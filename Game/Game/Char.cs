@@ -69,8 +69,11 @@ namespace TextureAtlas
             SwordTip = position;
         }
         #endregion
+
         #region Updates
+
         //Character Moves Left
+
         public void UpdateLeft()
         {
             //Iteration Through the Graphic Tiles of Character Walking
@@ -92,19 +95,21 @@ namespace TextureAtlas
                     currentFrame = 4;
             }
         }
+
         public void UpdateRight()
         {
             currentUpdate++;
             if (currentUpdate == updatesPerFrame)
             {
                 currentUpdate = 0;
-                if (currentFrame < 9 || currentFrame > 12)
-                    currentFrame = 9;
+                if (currentFrame < 8 || currentFrame > 12)
+                    currentFrame = 8;
                 currentFrame++;
                 if (currentFrame == 12)
-                    currentFrame = 9;
+                    currentFrame = 8;
             }
         }
+
         public void UpdateDown()
         {
             currentUpdate++;
@@ -118,6 +123,7 @@ namespace TextureAtlas
                     currentFrame = 0;
             }
         }
+
         public void UpdateUp()
         {
             currentUpdate++;
@@ -131,7 +137,9 @@ namespace TextureAtlas
                     currentFrame = 13;
             }
         }
+
 #endregion
+
         public void Draw(SpriteBatch spriteBatch, Vector2 location)
         {
             blnDisplaydamage = true;
@@ -248,6 +256,7 @@ namespace TextureAtlas
             #endregion
             spriteBatch.End();
         }
+
     }
 }
 

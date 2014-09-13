@@ -19,6 +19,11 @@ namespace TextureAtlas
 
         #region variables
 
+        public int Columns = 16;
+        public int Rows = 16;
+        public int TileWidth = 160;
+        public int TileHeight = 160;
+
         private int DebugCycles = 40;
 
         private DebugScreen debugScreenUpdate = new DebugScreen();
@@ -1060,11 +1065,11 @@ namespace TextureAtlas
                     DebugTimer1.Start();
                 }
 
-                for (int row = 0; row < 150; row++)
+                for (int row = 0; row < Rows; row++)
                 {
-                    for (int column = 0; column < 150; column++)
+                    for (int column = 0; column < Columns; column++)
                     {
-                        spriteBatch.Draw(Grass1, new Rectangle((row * 80), (column * 80), 80, 80), Color.White);
+                        spriteBatch.Draw(Grass1, new Rectangle((row * TileWidth), (column * TileHeight), TileWidth, TileHeight), Color.White);
                     }
                 }
 
