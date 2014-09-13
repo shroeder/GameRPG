@@ -19,17 +19,35 @@ namespace TextureAtlas
 
         #region variables
 
-        private int DebugCycles = 100;
+        private int DebugCycles = 40;
 
         private DebugScreen debugScreenUpdate = new DebugScreen();
         private DebugScreen debugScreenDraw = new DebugScreen();
+        private DebugScreen debugScreenDraw_Inventory = new DebugScreen();
+        private DebugScreen debugScreenDraw_Equipment = new DebugScreen();
+        private DebugScreen debugScreenDraw_Enemies = new DebugScreen();
+        private DebugScreen debugScreenDraw_Character = new DebugScreen();
+        private DebugScreen debugScreenDraw_Items = new DebugScreen();
+        private DebugScreen debugScreenDraw_PauseMenu = new DebugScreen();
+        private DebugScreen debugScreenDraw_BackGround = new DebugScreen();
+        private DebugScreen debugScreenDraw_Other = new DebugScreen();
 
         private bool blnLogTime = false;
+        private bool blnDrawDebuggerClicked = false;
 
         private Stopwatch DebugTimer;
+        private Stopwatch DebugTimer1;
 
         private List<long> UpdateTimes = new List<long>();
         private List<long> DrawTimes = new List<long>();
+        private List<long> DrawTimes_Inventory = new List<long>();
+        private List<long> DrawTimes_Equipment = new List<long>();
+        private List<long> DrawTimes_Enemies = new List<long>();
+        private List<long> DrawTimes_Character = new List<long>();
+        private List<long> DrawTimes_Items = new List<long>();
+        private List<long> DrawTimes_PauseMenu = new List<long>();
+        private List<long> DrawTimes_BackGround = new List<long>();
+        private List<long> DrawTimes_Other = new List<long>();
 
         private LevelSet levelSet;
         private Level currentlevel;
@@ -343,12 +361,41 @@ namespace TextureAtlas
 
             #region EscapeKey
 
+            //Is exiting Custom Debugger, or From being stepping inside it
+
             if (NState.IsKeyDown(Keys.Escape) && kState.IsKeyUp(Keys.Escape)){
                 if (blnLogTime)
                 {
                     blnLogTime = false;
+                    debugScreenDraw = new DebugScreen();
+                    debugScreenUpdate = new DebugScreen();
                     UpdateTimes.Clear();
                     DrawTimes.Clear();
+                }
+                else if (blnDrawDebuggerClicked)
+                {
+                    blnDrawDebuggerClicked = false;
+                    debugScreenDraw = new DebugScreen();
+                    debugScreenUpdate = new DebugScreen();
+                    debugScreenDraw_BackGround = new DebugScreen();
+                    debugScreenDraw_Character = new DebugScreen();
+                    debugScreenDraw_Enemies = new DebugScreen();
+                    debugScreenDraw_Equipment = new DebugScreen();
+                    debugScreenDraw_Inventory = new DebugScreen();
+                    debugScreenDraw_Items = new DebugScreen();
+                    debugScreenDraw_Other = new DebugScreen();
+                    debugScreenDraw_PauseMenu = new DebugScreen();
+                    UpdateTimes.Clear();
+                    DrawTimes.Clear();
+                    DrawTimes_BackGround.Clear();
+                    DrawTimes_Character.Clear();
+                    DrawTimes_Enemies.Clear();
+                    DrawTimes_Equipment.Clear();
+                    DrawTimes_Inventory.Clear();
+                    DrawTimes_Items.Clear();
+                    DrawTimes_Other.Clear();
+                    DrawTimes_PauseMenu.Clear();
+                    blnLogTime = true;
                 }
                 else
                 {
@@ -1007,6 +1054,12 @@ namespace TextureAtlas
 
                 //Drawing of Background, Draws at each row and Column
 
+                if (blnLogTime && DrawTimes_BackGround.Count < DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
+                }
+
                 for (int row = 0; row < 150; row++)
                 {
                     for (int column = 0; column < 150; column++)
@@ -1015,20 +1068,72 @@ namespace TextureAtlas
                     }
                 }
 
+                if (blnLogTime && DrawTimes_BackGround.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_BackGround.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
                 spriteBatch.End();
+
+                if (blnLogTime && DrawTimes_Items.Count < DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
+                }
 
                 foreach (Item item in DroppedItems)
                 {
                     item.Draw(spriteBatch, item.location);
                 }
 
+                if (blnLogTime && DrawTimes_Items.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_Items.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
+                if (blnLogTime && DrawTimes_Character.Count < DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
+                }
+
                 //Draw character
                 animatedSprite.Draw(spriteBatch, position);
+
+                if (blnLogTime && DrawTimes_Character.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_Character.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
+                if (blnLogTime && DrawTimes_Enemies.Count < DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
+                }
 
                 //Draw Each Enemy in List
                 foreach (Enemy enemy in Enemies)
                 {
                     enemy.Draw(spriteBatch, enemy.Location);
+                }
+
+                if (blnLogTime && DrawTimes_Enemies.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_Enemies.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
+                if (blnLogTime && DrawTimes_Inventory .Count< DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
                 }
 
                 //Inventory Selector
@@ -1043,6 +1148,19 @@ namespace TextureAtlas
                     }
                 }
 
+                if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_Inventory.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
+                if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
+                }
+
                 //Display Equipment
 
                 if (blnEquip)
@@ -1050,6 +1168,19 @@ namespace TextureAtlas
                     //Draw Empty Background for Character Equipment
 
                     equipment.draw(spriteBatch, CharScrn, Font2);
+                }
+
+                if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_Equipment.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
+                if (blnLogTime && DrawTimes_Other.Count < DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
                 }
 
                 //Display Message
@@ -1065,6 +1196,21 @@ namespace TextureAtlas
                 spriteBatch.DrawString(Font2, "Equipment", new Vector2(80, -2), Color.Beige);
                 spriteBatch.End();
 
+                if (blnLogTime && DrawTimes_Other.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_Other.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
+                if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
+                }
+                
+                //Pause Menu
+
                 if (CurrentGameState == GameState.Inactive)
                 {
 
@@ -1076,25 +1222,81 @@ namespace TextureAtlas
 
                 }
 
+                if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_PauseMenu.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
+                //Custom Debugger
+
+                debugScreenDraw.DrawBgClicked += DrawLogClicked;
+
                 if (blnLogTime)
                 {
-                    if (UpdateTimes.Count == 100)
+                    if (UpdateTimes.Count == DebugCycles)
                     {
-                        debugScreenUpdate.Draw(spriteBatch, Font2, Font24, false, graphics, UpdateTimes, "Cycle : Void Update", DebugCycles.ToString(), MenuBtn, 1);
+                        debugScreenUpdate.Draw(spriteBatch, Font2, Font24, false, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
                     }
                     else
                     {
-                        debugScreenUpdate.Draw(spriteBatch, Font2, Font24, true, graphics, UpdateTimes, "Cycle : Void Update", DebugCycles.ToString(), MenuBtn, 1);
+                        debugScreenUpdate.Draw(spriteBatch, Font2, Font24, true, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
                     }
-                    if (DrawTimes.Count == 100)
+                    if (DrawTimes.Count == DebugCycles)
                     {
-                        debugScreenDraw.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes, "Cycle : Void Draw", DebugCycles.ToString(), MenuBtn, 2);
+                        debugScreenDraw.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
                     }
                     else
                     {
-                        debugScreenDraw.Draw(spriteBatch, Font2, Font24, true, graphics, DrawTimes, "Cycle : Void Draw", DebugCycles.ToString(), MenuBtn, 2);
+                        debugScreenDraw.Draw(spriteBatch, Font2, Font24, true, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
                     }
                 }
+                else if (blnDrawDebuggerClicked)
+                {
+                    if (DrawTimes_BackGround.Count < DebugCycles || DrawTimes_Character.Count < DebugCycles || DrawTimes_Enemies.Count < DebugCycles || DrawTimes_Equipment.Count < DebugCycles
+                         || DrawTimes_Inventory.Count < DebugCycles || DrawTimes_Items.Count < DebugCycles || DrawTimes_Other.Count < DebugCycles || DrawTimes_PauseMenu.Count < DebugCycles)
+                    {
+                        blnLogTime = true;
+                        debugScreenDraw.Draw(spriteBatch, Font2, Font24, true, graphics, DrawTimes, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                    }
+                    else
+                    {
+                        if (DrawTimes_BackGround.Count == DebugCycles)
+                        {
+                            debugScreenDraw_BackGround.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_BackGround, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                        }
+                        if (DrawTimes_Character.Count == DebugCycles)
+                        {
+                            debugScreenDraw_Character.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Character, "Character.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
+                        }
+                        if (DrawTimes_Enemies.Count == DebugCycles)
+                        {
+                            debugScreenDraw_Enemies.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Enemies, "Enemy.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 3);
+                        }
+                        if (DrawTimes_Equipment.Count == DebugCycles)
+                        {
+                            debugScreenDraw_Equipment.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Equipment, "Equipment.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 4);
+                        }
+                        if (DrawTimes_Inventory.Count == DebugCycles)
+                        {
+                            debugScreenDraw_Inventory.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Inventory, "Inventory.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 5);
+                        }
+                        if (DrawTimes_Items.Count == DebugCycles)
+                        {
+                            debugScreenDraw_Items.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Items, "Item.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 6);
+                        }
+                        if (DrawTimes_Other.Count == DebugCycles)
+                        {
+                            debugScreenDraw_Other.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Other, "Other.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 7);
+                        }
+                        if (DrawTimes_PauseMenu.Count == DebugCycles)
+                        {
+                            debugScreenDraw_PauseMenu.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_PauseMenu, "Pause.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 8);
+                        }
+                    }
+                }
+
 
                 base.Draw(gameTime);
 
@@ -1121,6 +1323,12 @@ namespace TextureAtlas
 
             return;
 
+        }
+
+        public void DrawLogClicked(object sender, EventArgs eventArgs)
+        {
+            blnDrawDebuggerClicked = true;
+            blnLogTime = false;
         }
 
     }
