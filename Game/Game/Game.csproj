@@ -76,7 +76,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera1.cs" />
+    <Compile Include="BackGround.cs" />
     <Compile Include="Char.cs" />
     <Compile Include="DebugScreen.cs" />
     <Compile Include="Equipment.cs" />

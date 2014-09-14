@@ -39,8 +39,6 @@ namespace TextureAtlas
         public SpriteFont Font1;
         public Random RNG = new Random();
         public Texture2D ItemTexture;
-        public Vector2 velocity = new Vector2(150, 0);
-        public Vector2 velocityup = new Vector2(0, 150);
         public Texture2D LegendaryBg;
         public Texture2D TextBackground;
         public Color RarityColor;
@@ -183,22 +181,22 @@ namespace TextureAtlas
             }
         }
 
-        public void CharMovedRight(GameTime gameTime)
+        public void CharMovedRight(GameTime gameTime, Vector2 velocity)
         {
             location -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
-        public void CharMovedLeft(GameTime gameTime)
+        public void CharMovedLeft(GameTime gameTime, Vector2 velocity)
         {
             location += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
-        public void CharMovedUp(GameTime gameTime)
+        public void CharMovedUp(GameTime gameTime, Vector2 velocityup)
         {
             location += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
-        public void CharMovedDown(GameTime gameTime)
+        public void CharMovedDown(GameTime gameTime, Vector2 velocityup)
         {
             location -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
         }
