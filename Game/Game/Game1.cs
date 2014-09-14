@@ -14,20 +14,11 @@ using System.Timers;
 
 namespace TextureAtlas
 {
+
     public class Game1 : Microsoft.Xna.Framework.Game
     {
 
         #region variables
-
-        enum bgState
-        {
-            Normal,
-            Right,
-            Down,
-            DownRight
-        }
-
-        private bgState ScrollState = bgState.Normal;
 
         private Vector2 OffSet = new Vector2(0, 0);
 
@@ -251,7 +242,7 @@ namespace TextureAtlas
 
         //Instanciate New Character Class
         private AnimatedSprite animatedSprite;
-        
+
         #endregion
 
         public Game1()
@@ -259,16 +250,18 @@ namespace TextureAtlas
 
             //RESOLUTION
             graphics = new GraphicsDeviceManager(this);
+
             //Test Full Screen
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
-            graphics.IsFullScreen = false;
+
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            //graphics.IsFullScreen = true;
 
             this.Window.AllowUserResizing = true;
             this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
             Content.RootDirectory = "Content";
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
             TargetElapsedTime = TimeSpan.FromMilliseconds(20);
         }
 
@@ -346,19 +339,6 @@ namespace TextureAtlas
             #endregion
 
             #region States
-
-            if (position.X >= graphics.PreferredBackBufferWidth / 2 && position.Y >= graphics.PreferredBackBufferHeight / 2)
-            {
-                ScrollState = bgState.DownRight;
-            }
-            else if (position.X >= graphics.PreferredBackBufferWidth / 2)
-            {
-                ScrollState = bgState.Right;
-            }
-            else if (position.Y >= graphics.PreferredBackBufferHeight / 2)
-            {
-                ScrollState = bgState.Down;
-            }
 
             if (!base.IsActive)
             {
@@ -464,8 +444,8 @@ namespace TextureAtlas
             {
                 Valid = true;
                 //Create Random Location
-                position2.X = RNG.Next(1, 1250);
-                position2.Y = RNG.Next(1, 500);
+                position2.X = RNG.Next(1, (Rows * TileHeight));
+                position2.Y = RNG.Next(1, (Columns * TileWidth));
                 //Check to prevent enemies from spawn on top of each other or on Character
                 if (Enemies.Count >= 0)
                 {
@@ -530,11 +510,9 @@ namespace TextureAtlas
 
                         //Move Character on Screen
 
-                        if (ScrollState == bgState.DownRight || ScrollState == bgState.Right)
-                        {
                             if (position.X <= graphics.PreferredBackBufferWidth / 2)
                             {
-                                if (animatedSprite.WorldPos.X >= graphics.PreferredBackBufferWidth / 2)
+                                if (animatedSprite.WorldPos.X >= (graphics.PreferredBackBufferWidth / 2) + 10)
                                 {
                                     OffSet += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = true;
@@ -550,13 +528,9 @@ namespace TextureAtlas
                                 position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
-                        }
-                        else
-                        {
-                            position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                            IsScrolling = false;
-                        }
+
                         animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+
                     }
                     else
                     {
@@ -589,11 +563,9 @@ namespace TextureAtlas
 
                             //Update Char Position on Screen
 
-                            if (ScrollState == bgState.DownRight || ScrollState == bgState.Right)
-                            {
                                 if (position.X <= graphics.PreferredBackBufferWidth / 2)
                                 {
-                                    if (animatedSprite.WorldPos.X >= graphics.PreferredBackBufferWidth / 2)
+                                    if (animatedSprite.WorldPos.X >= (graphics.PreferredBackBufferWidth / 2) + 10)
                                     {
                                         OffSet += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                         IsScrolling = true;
@@ -609,12 +581,6 @@ namespace TextureAtlas
                                     position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
-                            }
-                            else
-                            {
-                                position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                IsScrolling = false;
-                            }
 
                             animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -666,7 +632,7 @@ namespace TextureAtlas
 
                             if (position.X >= graphics.PreferredBackBufferWidth / 2)
                             {
-                                if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 50)
+                                if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 10)
                                 {
                                     OffSet -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = true;
@@ -703,7 +669,7 @@ namespace TextureAtlas
 
                             if (position.X >= graphics.PreferredBackBufferWidth / 2)
                             {
-                                if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 50)
+                                if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 10)
                                 {
                                     OffSet -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = true;
@@ -762,11 +728,9 @@ namespace TextureAtlas
                         animatedSprite.direction = 4;
                         animatedSprite.UpdateUp();
 
-                        if (ScrollState == bgState.DownRight || ScrollState == bgState.Down)
-                        {
                             if (position.Y <= graphics.PreferredBackBufferHeight / 2)
                             {
-                                if (animatedSprite.WorldPos.Y >= graphics.PreferredBackBufferHeight / 2)
+                                if (animatedSprite.WorldPos.Y >= (graphics.PreferredBackBufferHeight / 2) + 10)
                                 {
                                     OffSet += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = true;
@@ -782,12 +746,6 @@ namespace TextureAtlas
                                 position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
-                        }
-                        else
-                        {
-                            position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                            IsScrolling = false;
-                        }
 
                         animatedSprite.WorldPos -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
@@ -807,11 +765,9 @@ namespace TextureAtlas
                             animatedSprite.direction = 4;
                             animatedSprite.UpdateUp();
 
-                            if (ScrollState == bgState.DownRight || ScrollState == bgState.Down)
-                            {
                                 if (position.Y <= graphics.PreferredBackBufferHeight / 2)
                                 {
-                                    if (animatedSprite.WorldPos.Y >= graphics.PreferredBackBufferHeight / 2)
+                                    if (animatedSprite.WorldPos.Y >= (graphics.PreferredBackBufferHeight / 2) + 10)
                                     {
                                         OffSet += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                         IsScrolling = true;
@@ -827,12 +783,6 @@ namespace TextureAtlas
                                     position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
-                            }
-                            else
-                            {
-                                position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                IsScrolling = false;
-                            }
 
                             animatedSprite.WorldPos -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -869,7 +819,7 @@ namespace TextureAtlas
             if (kState.IsKeyDown(Keys.Down) || kState.IsKeyDown(Keys.S))
             {
                 Valid = true;
-                if (position.Y < graphics.PreferredBackBufferHeight - 50)
+                if (position.Y < graphics.PreferredBackBufferHeight - 125)
                 {
                     if (Enemies.Count < 1)
                     {
@@ -878,7 +828,7 @@ namespace TextureAtlas
 
                         if (position.Y >= graphics.PreferredBackBufferHeight / 2)
                         {
-                            if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight/2) <= (Rows * TileHeight) - 100){
+                            if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight/2) <= (Rows * TileHeight) - 10){
                                 OffSet -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = true;
                             }
@@ -915,7 +865,7 @@ namespace TextureAtlas
 
                             if (position.Y >= graphics.PreferredBackBufferHeight / 2)
                             {
-                                if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= (Rows * TileHeight) - 100)
+                                if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= (Rows * TileHeight) - 10)
                                 {
                                     OffSet -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = true;
@@ -1279,11 +1229,11 @@ namespace TextureAtlas
                         {
                             return Font20;
                         }
-                        else if (gfx.PreferredBackBufferWidth > 400 && gfx.PreferredBackBufferWidth < 801)
+                        else if (gfx.PreferredBackBufferWidth > 600 && gfx.PreferredBackBufferWidth < 801)
                         {
                             return Font16;
                         }
-                        else if (gfx.PreferredBackBufferWidth > 0 && gfx.PreferredBackBufferWidth < 401)
+                        else if (gfx.PreferredBackBufferWidth > 0 && gfx.PreferredBackBufferWidth < 601)
                         {
                             return Font10;
                         }
@@ -1478,8 +1428,9 @@ namespace TextureAtlas
                     SpriteFont TheFont = AutoFont(graphics, 1);
 
                     pauseMenu.Resume += ResumeGame;
+                    pauseMenu.Exit += ExitGame;
 
-                    pauseMenu.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics);
+                    pauseMenu.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics, Font2);
 
                 }
 
@@ -1584,6 +1535,11 @@ namespace TextureAtlas
 
             return;
 
+        }
+
+        public void ExitGame(object sender, EventArgs eventArgs)
+        {
+            this.Exit();
         }
 
         public void DrawLogClicked(object sender, EventArgs eventArgs)
