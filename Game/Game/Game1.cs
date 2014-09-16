@@ -18,19 +18,76 @@ namespace TextureAtlas
     public class Game1 : Microsoft.Xna.Framework.Game
     {
 
+        public static bool In(MouseState ms, Rectangle rectangle)
+        {
+
+            if (ms.X >= rectangle.X && ms.X <= (rectangle.X + rectangle.Width) && ms.Y >= rectangle.Y && ms.Y <= (rectangle.Y + rectangle.Height))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         #region variables
 
-        private Vector2 OffSet = new Vector2(0, 0);
+        private string name = "Turd Burglar";
 
-        private Boolean IsScrolling = false;
+        private KeyboardState kState;
+        private KeyboardState NState;
+        private MouseState MoldState;
+        private MouseState mouseState;
 
+        public Vector2 OffSet = new Vector2(0, 0);
+        public Vector2 position = new Vector2(150, 150);
+        public Vector2 position2 = new Vector2();
+        public Vector2 velocity = new Vector2(300, 0);
+        public Vector2 velocityup = new Vector2(0, 300);
+        private Vector2 InvPos;
+
+        public bool Toggle = false;
+        public bool Valid = true;
+        public bool blnRevert = false;
+        public bool FullScreen = false;
+        private bool IsScrolling = false;
+        private bool blnLogTime = false;
+        private bool blnDrawDebuggerClicked = false;
+        private bool isDrag = false;
+        private bool DoesDrop = false;
+        private bool BlnAttack = true;
+        private bool blnEquip = false;
+        private bool blnDSP = false;
+        private bool blnOpen = false;
+        private bool BlnDelay = false;
+        private bool AniTick = false;
+        private bool Attack = false;
+        private bool blnIsConfirming = false;
+        private bool blnInitialResize = true;
+        private bool debugScreenDrawBgClickedBound = false;
+        private bool pauseMenuExitBound = false;
+        private bool pauseMenuResolutionBound = false;
+        private bool pauseMenuBound = false;
+        private bool ResolutionConfirmBound = false;
+        private bool ResolutionConfirmChangeBound = false;
+        private bool ResolutionConfirmRevertBound = false;
+
+        public int ScreenWidth;
+        public int ScreenHeight;
+        public int dir = 1;
+        public int DamageCounter = 0;
         public int Columns = 16;
         public int Rows = 16;
         public int TileWidth = 160;
         public int TileHeight = 160;
-
+        public int PreviousResolutionX;
+        public int PreviousResolutionY;
         private int DebugCycles = 40;
+        private int IntDrop = 0;
+        private int HP;
 
+        public Random RNG = new Random();
         private DebugScreen debugScreenUpdate = new DebugScreen();
         private DebugScreen debugScreenDraw = new DebugScreen();
         private DebugScreen debugScreenDraw_Inventory = new DebugScreen();
@@ -41,9 +98,12 @@ namespace TextureAtlas
         private DebugScreen debugScreenDraw_PauseMenu = new DebugScreen();
         private DebugScreen debugScreenDraw_BackGround = new DebugScreen();
         private DebugScreen debugScreenDraw_Other = new DebugScreen();
-
-        private bool blnLogTime = false;
-        private bool blnDrawDebuggerClicked = false;
+        private PauseMenu pauseMenu = new PauseMenu();
+        private PauseMenu ResolutionConfirm = new PauseMenu();
+        private MessageDisplay MSG = new MessageDisplay();
+        private Equipment equipment;
+        private Inventory inventory;
+        private AnimatedSprite animatedSprite;
 
         private Stopwatch DebugTimer;
         private Stopwatch DebugTimer1;
@@ -60,89 +120,45 @@ namespace TextureAtlas
         private List<long> DrawTimes_PauseMenu = new List<long>();
         private List<long> DrawTimes_BackGround = new List<long>();
         private List<long> DrawTimes_Other = new List<long>();
+        private List<Item> InvItems = new List<Item>();
+        private List<Item> EquipItem = new List<Item>();
+        private List<Item> DroppedItems = new List<Item>();
+        public List<Enemy> Enemies = new List<Enemy>();
 
         private LevelSet levelSet;
         private Level currentlevel;
-
-        //Variable If mouse is in Inv Dragable
-        private bool isDrag = false;
-
-        //Variable for Tile Rectangle
+        
         private Rectangle TileRect = new Rectangle(0, 0, 80, 80);
 
-        //Variable for MouseOffset
         private float MouseOffSetx = 0f;
         private float MouseOffSety = 0f;
+        private float AnimationTimer = 0f;
+        private float AnimationDuration = .5f;
+        private float AtkTmr = .2f;
+        private float TimeBetweenAttacks = .2f;
 
-        //Variable for Scalar Inventory Position
-        private Vector2 InvPos;
-
-        int IntDrop = 0;
-
-        private PauseMenu pauseMenu = new PauseMenu();
-        private Equipment equipment;
-
-        //Bln for ItemDrop
-        bool DoesDrop = false;
-
-        //Bln for Attack
-        bool BlnAttack = true;
-
-        //Bln for Equip
-        private bool blnEquip = false;
-
-        //Instanciate MessageDisplayClass
-        private MessageDisplay MSG = new MessageDisplay();
-
-        //Texture of Char
-        private Texture2D texture;
-
-        //Boolean for DispalyMessage
-        private Boolean blnDSP;
-
-        //Legendary Beam
-        private Texture2D legbeam;
-
-        //Texture of Hp Bar
-        private Texture2D hpbarFull;
-
-        //Variable for Texture of Inventory
-        private Texture2D InvText;
-
-        //Boolean Controlling Inventory Screen
-        private bool blnOpen = false;
-
-        //Instanciate Object of Inventory Class
-        private Inventory inventory;
-
-        //List of Items Picked Up and to be displayed in inventory
-        private List<Item> InvItems = new List<Item>();
-
-        //List of Items to be Displayed In Equipment Screen
-        private List<Item> EquipItem = new List<Item>();
-
-        //List of Items Dropped
-        private List<Item> DroppedItems = new List<Item>();
-
-        //Image for Legendary
         private Texture2D LegBG;
-
-        //Image for Menu Button
+        private Texture2D texture;
         private Texture2D MenuBtn;
-
-        //Image for text background
         private Texture2D Textbg;
-
-        //SpriteFont Message Display
-        private SpriteFont fontMSG;
-
-        //Texture For Character Background
         private Texture2D CharScrn;
-
-        //Texture for GrassBG
         private Texture2D Grass1;
+        private Texture2D legbeam;
+        private Texture2D hpbarFull;
+        private Texture2D InvText;
+        private Texture2D imgPause;
+        private Texture2D hpbar75;
+        private Texture2D hpbarHalf;
+        private Texture2D hpbarQuarter;
+        private Texture2D hpbar40;
+        private Texture2D buttonbg;
+        public Texture2D sword;
+        public Texture2D sword2;
 
-        //Instanciate Graphics Device and Sprite Batch
+        private SpriteFont fontMSG;
+        private SpriteFont Font1;
+        private SpriteFont Font2;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -154,108 +170,30 @@ namespace TextureAtlas
 
         GameState CurrentGameState = GameState.Active;
 
-        //Damage Counter Variable
-        public int DamageCounter = 0;
-
-        //Position for Character on Screen
-        public Vector2 position = new Vector2(150, 150);
-
-        //Position for Enemy on Screen
-        public Vector2 position2 = new Vector2();
-
-        //Variable Controlling Movement of X Axis
-        public Vector2 velocity = new Vector2(300, 0);
-
-        //Velocity Controlling Movement Speed of Y Axis
-        public Vector2 velocityup = new Vector2(0, 300);
-
-        //Random Number Generator:)
-        public Random RNG = new Random();
-
-        //List of Enemies
-        public List<Enemy> Enemies = new List<Enemy>();
-
-        //Boolean for Unit Collision Between Character and Enemies and Enemies to Character
-        public bool Valid = true;
-
-        //Variable for Name of Enemy
-        private string name = "Turd Burglar";
-
-        //Variable for Characters HP
-        private int HP;
-
-        //Variable for Font of HP Bar
-        SpriteFont Font1;
-
-        //Variable for Font of Enemy Name
-        SpriteFont Font2;
-
-        SpriteFont Font10;
-        SpriteFont Font16;
-        SpriteFont Font20;
-        SpriteFont Font24;
-        SpriteFont Font28;
-        SpriteFont Font32;
-
-
-        //Graphic Variable for Sword
-        public Texture2D sword;
-        public Texture2D sword2;
-
-        //Diretion of Character(Indexed to Down)
-        public int dir = 1;
-
-        //Timer for the Animation Draw cycle
-        float AnimationTimer = 0f;
-
-        //Time Set Aside for Drawing of Animation
-        float AnimationDuration = .5f;
-
-        bool AniTick = false;
-        bool Attack = false;
-
-        //Attack Timer(Indexed up for first Attack)
-        float AtkTmr = .2f;
-
-        //Variable Controlling Attack Speed(Delay after attack Animation)
-        float TimeBetweenAttacks = .2f;
-
-        //Variable for Old Mouse State
-        private MouseState MoldState;
-
-        //Variable for New Mouse State
-        private MouseState mouseState;
-
-        //When True it Controls the Timer for the Attack Delay
-        bool BlnDelay = false;
-
-        Texture2D imgPause;
-        Texture2D hpbar75;
-        Texture2D hpbarHalf;
-        Texture2D hpbarQuarter;
-        Texture2D hpbar40;
-        Texture2D buttonbg;
-
-        //Variable for "Old" Keyboard State
-        private KeyboardState kState;
-        private KeyboardState NState;
-
-        //Instanciate New Character Class
-        private AnimatedSprite animatedSprite;
-
         #endregion
 
         public Game1()
         {
-
-            //RESOLUTION
             graphics = new GraphicsDeviceManager(this);
+            GlobalVariables.gfx = graphics;
 
-            //Test Full Screen
+            //User Setting To be Set from some form of storage
 
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            //graphics.IsFullScreen = true;
+            ScreenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; ;
+            ScreenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
+            //Index fullScreen and Graphics width/height until storage can be put in place to 
+            //read values from storage
+
+            graphics.PreferredBackBufferWidth = ScreenWidth;
+            graphics.PreferredBackBufferHeight = ScreenHeight - 40;
+
+            FullScreen = false;
+
+            if (FullScreen)
+            {
+                Toggle = true;
+            }
 
             this.Window.AllowUserResizing = true;
             this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
@@ -267,14 +205,93 @@ namespace TextureAtlas
 
         void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-            graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+            if (blnInitialResize)
+            {
+                blnInitialResize = false;
+                return;
+            }
+            if (blnRevert)
+            {
+                //Reset Graphics State to Old Graphics State
+                GlobalVariables.NewestWidth = PreviousResolutionX;
+                GlobalVariables.NewHeight = PreviousResolutionY;
+                graphics.PreferredBackBufferWidth = PreviousResolutionX;
+                graphics.PreferredBackBufferHeight = PreviousResolutionY;
+
+                graphics.ApplyChanges();
+
+                if (graphics.IsFullScreen != FullScreen)
+                {
+                    Toggle = true;
+                }
+
+                //Flags are set to show Pause Menu at the Options Level
+                blnRevert = false;
+                blnIsConfirming = false;
+            }
+            else
+            {
+                if (GlobalVariables.NewHeight > 0 && GlobalVariables.NewWidth > 0)
+                {
+                    //In the Resolution Menu
+                    //Track Old Values
+                    PreviousResolutionX = graphics.PreferredBackBufferWidth;
+                    PreviousResolutionY = graphics.PreferredBackBufferHeight;
+                    FullScreen = graphics.IsFullScreen;
+
+                    //adjust screen size to fit screen
+                    if (!graphics.IsFullScreen)
+                    {
+                        if (GlobalVariables.NewWidth >= ScreenWidth)
+                        {
+                            GlobalVariables.NewWidth = ScreenWidth;
+                        }
+                        if (GlobalVariables.NewHeight >= (ScreenHeight - 40))
+                        {
+                            GlobalVariables.NewHeight = (ScreenHeight - 40);
+                        }
+                    }
+
+                    //Set new Values
+                    GlobalVariables.NewestWidth = GlobalVariables.NewWidth;
+                    GlobalVariables.NewestHeight = GlobalVariables.NewHeight;
+                    graphics.PreferredBackBufferWidth = GlobalVariables.NewWidth;
+                    graphics.PreferredBackBufferHeight = GlobalVariables.NewHeight;
+
+                    GlobalVariables.NewWidth = 0;
+                    GlobalVariables.NewHeight = 0;
+
+                    graphics.ApplyChanges();
+
+                    if (graphics.IsFullScreen != GlobalVariables.FullScreen)
+                    {
+
+                        Toggle = true;
+
+                    }
+
+                    //Show Dialogue to Keep or Revert
+
+                    blnIsConfirming = true;
+
+                }
+                else
+                {
+                    //ClientWindow Resized
+                    GlobalVariables.NewestWidth = Window.ClientBounds.Width;
+                    GlobalVariables.NewestHeight = Window.ClientBounds.Height;
+                    graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                    graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+                    graphics.ApplyChanges();
+                }
+            }
         }
 
         protected override void Initialize()
         {
             Components.Add(new GamerServicesComponent(this));
             base.Initialize();
+            GlobalVariables.TheGame = this;
         }
 
         protected override void LoadContent()
@@ -296,12 +313,12 @@ namespace TextureAtlas
             hpbar40 = Content.Load<Texture2D>("hpbar40");
             sword = Content.Load<Texture2D>("sword1");
             Font2 = Content.Load<SpriteFont>("EnemyName");
-            Font10 = Content.Load<SpriteFont>("Font10");
-            Font16 = Content.Load<SpriteFont>("Font16");
-            Font24 = Content.Load<SpriteFont>("Font24");
-            Font20 = Content.Load<SpriteFont>("Font20");
-            Font28 = Content.Load<SpriteFont>("Font28");
-            Font32 = Content.Load<SpriteFont>("Font32");
+            GlobalVariables.Font10 = Content.Load<SpriteFont>("Font10");
+            GlobalVariables.Font16 = Content.Load<SpriteFont>("Font16");
+            GlobalVariables.Font24 = Content.Load<SpriteFont>("Font24");
+            GlobalVariables.Font20 = Content.Load<SpriteFont>("Font20");
+            GlobalVariables.Font28 = Content.Load<SpriteFont>("Font28");
+            GlobalVariables.Font32 = Content.Load<SpriteFont>("Font32");
             Font2 = Content.Load<SpriteFont>("EnemyName");
             sword2 = Content.Load<Texture2D>("sword2");
             InvText = Content.Load<Texture2D>("Inventory");
@@ -310,6 +327,7 @@ namespace TextureAtlas
             Textbg = Content.Load<Texture2D>("ItemDscBG");
             CharScrn = Content.Load<Texture2D>("HeroSelection");
             Grass1 = Content.Load<Texture2D>("grass_tile_001");
+            GlobalVariables.CheckMark = Content.Load<Texture2D>("check");
 
             //Set Invstart Position
             InvPos = new Vector2(50, 50);
@@ -328,10 +346,11 @@ namespace TextureAtlas
 
         protected override void Update(GameTime gameTime)
         {
-            
+
             #region StartTimer
 
-            if (blnLogTime && UpdateTimes.Count < DebugCycles){
+            if (blnLogTime && UpdateTimes.Count < DebugCycles)
+            {
                 DebugTimer = new Stopwatch();
                 DebugTimer.Start();
             }
@@ -370,7 +389,8 @@ namespace TextureAtlas
 
             //Is exiting Custom Debugger, or From being stepping inside it
 
-            if (NState.IsKeyDown(Keys.Escape) && kState.IsKeyUp(Keys.Escape)){
+            if (NState.IsKeyDown(Keys.Escape) && kState.IsKeyUp(Keys.Escape))
+            {
                 if (blnLogTime)
                 {
                     blnLogTime = false;
@@ -510,24 +530,24 @@ namespace TextureAtlas
 
                         //Move Character on Screen
 
-                            if (position.X <= graphics.PreferredBackBufferWidth / 2)
+                        if (position.X <= graphics.PreferredBackBufferWidth / 2)
+                        {
+                            if (animatedSprite.WorldPos.X >= (graphics.PreferredBackBufferWidth / 2) + 10)
                             {
-                                if (animatedSprite.WorldPos.X >= (graphics.PreferredBackBufferWidth / 2) + 10)
-                                {
-                                    OffSet += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                    IsScrolling = true;
-                                }
-                                else
-                                {
-                                    position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                    IsScrolling = false;
-                                }
+                                OffSet += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                IsScrolling = true;
                             }
                             else
                             {
                                 position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
+                        }
+                        else
+                        {
+                            position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                            IsScrolling = false;
+                        }
 
                         animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -563,24 +583,24 @@ namespace TextureAtlas
 
                             //Update Char Position on Screen
 
-                                if (position.X <= graphics.PreferredBackBufferWidth / 2)
+                            if (position.X <= graphics.PreferredBackBufferWidth / 2)
+                            {
+                                if (animatedSprite.WorldPos.X >= (graphics.PreferredBackBufferWidth / 2) + 10)
                                 {
-                                    if (animatedSprite.WorldPos.X >= (graphics.PreferredBackBufferWidth / 2) + 10)
-                                    {
-                                        OffSet += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                        IsScrolling = true;
-                                    }
-                                    else
-                                    {
-                                        position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                        IsScrolling = false;
-                                    }
+                                    OffSet += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    IsScrolling = true;
                                 }
                                 else
                                 {
                                     position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
+                            }
+                            else
+                            {
+                                position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                IsScrolling = false;
+                            }
 
                             animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -623,31 +643,32 @@ namespace TextureAtlas
 
             if (kState.IsKeyDown(Keys.D) || kState.IsKeyDown(Keys.Right))
             {
-                if (position.X < graphics.PreferredBackBufferWidth - 75) { 
-                Valid = true;
+                if (position.X < graphics.PreferredBackBufferWidth - 75)
+                {
+                    Valid = true;
                     if (Enemies.Count < 1)
                     {
                         animatedSprite.direction = 3;
                         animatedSprite.UpdateRight();
 
-                            if (position.X >= graphics.PreferredBackBufferWidth / 2)
+                        if (position.X >= graphics.PreferredBackBufferWidth / 2)
+                        {
+                            if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 10)
                             {
-                                if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 10)
-                                {
-                                    OffSet -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                    IsScrolling = true;
-                                }
-                                else
-                                {
-                                    position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                    IsScrolling = false;
-                                }
+                                OffSet -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                IsScrolling = true;
                             }
                             else
                             {
                                 position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
+                        }
+                        else
+                        {
+                            position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                            IsScrolling = false;
+                        }
 
                         animatedSprite.WorldPos += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
@@ -728,24 +749,24 @@ namespace TextureAtlas
                         animatedSprite.direction = 4;
                         animatedSprite.UpdateUp();
 
-                            if (position.Y <= graphics.PreferredBackBufferHeight / 2)
+                        if (position.Y <= graphics.PreferredBackBufferHeight / 2)
+                        {
+                            if (animatedSprite.WorldPos.Y >= (graphics.PreferredBackBufferHeight / 2) + 10)
                             {
-                                if (animatedSprite.WorldPos.Y >= (graphics.PreferredBackBufferHeight / 2) + 10)
-                                {
-                                    OffSet += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                    IsScrolling = true;
-                                }
-                                else
-                                {
-                                    position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                    IsScrolling = false;
-                                }
+                                OffSet += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                IsScrolling = true;
                             }
                             else
                             {
                                 position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
+                        }
+                        else
+                        {
+                            position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                            IsScrolling = false;
+                        }
 
                         animatedSprite.WorldPos -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
@@ -765,24 +786,24 @@ namespace TextureAtlas
                             animatedSprite.direction = 4;
                             animatedSprite.UpdateUp();
 
-                                if (position.Y <= graphics.PreferredBackBufferHeight / 2)
+                            if (position.Y <= graphics.PreferredBackBufferHeight / 2)
+                            {
+                                if (animatedSprite.WorldPos.Y >= (graphics.PreferredBackBufferHeight / 2) + 10)
                                 {
-                                    if (animatedSprite.WorldPos.Y >= (graphics.PreferredBackBufferHeight / 2) + 10)
-                                    {
-                                        OffSet += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                        IsScrolling = true;
-                                    }
-                                    else
-                                    {
-                                        position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                        IsScrolling = false;
-                                    }
+                                    OffSet += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    IsScrolling = true;
                                 }
                                 else
                                 {
                                     position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
+                            }
+                            else
+                            {
+                                position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                IsScrolling = false;
+                            }
 
                             animatedSprite.WorldPos -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -828,7 +849,8 @@ namespace TextureAtlas
 
                         if (position.Y >= graphics.PreferredBackBufferHeight / 2)
                         {
-                            if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight/2) <= (Rows * TileHeight) - 10){
+                            if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= (Rows * TileHeight) - 10)
+                            {
                                 OffSet -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = true;
                             }
@@ -859,7 +881,7 @@ namespace TextureAtlas
                         }
                         if (Valid)
                         {
-                            
+
                             animatedSprite.direction = 1;
                             animatedSprite.UpdateDown();
 
@@ -894,7 +916,7 @@ namespace TextureAtlas
                                         DroppedItems[lc].CharMovedDown(gameTime, velocityup);
                                     }
                                 }
-                                
+
                             }
 
                             if (IsScrolling)
@@ -1198,63 +1220,14 @@ namespace TextureAtlas
                 DebugTimer.Reset();
             }
 
-#endregion
+            #endregion
 
-        }
-
-        public SpriteFont AutoFont(GraphicsDeviceManager gfx, int scale)
-        {
-
-            try
-            {
-
-                switch (scale)
-                {
-
-                    case 1:
-
-                        if (gfx.PreferredBackBufferWidth > 1600)
-                        {
-                            return Font32;
-                        }
-                        else if (gfx.PreferredBackBufferWidth > 1200 && gfx.PreferredBackBufferWidth < 1601)
-                        {
-                            return Font28;
-                        }
-                        else if (gfx.PreferredBackBufferWidth > 1000 && gfx.PreferredBackBufferWidth < 1201)
-                        {
-                            return Font24;
-                        }
-                        else if (gfx.PreferredBackBufferWidth > 800 && gfx.PreferredBackBufferWidth < 1001)
-                        {
-                            return Font20;
-                        }
-                        else if (gfx.PreferredBackBufferWidth > 600 && gfx.PreferredBackBufferWidth < 801)
-                        {
-                            return Font16;
-                        }
-                        else if (gfx.PreferredBackBufferWidth > 0 && gfx.PreferredBackBufferWidth < 601)
-                        {
-                            return Font10;
-                        }
-                        else
-                        {
-                            return Font10;
-                        }
-
-                    default:
-
-                        return Font10;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in Function AutFont " + ex.ToString());
-            }
         }
 
         protected override void Draw(GameTime gameTime)
         {
+
+            ResolutionConfirm = null;
 
             try
             {
@@ -1341,7 +1314,7 @@ namespace TextureAtlas
                     DebugTimer1.Reset();
                 }
 
-                if (blnLogTime && DrawTimes_Inventory .Count< DebugCycles)
+                if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles)
                 {
                     DebugTimer1 = new Stopwatch();
                     DebugTimer1.Start();
@@ -1419,19 +1392,65 @@ namespace TextureAtlas
                     DebugTimer1 = new Stopwatch();
                     DebugTimer1.Start();
                 }
-                
+
                 //Pause Menu
 
                 if (CurrentGameState == GameState.Inactive)
                 {
 
-                    SpriteFont TheFont = AutoFont(graphics, 1);
+                    SpriteFont TheFont = GlobalVariables.AutoFont(graphics, 1);
 
-                    pauseMenu.Resume += ResumeGame;
-                    pauseMenu.Exit += ExitGame;
+                    if (blnIsConfirming)
+                    {
+                        if (ResolutionConfirm == null)
+                        {
+                            ResolutionConfirm = new PauseMenu();
+                            ResolutionConfirmChangeBound = false;
+                            ResolutionConfirmRevertBound = false;
+                        }
 
-                    pauseMenu.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics, Font2);
+                        if (!ResolutionConfirmChangeBound)
+                        {
+                            ResolutionConfirm.ConfirmChange += ConfirmChange;
+                            ResolutionConfirmChangeBound = true;
+                        }
+                        if (!ResolutionConfirmRevertBound)
+                        {
+                            ResolutionConfirm.RevertChange += RevertChange;
+                            ResolutionConfirmRevertBound = true;
+                        }
 
+                            ResolutionConfirm.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics, Font2, 2);
+
+                    }
+                    else
+                    {
+
+                        if (pauseMenu == null)
+                        {
+                            pauseMenu = new PauseMenu();
+                            pauseMenuBound = false;
+                            pauseMenuExitBound = false;
+                            pauseMenuResolutionBound = false;
+                        }
+                        if (!pauseMenuBound)
+                        {
+                            pauseMenu.Resume += ResumeGame;
+                            pauseMenuBound = true;
+                        }
+                        if (!pauseMenuExitBound)
+                        {
+                            pauseMenu.Exit += ExitGame;
+                            pauseMenuExitBound = false;
+                        }
+                        if (!pauseMenuResolutionBound)
+                        {
+                            pauseMenu.ResolutionChange += ResolutionChange;
+                            pauseMenuResolutionBound = false;
+                        }
+
+                        pauseMenu.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics, Font2, 1);
+                    }
                 }
 
                 if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles && DebugTimer1 != null)
@@ -1442,26 +1461,29 @@ namespace TextureAtlas
                 }
 
                 //Custom Debugger
-
-                debugScreenDraw.DrawBgClicked += DrawLogClicked;
+                if (!debugScreenDrawBgClickedBound)
+                {
+                    debugScreenDraw.DrawBgClicked += DrawLogClicked;
+                    debugScreenDrawBgClickedBound = false;
+                }
 
                 if (blnLogTime)
                 {
                     if (UpdateTimes.Count == DebugCycles)
                     {
-                        debugScreenUpdate.Draw(spriteBatch, Font2, Font24, false, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                        debugScreenUpdate.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
                     }
                     else
                     {
-                        debugScreenUpdate.Draw(spriteBatch, Font2, Font24, true, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                        debugScreenUpdate.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
                     }
                     if (DrawTimes.Count == DebugCycles)
                     {
-                        debugScreenDraw.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
+                        debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
                     }
                     else
                     {
-                        debugScreenDraw.Draw(spriteBatch, Font2, Font24, true, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
+                        debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
                     }
                 }
                 else if (blnDrawDebuggerClicked)
@@ -1470,45 +1492,56 @@ namespace TextureAtlas
                          || DrawTimes_Inventory.Count < DebugCycles || DrawTimes_Items.Count < DebugCycles || DrawTimes_Other.Count < DebugCycles || DrawTimes_PauseMenu.Count < DebugCycles)
                     {
                         blnLogTime = true;
-                        debugScreenDraw.Draw(spriteBatch, Font2, Font24, true, graphics, DrawTimes, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                        debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, DrawTimes, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
                     }
                     else
                     {
                         if (DrawTimes_BackGround.Count == DebugCycles)
                         {
-                            debugScreenDraw_BackGround.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_BackGround, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                            debugScreenDraw_BackGround.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_BackGround, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
                         }
                         if (DrawTimes_Character.Count == DebugCycles)
                         {
-                            debugScreenDraw_Character.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Character, "Character.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
+                            debugScreenDraw_Character.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Character, "Character.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
                         }
                         if (DrawTimes_Enemies.Count == DebugCycles)
                         {
-                            debugScreenDraw_Enemies.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Enemies, "Enemy.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 3);
+                            debugScreenDraw_Enemies.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Enemies, "Enemy.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 3);
                         }
                         if (DrawTimes_Equipment.Count == DebugCycles)
                         {
-                            debugScreenDraw_Equipment.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Equipment, "Equipment.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 4);
+                            debugScreenDraw_Equipment.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Equipment, "Equipment.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 4);
                         }
                         if (DrawTimes_Inventory.Count == DebugCycles)
                         {
-                            debugScreenDraw_Inventory.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Inventory, "Inventory.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 5);
+                            debugScreenDraw_Inventory.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Inventory, "Inventory.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 5);
                         }
                         if (DrawTimes_Items.Count == DebugCycles)
                         {
-                            debugScreenDraw_Items.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Items, "Item.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 6);
+                            debugScreenDraw_Items.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Items, "Item.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 6);
                         }
                         if (DrawTimes_Other.Count == DebugCycles)
                         {
-                            debugScreenDraw_Other.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_Other, "Other.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 7);
+                            debugScreenDraw_Other.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Other, "Other.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 7);
                         }
                         if (DrawTimes_PauseMenu.Count == DebugCycles)
                         {
-                            debugScreenDraw_PauseMenu.Draw(spriteBatch, Font2, Font24, false, graphics, DrawTimes_PauseMenu, "Pause.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 8);
+                            debugScreenDraw_PauseMenu.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_PauseMenu, "Pause.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 8);
                         }
                     }
                 }
 
+                if (Toggle)
+                {
+                    PresentationParameters pp = new PresentationParameters();
+                    pp.BackBufferWidth = GlobalVariables.NewestWidth;
+                    pp.BackBufferHeight = GlobalVariables.NewestHeight;
+                    pp.IsFullScreen = GlobalVariables.NewestFullScreen;
+                    pp.DeviceWindowHandle = Window.Handle;
+                    graphics.GraphicsDevice.Reset(pp);
+                    graphics.ToggleFullScreen();
+                    Toggle = false;
+                }
 
                 base.Draw(gameTime);
 
@@ -1528,13 +1561,37 @@ namespace TextureAtlas
 
         }
 
+        private void ConfirmChange(object sender, EventArgs e)
+        {
+            blnIsConfirming = false;
+            pauseMenu = new PauseMenu();
+            pauseMenu.blnVideoOpen = true;
+            pauseMenu.DefaultPauseOpen = false;
+        }
+
+        private void RevertChange(object sender, EventArgs e)
+        {
+            blnRevert = true;
+            blnIsConfirming = false;
+            Window_ClientSizeChanged(this, EventArgs.Empty);
+            pauseMenu = new PauseMenu();
+            pauseMenu.blnVideoOpen = true;
+            pauseMenu.DefaultPauseOpen = false;
+
+        }
+
+        private void ResolutionChange(object sender, EventArgs e)
+        {
+            pauseMenu = null;
+
+            Window_ClientSizeChanged(this, EventArgs.Empty);
+        }
+
         public void ResumeGame(object sender, EventArgs eventArgs)
         {
+            pauseMenu = null;
 
             CurrentGameState = GameState.Active;
-
-            return;
-
         }
 
         public void ExitGame(object sender, EventArgs eventArgs)
@@ -1547,6 +1604,5 @@ namespace TextureAtlas
             blnDrawDebuggerClicked = true;
             blnLogTime = false;
         }
-
     }
 }
