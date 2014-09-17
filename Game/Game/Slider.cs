@@ -16,8 +16,22 @@ namespace TextureAtlas
     class Slider
     {
 
+        private int SelectedIndex = 0;
+
+        public int Index
+        {
+            get
+            {
+                return SelectedIndex;
+            }
+
+            set
+            {
+                SelectedIndex = value;
+            }
+        }
+
         bool blnDragging = false;
-        int SelectedIndex = 0;
         List<string> ReturnArray = new List<string>();
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font, GraphicsDeviceManager gfx, Texture2D txt, List<string> Array, int width, int height, int posX, int posY, Color color)

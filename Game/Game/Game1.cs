@@ -11,6 +11,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Starbound.RealmFactoryCore;
 using System.Timers;
+using System.IO;
+using System.Xml.Serialization;
+using Microsoft.Xna.Framework.Storage;
 
 namespace TextureAtlas
 {
@@ -50,7 +53,6 @@ namespace TextureAtlas
         public bool Toggle = false;
         public bool Valid = true;
         public bool blnRevert = false;
-        public bool FullScreen = false;
         private bool IsScrolling = false;
         private bool blnLogTime = false;
         private bool blnDrawDebuggerClicked = false;
@@ -64,7 +66,6 @@ namespace TextureAtlas
         private bool AniTick = false;
         private bool Attack = false;
         private bool blnIsConfirming = false;
-        private bool blnInitialResize = true;
         private bool debugScreenDrawBgClickedBound = false;
         private bool pauseMenuExitBound = false;
         private bool pauseMenuResolutionBound = false;
@@ -72,17 +73,15 @@ namespace TextureAtlas
         private bool ResolutionConfirmBound = false;
         private bool ResolutionConfirmChangeBound = false;
         private bool ResolutionConfirmRevertBound = false;
+        private bool blnIsDirty = false;
+        private bool blnWindowSizeBound = false;
 
-        public int ScreenWidth;
-        public int ScreenHeight;
         public int dir = 1;
         public int DamageCounter = 0;
         public int Columns = 16;
         public int Rows = 16;
         public int TileWidth = 160;
         public int TileHeight = 160;
-        public int PreviousResolutionX;
-        public int PreviousResolutionY;
         private int DebugCycles = 40;
         private int IntDrop = 0;
         private int HP;
@@ -127,7 +126,7 @@ namespace TextureAtlas
 
         private LevelSet levelSet;
         private Level currentlevel;
-        
+
         private Rectangle TileRect = new Rectangle(0, 0, 80, 80);
 
         private float MouseOffSetx = 0f;
@@ -177,26 +176,30 @@ namespace TextureAtlas
             graphics = new GraphicsDeviceManager(this);
             GlobalVariables.gfx = graphics;
 
-            //User Setting To be Set from some form of storage
-
-            ScreenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; ;
-            ScreenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            GlobalVariables.ScreenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; ;
+            GlobalVariables.ScreenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
             //Index fullScreen and Graphics width/height until storage can be put in place to 
             //read values from storage
 
-            graphics.PreferredBackBufferWidth = ScreenWidth;
-            graphics.PreferredBackBufferHeight = ScreenHeight - 40;
+            GlobalVariables.LoadUserSettings();
 
-            FullScreen = false;
-
-            if (FullScreen)
+            if (GlobalVariables.UserSetWidth > 0 && GlobalVariables.UserSetHeight > 0)
             {
-                Toggle = true;
+                graphics.PreferredBackBufferWidth = GlobalVariables.UserSetWidth;
+                graphics.PreferredBackBufferHeight = GlobalVariables.UserSetHeight;
+                graphics.IsFullScreen = GlobalVariables.UserSetFullScreen;
+                GlobalVariables.FullScreen = GlobalVariables.UserSetFullScreen;
+            }
+            else
+            {
+                graphics.PreferredBackBufferWidth = GlobalVariables.ScreenWidth;
+                graphics.PreferredBackBufferHeight = GlobalVariables.ScreenHeight - 40;
+                graphics.IsFullScreen = false;
+                GlobalVariables.FullScreen = false;
             }
 
             this.Window.AllowUserResizing = true;
-            this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
             Content.RootDirectory = "Content";
             IsFixedTimeStep = true;
@@ -205,84 +208,84 @@ namespace TextureAtlas
 
         void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (blnInitialResize)
+            if (sender == this.Window)
             {
-                blnInitialResize = false;
-                return;
-            }
-            if (blnRevert)
-            {
-                //Reset Graphics State to Old Graphics State
-                GlobalVariables.NewestWidth = PreviousResolutionX;
-                GlobalVariables.NewHeight = PreviousResolutionY;
-                graphics.PreferredBackBufferWidth = PreviousResolutionX;
-                graphics.PreferredBackBufferHeight = PreviousResolutionY;
-
-                graphics.ApplyChanges();
-
-                if (graphics.IsFullScreen != FullScreen)
-                {
-                    Toggle = true;
-                }
-
-                //Flags are set to show Pause Menu at the Options Level
-                blnRevert = false;
-                blnIsConfirming = false;
+                //ClientWindow Resized
+                graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+                blnIsDirty = true;
             }
             else
             {
-                if (GlobalVariables.NewHeight > 0 && GlobalVariables.NewWidth > 0)
+                this.Window.ClientSizeChanged -= new EventHandler<EventArgs>(Window_ClientSizeChanged);
+                blnWindowSizeBound = false;
+                if (blnRevert)
                 {
-                    //In the Resolution Menu
-                    //Track Old Values
-                    PreviousResolutionX = graphics.PreferredBackBufferWidth;
-                    PreviousResolutionY = graphics.PreferredBackBufferHeight;
-                    FullScreen = graphics.IsFullScreen;
-
-                    //adjust screen size to fit screen
-                    if (!graphics.IsFullScreen)
+                    if (GlobalVariables.OldFullScreen != graphics.IsFullScreen)
                     {
-                        if (GlobalVariables.NewWidth >= ScreenWidth)
-                        {
-                            GlobalVariables.NewWidth = ScreenWidth;
-                        }
-                        if (GlobalVariables.NewHeight >= (ScreenHeight - 40))
-                        {
-                            GlobalVariables.NewHeight = (ScreenHeight - 40);
-                        }
-                    }
-
-                    //Set new Values
-                    GlobalVariables.NewestWidth = GlobalVariables.NewWidth;
-                    GlobalVariables.NewestHeight = GlobalVariables.NewHeight;
-                    graphics.PreferredBackBufferWidth = GlobalVariables.NewWidth;
-                    graphics.PreferredBackBufferHeight = GlobalVariables.NewHeight;
-
-                    GlobalVariables.NewWidth = 0;
-                    GlobalVariables.NewHeight = 0;
-
-                    graphics.ApplyChanges();
-
-                    if (graphics.IsFullScreen != GlobalVariables.FullScreen)
-                    {
-
                         Toggle = true;
-
                     }
+                    else
+                    {
+                        //Reset Graphics State to Old Graphics State
+                        graphics.PreferredBackBufferWidth = GlobalVariables.OldWidth;
+                        graphics.PreferredBackBufferHeight = GlobalVariables.OldHeight;
+                        blnIsDirty = true;
 
-                    //Show Dialogue to Keep or Revert
-
-                    blnIsConfirming = true;
-
+                        //Flags are set to show Pause Menu at the Options Level
+                        blnRevert = false;
+                        blnIsConfirming = false;
+                    }
                 }
                 else
                 {
-                    //ClientWindow Resized
-                    GlobalVariables.NewestWidth = Window.ClientBounds.Width;
-                    GlobalVariables.NewestHeight = Window.ClientBounds.Height;
-                    graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                    graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-                    graphics.ApplyChanges();
+                    if (graphics.IsFullScreen != GlobalVariables.FullScreen)
+                    {
+                        Toggle = true;
+                        GlobalVariables.OldFullScreen = graphics.IsFullScreen;
+                    }
+                    //Code for Video Option Changes
+                    if (GlobalVariables.NewHeight > 0 && GlobalVariables.NewWidth > 0)
+                    {
+                        //Track Old Values
+                        GlobalVariables.OldWidth = graphics.PreferredBackBufferWidth;
+                        GlobalVariables.OldHeight = graphics.PreferredBackBufferHeight;
+
+                        //adjust screen size to fit screen
+                        if (!GlobalVariables.FullScreen)
+                        {
+                            if (GlobalVariables.NewWidth >= GlobalVariables.ScreenWidth)
+                            {
+                                GlobalVariables.NewWidth = GlobalVariables.ScreenWidth;
+                            }
+                            if (GlobalVariables.NewHeight >= (GlobalVariables.ScreenHeight - 40))
+                            {
+                                GlobalVariables.NewHeight = (GlobalVariables.ScreenHeight - 40);
+                            }
+                        }
+                        else
+                        {
+                            if (GlobalVariables.NewWidth >= GlobalVariables.ScreenWidth)
+                            {
+                                GlobalVariables.NewWidth = GlobalVariables.ScreenWidth;
+                            }
+                            if (GlobalVariables.NewHeight >= GlobalVariables.ScreenHeight)
+                            {
+                                GlobalVariables.NewHeight = GlobalVariables.ScreenHeight;
+                            }
+                        }
+
+                        graphics.PreferredBackBufferWidth = GlobalVariables.NewWidth;
+                        graphics.PreferredBackBufferHeight = GlobalVariables.NewHeight;
+                        blnIsDirty = true;
+
+                        //Reset New Values To 0 to pass above validation
+                        GlobalVariables.NewWidth = 0;
+                        GlobalVariables.NewHeight = 0;
+
+                        //Show Dialogue to Keep or Revert
+                        blnIsConfirming = true;
+                    }
                 }
             }
         }
@@ -346,6 +349,11 @@ namespace TextureAtlas
 
         protected override void Update(GameTime gameTime)
         {
+            if (!blnWindowSizeBound)
+            {
+                this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
+                blnWindowSizeBound = true;
+            }
 
             #region StartTimer
 
@@ -1226,371 +1234,353 @@ namespace TextureAtlas
 
         protected override void Draw(GameTime gameTime)
         {
-
-            ResolutionConfirm = null;
-
-            try
+            if (blnLogTime && DrawTimes.Count < DebugCycles)
             {
-
-                if (blnLogTime && DrawTimes.Count < DebugCycles)
-                {
-                    DebugTimer = new Stopwatch();
-                    DebugTimer.Start();
-                }
-
-                GraphicsDevice.Clear(Color.CornflowerBlue);
-
-                spriteBatch.Begin();
-
-                if (blnLogTime && DrawTimes_BackGround.Count < DebugCycles)
-                {
-                    DebugTimer1 = new Stopwatch();
-                    DebugTimer1.Start();
-                }
-
-                //Draw BackGround
-
-                backGround.Draw(spriteBatch, graphics, Grass1, Rows, Columns, TileHeight, TileWidth, OffSet);
-
-                if (blnLogTime && DrawTimes_BackGround.Count < DebugCycles && DebugTimer1 != null)
-                {
-                    DebugTimer1.Stop();
-                    DrawTimes_BackGround.Add(DebugTimer1.ElapsedTicks);
-                    DebugTimer1.Reset();
-                }
-
-                spriteBatch.End();
-
-                if (blnLogTime && DrawTimes_Items.Count < DebugCycles)
-                {
-                    DebugTimer1 = new Stopwatch();
-                    DebugTimer1.Start();
-                }
-
-                foreach (Item item in DroppedItems)
-                {
-                    item.Draw(spriteBatch, item.location);
-                }
-
-                if (blnLogTime && DrawTimes_Items.Count < DebugCycles && DebugTimer1 != null)
-                {
-                    DebugTimer1.Stop();
-                    DrawTimes_Items.Add(DebugTimer1.ElapsedTicks);
-                    DebugTimer1.Reset();
-                }
-
-                if (blnLogTime && DrawTimes_Character.Count < DebugCycles)
-                {
-                    DebugTimer1 = new Stopwatch();
-                    DebugTimer1.Start();
-                }
-
-                //Draw character
-                animatedSprite.Draw(spriteBatch, position);
-
-                if (blnLogTime && DrawTimes_Character.Count < DebugCycles && DebugTimer1 != null)
-                {
-                    DebugTimer1.Stop();
-                    DrawTimes_Character.Add(DebugTimer1.ElapsedTicks);
-                    DebugTimer1.Reset();
-                }
-
-                if (blnLogTime && DrawTimes_Enemies.Count < DebugCycles)
-                {
-                    DebugTimer1 = new Stopwatch();
-                    DebugTimer1.Start();
-                }
-
-                //Draw Each Enemy in List
-                foreach (Enemy enemy in Enemies)
-                {
-                    enemy.Draw(spriteBatch, enemy.Location);
-                }
-
-                if (blnLogTime && DrawTimes_Enemies.Count < DebugCycles && DebugTimer1 != null)
-                {
-                    DebugTimer1.Stop();
-                    DrawTimes_Enemies.Add(DebugTimer1.ElapsedTicks);
-                    DebugTimer1.Reset();
-                }
-
-                if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles)
-                {
-                    DebugTimer1 = new Stopwatch();
-                    DebugTimer1.Start();
-                }
-
-                //Inventory Selector
-
-                spriteBatch.Begin();
-                if (blnOpen)
-                {
-                    spriteBatch.Draw(InvText, new Rectangle((int)InvPos.X, (int)InvPos.Y, 250, 300), Color.White);
-                    if (InvItems.Count > 0)
-                    {
-                        inventory.Draw(spriteBatch);
-                    }
-                }
-
-                if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles && DebugTimer1 != null)
-                {
-                    DebugTimer1.Stop();
-                    DrawTimes_Inventory.Add(DebugTimer1.ElapsedTicks);
-                    DebugTimer1.Reset();
-                }
-
-                if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles)
-                {
-                    DebugTimer1 = new Stopwatch();
-                    DebugTimer1.Start();
-                }
-
-                //Display Equipment
-
-                if (blnEquip)
-                {
-                    //Draw Empty Background for Character Equipment
-
-                    equipment.draw(spriteBatch, CharScrn, Font2);
-                }
-
-                if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles && DebugTimer1 != null)
-                {
-                    DebugTimer1.Stop();
-                    DrawTimes_Equipment.Add(DebugTimer1.ElapsedTicks);
-                    DebugTimer1.Reset();
-                }
-
-                if (blnLogTime && DrawTimes_Other.Count < DebugCycles)
-                {
-                    DebugTimer1 = new Stopwatch();
-                    DebugTimer1.Start();
-                }
-
-                //Display Message
-
-                if (blnDSP)
-                {
-                    MSG.draw(spriteBatch, gameTime, "Your Inventory Is Full!", fontMSG);
-                }
-
-                spriteBatch.Draw(buttonbg, new Rectangle(7, 1, 58, 12), Color.Black);
-                spriteBatch.Draw(buttonbg, new Rectangle(75, 1, 70, 12), Color.Black);
-                spriteBatch.DrawString(Font2, "Inventory", new Vector2(10, -2), Color.Beige);
-                spriteBatch.DrawString(Font2, "Equipment", new Vector2(80, -2), Color.Beige);
-                spriteBatch.End();
-
-                if (blnLogTime && DrawTimes_Other.Count < DebugCycles && DebugTimer1 != null)
-                {
-                    DebugTimer1.Stop();
-                    DrawTimes_Other.Add(DebugTimer1.ElapsedTicks);
-                    DebugTimer1.Reset();
-                }
-
-                if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles)
-                {
-                    DebugTimer1 = new Stopwatch();
-                    DebugTimer1.Start();
-                }
-
-                //Pause Menu
-
-                if (CurrentGameState == GameState.Inactive)
-                {
-
-                    SpriteFont TheFont = GlobalVariables.AutoFont(graphics, 1);
-
-                    if (blnIsConfirming)
-                    {
-                        if (ResolutionConfirm == null)
-                        {
-                            ResolutionConfirm = new PauseMenu();
-                            ResolutionConfirmChangeBound = false;
-                            ResolutionConfirmRevertBound = false;
-                        }
-
-                        if (!ResolutionConfirmChangeBound)
-                        {
-                            ResolutionConfirm.ConfirmChange += ConfirmChange;
-                            ResolutionConfirmChangeBound = true;
-                        }
-                        if (!ResolutionConfirmRevertBound)
-                        {
-                            ResolutionConfirm.RevertChange += RevertChange;
-                            ResolutionConfirmRevertBound = true;
-                        }
-
-                            ResolutionConfirm.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics, Font2, 2);
-
-                    }
-                    else
-                    {
-
-                        if (pauseMenu == null)
-                        {
-                            pauseMenu = new PauseMenu();
-                            pauseMenuBound = false;
-                            pauseMenuExitBound = false;
-                            pauseMenuResolutionBound = false;
-                        }
-                        if (!pauseMenuBound)
-                        {
-                            pauseMenu.Resume += ResumeGame;
-                            pauseMenuBound = true;
-                        }
-                        if (!pauseMenuExitBound)
-                        {
-                            pauseMenu.Exit += ExitGame;
-                            pauseMenuExitBound = false;
-                        }
-                        if (!pauseMenuResolutionBound)
-                        {
-                            pauseMenu.ResolutionChange += ResolutionChange;
-                            pauseMenuResolutionBound = false;
-                        }
-
-                        pauseMenu.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics, Font2, 1);
-                    }
-                }
-
-                if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles && DebugTimer1 != null)
-                {
-                    DebugTimer1.Stop();
-                    DrawTimes_PauseMenu.Add(DebugTimer1.ElapsedTicks);
-                    DebugTimer1.Reset();
-                }
-
-                //Custom Debugger
-                if (!debugScreenDrawBgClickedBound)
-                {
-                    debugScreenDraw.DrawBgClicked += DrawLogClicked;
-                    debugScreenDrawBgClickedBound = false;
-                }
-
-                if (blnLogTime)
-                {
-                    if (UpdateTimes.Count == DebugCycles)
-                    {
-                        debugScreenUpdate.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
-                    }
-                    else
-                    {
-                        debugScreenUpdate.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
-                    }
-                    if (DrawTimes.Count == DebugCycles)
-                    {
-                        debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
-                    }
-                    else
-                    {
-                        debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
-                    }
-                }
-                else if (blnDrawDebuggerClicked)
-                {
-                    if (DrawTimes_BackGround.Count < DebugCycles || DrawTimes_Character.Count < DebugCycles || DrawTimes_Enemies.Count < DebugCycles || DrawTimes_Equipment.Count < DebugCycles
-                         || DrawTimes_Inventory.Count < DebugCycles || DrawTimes_Items.Count < DebugCycles || DrawTimes_Other.Count < DebugCycles || DrawTimes_PauseMenu.Count < DebugCycles)
-                    {
-                        blnLogTime = true;
-                        debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, DrawTimes, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
-                    }
-                    else
-                    {
-                        if (DrawTimes_BackGround.Count == DebugCycles)
-                        {
-                            debugScreenDraw_BackGround.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_BackGround, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
-                        }
-                        if (DrawTimes_Character.Count == DebugCycles)
-                        {
-                            debugScreenDraw_Character.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Character, "Character.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
-                        }
-                        if (DrawTimes_Enemies.Count == DebugCycles)
-                        {
-                            debugScreenDraw_Enemies.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Enemies, "Enemy.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 3);
-                        }
-                        if (DrawTimes_Equipment.Count == DebugCycles)
-                        {
-                            debugScreenDraw_Equipment.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Equipment, "Equipment.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 4);
-                        }
-                        if (DrawTimes_Inventory.Count == DebugCycles)
-                        {
-                            debugScreenDraw_Inventory.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Inventory, "Inventory.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 5);
-                        }
-                        if (DrawTimes_Items.Count == DebugCycles)
-                        {
-                            debugScreenDraw_Items.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Items, "Item.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 6);
-                        }
-                        if (DrawTimes_Other.Count == DebugCycles)
-                        {
-                            debugScreenDraw_Other.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Other, "Other.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 7);
-                        }
-                        if (DrawTimes_PauseMenu.Count == DebugCycles)
-                        {
-                            debugScreenDraw_PauseMenu.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_PauseMenu, "Pause.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 8);
-                        }
-                    }
-                }
-
-                if (Toggle)
-                {
-                    PresentationParameters pp = new PresentationParameters();
-                    pp.BackBufferWidth = GlobalVariables.NewestWidth;
-                    pp.BackBufferHeight = GlobalVariables.NewestHeight;
-                    pp.IsFullScreen = GlobalVariables.NewestFullScreen;
-                    pp.DeviceWindowHandle = Window.Handle;
-                    graphics.GraphicsDevice.Reset(pp);
-                    graphics.ToggleFullScreen();
-                    Toggle = false;
-                }
-
-                base.Draw(gameTime);
-
-                if (blnLogTime && DrawTimes.Count < DebugCycles && DebugTimer != null)
-                {
-                    DebugTimer.Stop();
-                    DrawTimes.Add(DebugTimer.ElapsedTicks);
-                    DebugTimer.Reset();
-                }
-
+                DebugTimer = new Stopwatch();
+                DebugTimer.Start();
             }
 
-            catch (Exception ex)
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin();
+
+            if (blnLogTime && DrawTimes_BackGround.Count < DebugCycles)
             {
-                throw new Exception("Error in Game1.Draw " + ex.ToString());
+                DebugTimer1 = new Stopwatch();
+                DebugTimer1.Start();
             }
 
+            //Draw BackGround
+
+            backGround.Draw(spriteBatch, graphics, Grass1, Rows, Columns, TileHeight, TileWidth, OffSet);
+
+            if (blnLogTime && DrawTimes_BackGround.Count < DebugCycles && DebugTimer1 != null)
+            {
+                DebugTimer1.Stop();
+                DrawTimes_BackGround.Add(DebugTimer1.ElapsedTicks);
+                DebugTimer1.Reset();
+            }
+
+            spriteBatch.End();
+
+            if (blnLogTime && DrawTimes_Items.Count < DebugCycles)
+            {
+                DebugTimer1 = new Stopwatch();
+                DebugTimer1.Start();
+            }
+
+            foreach (Item item in DroppedItems)
+            {
+                item.Draw(spriteBatch, item.location);
+            }
+
+            if (blnLogTime && DrawTimes_Items.Count < DebugCycles && DebugTimer1 != null)
+            {
+                DebugTimer1.Stop();
+                DrawTimes_Items.Add(DebugTimer1.ElapsedTicks);
+                DebugTimer1.Reset();
+            }
+
+            if (blnLogTime && DrawTimes_Character.Count < DebugCycles)
+            {
+                DebugTimer1 = new Stopwatch();
+                DebugTimer1.Start();
+            }
+
+            //Draw character
+            animatedSprite.Draw(spriteBatch, position);
+
+            if (blnLogTime && DrawTimes_Character.Count < DebugCycles && DebugTimer1 != null)
+            {
+                DebugTimer1.Stop();
+                DrawTimes_Character.Add(DebugTimer1.ElapsedTicks);
+                DebugTimer1.Reset();
+            }
+
+            if (blnLogTime && DrawTimes_Enemies.Count < DebugCycles)
+            {
+                DebugTimer1 = new Stopwatch();
+                DebugTimer1.Start();
+            }
+
+            //Draw Each Enemy in List
+            foreach (Enemy enemy in Enemies)
+            {
+                enemy.Draw(spriteBatch, enemy.Location);
+            }
+
+            if (blnLogTime && DrawTimes_Enemies.Count < DebugCycles && DebugTimer1 != null)
+            {
+                DebugTimer1.Stop();
+                DrawTimes_Enemies.Add(DebugTimer1.ElapsedTicks);
+                DebugTimer1.Reset();
+            }
+
+            if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles)
+            {
+                DebugTimer1 = new Stopwatch();
+                DebugTimer1.Start();
+            }
+
+            //Inventory Selector
+
+            spriteBatch.Begin();
+            if (blnOpen)
+            {
+                spriteBatch.Draw(InvText, new Rectangle((int)InvPos.X, (int)InvPos.Y, 250, 300), Color.White);
+                if (InvItems.Count > 0)
+                {
+                    inventory.Draw(spriteBatch);
+                }
+            }
+
+            if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles && DebugTimer1 != null)
+            {
+                DebugTimer1.Stop();
+                DrawTimes_Inventory.Add(DebugTimer1.ElapsedTicks);
+                DebugTimer1.Reset();
+            }
+
+            if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles)
+            {
+                DebugTimer1 = new Stopwatch();
+                DebugTimer1.Start();
+            }
+
+            //Display Equipment
+
+            if (blnEquip)
+            {
+                //Draw Empty Background for Character Equipment
+
+                equipment.draw(spriteBatch, CharScrn, Font2);
+            }
+
+            if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles && DebugTimer1 != null)
+            {
+                DebugTimer1.Stop();
+                DrawTimes_Equipment.Add(DebugTimer1.ElapsedTicks);
+                DebugTimer1.Reset();
+            }
+
+            if (blnLogTime && DrawTimes_Other.Count < DebugCycles)
+            {
+                DebugTimer1 = new Stopwatch();
+                DebugTimer1.Start();
+            }
+
+            //Display Message
+
+            if (blnDSP)
+            {
+                MSG.draw(spriteBatch, gameTime, "Your Inventory Is Full!", fontMSG);
+            }
+
+            spriteBatch.Draw(buttonbg, new Rectangle(7, 1, 58, 12), Color.Black);
+            spriteBatch.Draw(buttonbg, new Rectangle(75, 1, 70, 12), Color.Black);
+            spriteBatch.DrawString(Font2, "Inventory", new Vector2(10, -2), Color.Beige);
+            spriteBatch.DrawString(Font2, "Equipment", new Vector2(80, -2), Color.Beige);
+            spriteBatch.End();
+
+            if (blnLogTime && DrawTimes_Other.Count < DebugCycles && DebugTimer1 != null)
+            {
+                DebugTimer1.Stop();
+                DrawTimes_Other.Add(DebugTimer1.ElapsedTicks);
+                DebugTimer1.Reset();
+            }
+
+            if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles)
+            {
+                DebugTimer1 = new Stopwatch();
+                DebugTimer1.Start();
+            }
+
+            //Pause Menu
+
+            if (CurrentGameState == GameState.Inactive)
+            {
+
+                SpriteFont TheFont = GlobalVariables.AutoFont(graphics, 1);
+
+                if (blnIsConfirming)
+                {
+                    if (ResolutionConfirm == null)
+                    {
+                        ResolutionConfirm = new PauseMenu();
+                        ResolutionConfirmChangeBound = false;
+                        ResolutionConfirmRevertBound = false;
+                    }
+
+                    if (!ResolutionConfirmChangeBound)
+                    {
+                        ResolutionConfirm.ConfirmChange += ConfirmChange;
+                        ResolutionConfirmChangeBound = true;
+                    }
+                    if (!ResolutionConfirmRevertBound)
+                    {
+                        ResolutionConfirm.RevertChange += RevertChange;
+                        ResolutionConfirmRevertBound = true;
+                    }
+
+                    ResolutionConfirm.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics, Font2, 2);
+
+                }
+                else
+                {
+
+                    if (pauseMenu == null)
+                    {
+                        pauseMenu = new PauseMenu();
+                        pauseMenuBound = false;
+                        pauseMenuExitBound = false;
+                        pauseMenuResolutionBound = false;
+                    }
+                    if (!pauseMenuBound)
+                    {
+                        pauseMenu.Resume += ResumeGame;
+                        pauseMenuBound = true;
+                    }
+                    if (!pauseMenuExitBound)
+                    {
+                        pauseMenu.Exit += ExitGame;
+                        pauseMenuExitBound = true;
+                    }
+                    if (!pauseMenuResolutionBound)
+                    {
+                        pauseMenu.ResolutionChange += ResolutionChange;
+                        pauseMenuResolutionBound = true;
+                    }
+
+                    pauseMenu.Draw(spriteBatch, imgPause, MenuBtn, TheFont, graphics, Font2, 1);
+                }
+            }
+
+            if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles && DebugTimer1 != null)
+            {
+                DebugTimer1.Stop();
+                DrawTimes_PauseMenu.Add(DebugTimer1.ElapsedTicks);
+                DebugTimer1.Reset();
+            }
+
+            //Custom Debugger
+            if (!debugScreenDrawBgClickedBound)
+            {
+                debugScreenDraw.DrawBgClicked += DrawLogClicked;
+                debugScreenDrawBgClickedBound = true;
+            }
+
+            if (blnLogTime)
+            {
+                if (UpdateTimes.Count == DebugCycles)
+                {
+                    debugScreenUpdate.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                }
+                else
+                {
+                    debugScreenUpdate.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, UpdateTimes, "Update()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                }
+                if (DrawTimes.Count == DebugCycles)
+                {
+                    debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
+                }
+                else
+                {
+                    debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, DrawTimes, "Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
+                }
+            }
+            else if (blnDrawDebuggerClicked)
+            {
+                if (DrawTimes_BackGround.Count < DebugCycles || DrawTimes_Character.Count < DebugCycles || DrawTimes_Enemies.Count < DebugCycles || DrawTimes_Equipment.Count < DebugCycles
+                     || DrawTimes_Inventory.Count < DebugCycles || DrawTimes_Items.Count < DebugCycles || DrawTimes_Other.Count < DebugCycles || DrawTimes_PauseMenu.Count < DebugCycles)
+                {
+                    blnLogTime = true;
+                    debugScreenDraw.Draw(spriteBatch, Font2, GlobalVariables.Font24, true, graphics, DrawTimes, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                }
+                else
+                {
+                    if (DrawTimes_BackGround.Count == DebugCycles)
+                    {
+                        debugScreenDraw_BackGround.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_BackGround, "BackGround.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 1);
+                    }
+                    if (DrawTimes_Character.Count == DebugCycles)
+                    {
+                        debugScreenDraw_Character.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Character, "Character.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 2);
+                    }
+                    if (DrawTimes_Enemies.Count == DebugCycles)
+                    {
+                        debugScreenDraw_Enemies.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Enemies, "Enemy.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 3);
+                    }
+                    if (DrawTimes_Equipment.Count == DebugCycles)
+                    {
+                        debugScreenDraw_Equipment.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Equipment, "Equipment.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 4);
+                    }
+                    if (DrawTimes_Inventory.Count == DebugCycles)
+                    {
+                        debugScreenDraw_Inventory.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Inventory, "Inventory.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 5);
+                    }
+                    if (DrawTimes_Items.Count == DebugCycles)
+                    {
+                        debugScreenDraw_Items.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Items, "Item.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 6);
+                    }
+                    if (DrawTimes_Other.Count == DebugCycles)
+                    {
+                        debugScreenDraw_Other.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_Other, "Other.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 7);
+                    }
+                    if (DrawTimes_PauseMenu.Count == DebugCycles)
+                    {
+                        debugScreenDraw_PauseMenu.Draw(spriteBatch, Font2, GlobalVariables.Font24, false, graphics, DrawTimes_PauseMenu, "Pause.Draw()", base.ToString(), DebugCycles.ToString(), MenuBtn, 8);
+                    }
+                }
+            }
+
+            if (blnIsDirty)
+            {
+                graphics.ApplyChanges();
+                blnIsDirty = false;
+            }
+
+            if (Toggle)
+            {
+                graphics.ToggleFullScreen();
+                Toggle = false;
+            }
+
+            base.Draw(gameTime);
+
+            if (blnLogTime && DrawTimes.Count < DebugCycles && DebugTimer != null)
+            {
+                DebugTimer.Stop();
+                DrawTimes.Add(DebugTimer.ElapsedTicks);
+                DebugTimer.Reset();
+            }
         }
 
         private void ConfirmChange(object sender, EventArgs e)
         {
             blnIsConfirming = false;
-            pauseMenu = new PauseMenu();
             pauseMenu.blnVideoOpen = true;
             pauseMenu.DefaultPauseOpen = false;
+            GlobalVariables.SaveUserSettings();
         }
 
         private void RevertChange(object sender, EventArgs e)
         {
+            pauseMenu.blnIndexValues = true;
             blnRevert = true;
             blnIsConfirming = false;
             Window_ClientSizeChanged(this, EventArgs.Empty);
-            pauseMenu = new PauseMenu();
             pauseMenu.blnVideoOpen = true;
             pauseMenu.DefaultPauseOpen = false;
-
+            GlobalVariables.SaveUserSettings();
         }
 
         private void ResolutionChange(object sender, EventArgs e)
         {
-            pauseMenu = null;
-
             Window_ClientSizeChanged(this, EventArgs.Empty);
         }
 
         public void ResumeGame(object sender, EventArgs eventArgs)
         {
-            pauseMenu = null;
-
             CurrentGameState = GameState.Active;
         }
 

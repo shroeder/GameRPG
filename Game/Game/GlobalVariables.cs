@@ -10,6 +10,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Starbound.RealmFactoryCore;
 using System.Timers;
+using Microsoft.Xna.Framework.Storage;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace TextureAtlas
 {
@@ -22,13 +25,20 @@ namespace TextureAtlas
         public static SpriteFont Font24 { get; set; }
         public static SpriteFont Font28 { get; set; }
         public static SpriteFont Font32 { get; set; }
-        public static Game1 TheGame { get; set; }
-        public static int NewHeight { get; set; }
+
+        public static int UserSetWidth { get; set; }
+        public static int UserSetHeight { get; set; }
+        public static int ScreenWidth { get; set; }
+        public static int ScreenHeight { get; set; }
+        public static int OldWidth { get; set; }
+        public static int OldHeight { get; set; }
         public static int NewWidth { get; set; }
-        public static int NewestWidth { get; set; }
-        public static int NewestHeight { get; set; }
-        public static bool NewestFullScreen { get; set; }
+        public static int NewHeight { get; set; }
+        public static bool OldFullScreen { get; set; }
         public static bool FullScreen { get; set; }
+        public static bool UserSetFullScreen { get; set; }
+
+        public static Game1 TheGame { get; set; }
         public static GraphicsDeviceManager gfx { get; set; }
 
         public static SpriteFont LargeFont
@@ -53,6 +63,73 @@ namespace TextureAtlas
             {
                 return AutoFont(gfx, 3);
             }
+        }
+        [Serializable]
+        public struct SaveSettings
+        {
+            public int ResolutionWidth;
+            public int ResolutionHeight;
+            public bool IsFullScreen;
+        }
+
+        public struct SaveGameData
+        {
+
+        }
+
+        public static void SaveUserSettings()
+        {
+            SaveSettings data = new SaveSettings();
+            data.ResolutionWidth = gfx.PreferredBackBufferWidth;
+            data.ResolutionHeight = gfx.PreferredBackBufferHeight;
+            data.IsFullScreen = gfx.IsFullScreen;
+
+            IAsyncResult result1 = StorageDevice.BeginShowSelector(PlayerIndex.One, null, null);
+            StorageDevice device = StorageDevice.EndShowSelector(result1);
+
+            IAsyncResult result = device.BeginOpenContainer("UserSettings", null, null);
+            result.AsyncWaitHandle.WaitOne();
+            StorageContainer container = device.EndOpenContainer(result);
+            result.AsyncWaitHandle.Close();
+            string filename = "settings.sav";
+
+            if (container.FileExists(filename))
+            {
+                container.DeleteFile(filename);
+            }
+
+            Stream stream = container.CreateFile(filename);
+            XmlSerializer serializer = new XmlSerializer(typeof(SaveSettings));
+            serializer.Serialize(stream, data);
+            stream.Close();
+            container.Dispose();
+
+        }
+
+        public static void LoadUserSettings()
+        {
+            IAsyncResult result1 = StorageDevice.BeginShowSelector(PlayerIndex.One, null, null);
+            StorageDevice device = StorageDevice.EndShowSelector(result1);
+
+            IAsyncResult result = device.BeginOpenContainer("UserSettings", null, null);
+            result.AsyncWaitHandle.WaitOne();
+            StorageContainer container = device.EndOpenContainer(result);
+            result.AsyncWaitHandle.Close();
+            string filename = "settings.sav";
+            if (!container.FileExists(filename))
+            {
+                container.Dispose();
+                return;
+            }
+            Stream stream = container.OpenFile(filename, FileMode.Open);
+            XmlSerializer serializer = new XmlSerializer(typeof(SaveSettings));
+            SaveSettings data = (SaveSettings)serializer.Deserialize(stream);
+            stream.Close();
+            container.Dispose();
+
+            UserSetWidth = data.ResolutionWidth;
+            UserSetHeight = data.ResolutionHeight;
+            UserSetFullScreen = data.IsFullScreen;
         }
 
         public static SpriteFont AutoFont(GraphicsDeviceManager gfx, int scale)

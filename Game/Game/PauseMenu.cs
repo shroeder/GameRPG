@@ -15,7 +15,7 @@ namespace TextureAtlas
 {
     class PauseMenu
     {
-
+        public bool blnIndexValues = false;
         public bool blnOptionsOpen = false;
         public bool DefaultPauseOpen = true;
         public bool blnVideoOpen = false;
@@ -70,18 +70,6 @@ namespace TextureAtlas
 
         public void Draw(SpriteBatch spriteBatch, Texture2D img, Texture2D MenuBtn, SpriteFont font, GraphicsDeviceManager gfx, SpriteFont smallfont, int MenuType)
         {
-            mnuBtnAcceptChanges = null;
-            mnuBtnCancel = null;
-            mnuBtnConfirm = null;
-            mnuBtnExit = null;
-            mnuBtnOptions = null;
-            mnuBtnResume = null;
-            mnuBtnRevert = null;
-            mnuBtnVideo = null;
-            mnuBtnAudio = null;
-            mnuBtnGamePlay = null;
-            mnuBtnBack = null;
-
             switch (MenuType)
             {
 
@@ -166,6 +154,92 @@ namespace TextureAtlas
                                 chkNoBound = false;
                             }
 
+                            if (blnIndexValues)
+                            {
+                                if (GlobalVariables.UserSetFullScreen)
+                                {
+                                    chkYes.Check();
+                                    chkNo.Uncheck();
+                                }
+                                else
+                                {
+                                    chkNo.Check();
+                                    chkYes.Uncheck();
+                                }
+                                double ht;
+                                double wdt;
+                                if (GlobalVariables.UserSetHeight > 0)
+                                {
+                                    ht = Convert.ToDouble(GlobalVariables.UserSetHeight);
+                                }
+                                else
+                                {
+                                    ht = Convert.ToDouble(GlobalVariables.ScreenHeight);
+                                }
+                                if (GlobalVariables.UserSetWidth > 0)
+                                {
+                                    wdt = Convert.ToDouble(GlobalVariables.UserSetWidth);
+                                }
+                                else
+                                {
+                                    wdt = Convert.ToDouble(GlobalVariables.ScreenWidth);
+                                }
+                                double dbl = (wdt / ht);
+                                string ratio = Convert.ToString(dbl);
+                                if (ratio.Contains("1.33333"))
+                                {
+                                    slider1.Index = 0;
+                                }
+                                else if (ratio.Contains("1.77777"))
+                                {
+                                    slider1.Index = 1;
+                                }
+                                else if (ratio.Contains("1.6"))
+                                {
+                                    slider1.Index = 2;
+                                }
+                                string sliderRes = Convert.ToString(GlobalVariables.ScreenWidth) + " X " + Convert.ToString(GlobalVariables.ScreenHeight);
+                                int i = 0;
+                                foreach (string str in Resolution_43)
+                                {
+                                    if (str == sliderRes)
+                                    {
+                                        slider.Index = i;
+                                    }
+                                    i += 1;
+                                }
+                                i = 0;
+                                foreach (string str in Resolution_169)
+                                {
+                                    if (str == sliderRes)
+                                    {
+                                        slider.Index = i;
+                                    }
+                                    i += 1;
+                                }
+                                i = 0;
+                                foreach (string str in Resolution_1610)
+                                {
+                                    if (str == sliderRes)
+                                    {
+                                        slider.Index = i;
+                                    }
+                                    i += 1;
+                                }
+                                blnIndexValues = false;
+                            }
+
+                            if (!chkNoBound)
+                            {
+                                chkNo.ClickedChecked += ChkNo_Checked;
+                                chkNoBound = true;
+                            }
+                            if (!blnChkYesBound)
+                            {
+                                chkYes.ClickedChecked += ChkYes_Checked;
+                                blnChkYesBound = true;
+                            }
+
                             double TextWidth = font.MeasureString("Resolution").X;
                             double TextHeight = font.MeasureString("Resolution").Y;
                             int SliderWidth = (int)(gfx.PreferredBackBufferWidth * .3);
@@ -208,6 +282,7 @@ namespace TextureAtlas
                             GlobalVariables.NewWidth = Convert.ToInt32(Res[0].Trim());
                             GlobalVariables.NewHeight = Convert.ToInt32(Res[1].Trim());
 
+                            //Wait for mouse release to bind events prevents one click on two buttons drawn one after another
                             if (oms.LeftButton == ButtonState.Released)
                             {
                                 if (!mnuBtnCancelBound)
@@ -219,16 +294,6 @@ namespace TextureAtlas
                                 {
                                     mnuBtnAcceptChanges.ButtonClicked += mnuBtnAcceptChanges_Clicked;
                                     mnuBtnAcceptChangesBound = true;
-                                }
-                                if (!chkNoBound)
-                                {
-                                    chkNo.ClickedChecked += ChkNo_Checked;
-                                    chkNoBound = true;
-                                }
-                                if (!blnChkYesBound)
-                                {
-                                    chkYes.ClickedChecked += ChkYes_Checked;
-                                    blnChkYesBound = true;
                                 }
                             }
 
@@ -424,6 +489,7 @@ namespace TextureAtlas
 
         public void mnuBtnVideo_Clicked(object sender, EventArgs eventArgs)
         {
+            blnIndexValues = true;
             blnVideoOpen = true;
         }
 
@@ -441,6 +507,5 @@ namespace TextureAtlas
         {
             DefaultPauseOpen = true;
         }
-
     }
 }

@@ -94,6 +94,11 @@ namespace TextureAtlas
             CheckState = CheckedState.UnChecked;
         }
 
+        public void Check()
+        {
+            CheckState = CheckedState.Checked;
+        }
+
         public bool IsChecked()
         {
             if (CheckState == CheckedState.Checked)
