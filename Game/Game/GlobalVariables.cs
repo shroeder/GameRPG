@@ -37,6 +37,10 @@ namespace TextureAtlas
         public static bool OldFullScreen { get; set; }
         public static bool FullScreen { get; set; }
         public static bool UserSetFullScreen { get; set; }
+        public static bool ShowEnemyNames { get; set; }
+        public static bool ShowEnemyBars { get; set; }
+        public static bool ShowItemNames { get; set; }
+        public static bool ShowEnemyDamage { get; set; }
 
         public static Game1 TheGame { get; set; }
         public static GraphicsDeviceManager gfx { get; set; }
@@ -70,6 +74,10 @@ namespace TextureAtlas
             public int ResolutionWidth;
             public int ResolutionHeight;
             public bool IsFullScreen;
+            public bool blnShowEnemyNames;
+            public bool blnShowEnemyBars;
+            public bool blnShowItemNames;
+            public bool blnShowEnemyDamage;
         }
 
         public struct SaveGameData
@@ -80,9 +88,14 @@ namespace TextureAtlas
         public static void SaveUserSettings()
         {
             SaveSettings data = new SaveSettings();
+
             data.ResolutionWidth = gfx.PreferredBackBufferWidth;
             data.ResolutionHeight = gfx.PreferredBackBufferHeight;
             data.IsFullScreen = gfx.IsFullScreen;
+            data.blnShowEnemyBars = ShowEnemyBars;
+            data.blnShowEnemyNames = ShowEnemyNames;
+            data.blnShowItemNames = ShowItemNames;
+            data.blnShowEnemyDamage = ShowEnemyDamage;
 
             IAsyncResult result1 = StorageDevice.BeginShowSelector(PlayerIndex.One, null, null);
             StorageDevice device = StorageDevice.EndShowSelector(result1);
@@ -130,6 +143,10 @@ namespace TextureAtlas
             UserSetWidth = data.ResolutionWidth;
             UserSetHeight = data.ResolutionHeight;
             UserSetFullScreen = data.IsFullScreen;
+            ShowEnemyBars = data.blnShowEnemyBars;
+            ShowEnemyNames = data.blnShowEnemyNames;
+            ShowItemNames = data.blnShowItemNames;
+
         }
 
         public static SpriteFont AutoFont(GraphicsDeviceManager gfx, int scale)

@@ -70,7 +70,6 @@ namespace TextureAtlas
         private bool pauseMenuExitBound = false;
         private bool pauseMenuResolutionBound = false;
         private bool pauseMenuBound = false;
-        private bool ResolutionConfirmBound = false;
         private bool ResolutionConfirmChangeBound = false;
         private bool ResolutionConfirmRevertBound = false;
         private bool blnIsDirty = false;
@@ -373,6 +372,10 @@ namespace TextureAtlas
                 return;
             }
 
+            if (pauseMenu != null)
+            {
+                pauseMenu.Update();
+            }
             //Variable for "New" Keyboard State
             kState = NState;
             NState = Keyboard.GetState();
@@ -440,6 +443,7 @@ namespace TextureAtlas
                     }
                     else
                     {
+                        pauseMenu = null;
                         CurrentGameState = GameState.Active;
                     }
                 }

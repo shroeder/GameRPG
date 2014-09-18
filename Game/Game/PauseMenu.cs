@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -10,11 +11,15 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Starbound.RealmFactoryCore;
 using System.Timers;
+using System.IO;
+using System.Xml.Serialization;
+using Microsoft.Xna.Framework.Storage;
 
 namespace TextureAtlas
 {
     class PauseMenu
     {
+        public bool blnCanBind = false;
         public bool blnIndexValues = false;
         public bool blnOptionsOpen = false;
         public bool DefaultPauseOpen = true;
@@ -34,6 +39,14 @@ namespace TextureAtlas
         private bool mnuBtnVideoBound = false;
         private bool mnuBtnOptionsBound = false;
         private bool mnuBtnAcceptChangesBound = false;
+        private bool mnuGamePlayConfirmBound = false;
+        private bool mnuGamePlayCancelBound = false;
+        private bool StartTimer = false;
+
+        //Have to use a timer for when clicked the options button to prevent the audio button from clicking immediately
+        //optimize later for sure, for now its 250 ms which ensures a few updates take place before allowing the 
+        //audio event to have a handler
+        public Stopwatch tmr = new Stopwatch();
 
         public MouseState ms;
         public MouseState oms;
@@ -61,23 +74,43 @@ namespace TextureAtlas
         MenuButton mnuBtnCancel;
         MenuButton mnuBtnConfirm;
         MenuButton mnuBtnRevert;
+        MenuButton mnuGamePlayConfirm;
+        MenuButton mnuGamePlayCancel;
 
         CheckBox chkYes;
         CheckBox chkNo;
-        
+        CheckBox chkShowItemNames;
+        CheckBox chkShowEnemyNames;
+        CheckBox chkShowEnemyBars;
+        CheckBox chkShowEnemyDamage;
+
         Slider slider = new Slider();
         Slider slider1 = new Slider();
 
+        public void Update()
+        {
+            oms = ms;
+            ms = Mouse.GetState();
+        }
+
         public void Draw(SpriteBatch spriteBatch, Texture2D img, Texture2D MenuBtn, SpriteFont font, GraphicsDeviceManager gfx, SpriteFont smallfont, int MenuType)
         {
+            if (StartTimer)
+            {
+                StartTimer = false;
+                tmr.Start();
+            }
+            if (tmr.ElapsedMilliseconds > 250)
+            {
+                tmr.Stop();
+                tmr.Reset();
+                blnCanBind = true;
+            }
             switch (MenuType)
             {
 
                 //Draw PauseMenu
                 case 1:
-
-                    oms = ms;
-                    ms = Mouse.GetState();
 
                     Rectangle Rect = new Rectangle(0, 0, gfx.PreferredBackBufferWidth, gfx.PreferredBackBufferHeight);
 
@@ -120,7 +153,7 @@ namespace TextureAtlas
                         if (!mnuBtnOptionsBound)
                         {
                             mnuBtnOptions.ButtonClicked += mnuBtnOptions_Clicked;
-                            mnuBtnOptionsBound = false;
+                            mnuBtnOptionsBound = true;
                         }
 
                         mnuBtnResume.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy, width, height), "Resume", font);
@@ -143,7 +176,7 @@ namespace TextureAtlas
                                 mnuBtnAcceptChanges = new MenuButton();
                                 mnuBtnAcceptChangesBound = false;
                             }
-                            if(chkYes == null)
+                            if (chkYes == null)
                             {
                                 chkYes = new CheckBox();
                                 blnChkYesBound = false;
@@ -282,19 +315,15 @@ namespace TextureAtlas
                             GlobalVariables.NewWidth = Convert.ToInt32(Res[0].Trim());
                             GlobalVariables.NewHeight = Convert.ToInt32(Res[1].Trim());
 
-                            //Wait for mouse release to bind events prevents one click on two buttons drawn one after another
-                            if (oms.LeftButton == ButtonState.Released)
+                            if (!mnuBtnCancelBound)
                             {
-                                if (!mnuBtnCancelBound)
-                                {
-                                    mnuBtnCancel.ButtonClicked += mnuBtnCancel_Clicked;
-                                    mnuBtnCancelBound = true;
-                                }
-                                if (!mnuBtnAcceptChangesBound)
-                                {
-                                    mnuBtnAcceptChanges.ButtonClicked += mnuBtnAcceptChanges_Clicked;
-                                    mnuBtnAcceptChangesBound = true;
-                                }
+                                mnuBtnCancel.ButtonClicked += mnuBtnCancel_Clicked;
+                                mnuBtnCancelBound = true;
+                            }
+                            if (!mnuBtnAcceptChangesBound)
+                            {
+                                mnuBtnAcceptChanges.ButtonClicked += mnuBtnAcceptChanges_Clicked;
+                                mnuBtnAcceptChangesBound = true;
                             }
 
                             spriteBatch.Begin();
@@ -307,14 +336,94 @@ namespace TextureAtlas
                             chkNo.draw(spriteBatch, MenuBtn, (int)((gfx.PreferredBackBufferWidth / 2) + gfx.PreferredBackBufferWidth * .05), (int)(gfx.PreferredBackBufferHeight * .45), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "No", gfx);
 
                             mnuBtnAcceptChanges.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .45), width, height), "Accept", font);
-                            mnuBtnCancel.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .60), width, height), "Cancel", font);
+                            mnuBtnCancel.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .60), width, height), "Back", font);
 
                         }
                         else if (blnAudioOpen) { }
-                        else if (blnGameplayOpen) { }
+                        else if (blnGameplayOpen)
+                        {
+                            if (mnuGamePlayConfirm == null)
+                            {
+                                mnuGamePlayConfirm = new MenuButton();
+                                mnuGamePlayConfirmBound = false;
+                            }
+                            if (mnuGamePlayCancel == null)
+                            {
+                                mnuGamePlayCancel = new MenuButton();
+                                mnuGamePlayCancelBound = false;
+                            }
+                            if (!mnuGamePlayCancelBound)
+                            {
+                                mnuGamePlayCancel.ButtonClicked += mnuGamePlayCancel_Clicked;
+                                mnuGamePlayCancelBound = true;
+                            }
+                            if (!mnuGamePlayConfirmBound)
+                            {
+                                mnuGamePlayConfirm.ButtonClicked += mnuGamePlayConfirm_Clicked;
+                                mnuGamePlayConfirmBound = true;
+                            }
+                            if (chkShowItemNames == null)
+                            {
+                                chkShowItemNames = new CheckBox();
+                            }
+                            if (chkShowEnemyBars == null)
+                            {
+                                chkShowEnemyBars = new CheckBox();
+                            }
+                            if (chkShowEnemyNames == null)
+                            {
+                                chkShowEnemyNames = new CheckBox();
+                            }
+                            if (chkShowEnemyDamage == null)
+                            {
+                                chkShowEnemyDamage = new CheckBox();
+                            }
+                            chkShowItemNames.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2), (int)(gfx.PreferredBackBufferHeight * .10), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Item Names", gfx);
+                            chkShowEnemyNames.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2), (int)(gfx.PreferredBackBufferHeight * .15), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy Names", gfx);
+                            chkShowEnemyBars.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2), (int)(gfx.PreferredBackBufferHeight * .20), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy HP Bars", gfx);
+                            chkShowEnemyDamage.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2), (int)(gfx.PreferredBackBufferHeight * .25), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy Damage", gfx);
+                            mnuGamePlayConfirm.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .45), width, height), "Confirm", font);
+                            mnuGamePlayCancel.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .60), width, height), "Back", font);
+                            if (blnIndexValues)
+                            {
+                                if (GlobalVariables.ShowItemNames)
+                                {
+                                    chkShowItemNames.Check();
+                                }
+                                else
+                                {
+                                    chkShowItemNames.Uncheck();
+                                }
+                                if (GlobalVariables.ShowEnemyBars)
+                                {
+                                    chkShowEnemyBars.Check();
+                                }
+                                else
+                                {
+                                    chkShowEnemyBars.Uncheck();
+                                }
+                                if (GlobalVariables.ShowEnemyNames)
+                                {
+                                    chkShowEnemyNames.Check();
+                                }
+                                else
+                                {
+                                    chkShowEnemyNames.Uncheck();
+                                }
+                                if (GlobalVariables.ShowEnemyDamage)
+                                {
+                                    chkShowEnemyDamage.Check();
+                                }
+                                else
+                                {
+                                    chkShowEnemyDamage.Uncheck();
+                                }
+                            }
+                            blnIndexValues = false;
+                        }
                         else if (blnOptionsOpen)
                         {
-                            
+
                             if (mnuBtnVideo == null)
                             {
                                 mnuBtnVideo = new MenuButton();
@@ -335,29 +444,32 @@ namespace TextureAtlas
                                 mnuBtnBack = new MenuButton();
                                 mnuBtnBackBound = false;
                             }
-                            //keeps event from firing from previous menu, slowclick
-                            if (oms.LeftButton == ButtonState.Released)
+
+                            if (blnCanBind)
                             {
-                                if (!mnuBtnVideoBound)
-                                {
-                                    mnuBtnVideo.ButtonClicked += mnuBtnVideo_Clicked;
-                                    mnuBtnVideoBound = true;
-                                }
+                                blnCanBind = false;
                                 if (!mnuBtnAudioBound)
                                 {
                                     mnuBtnAudio.ButtonClicked += mnuBtnAudio_Clicked;
                                     mnuBtnAudioBound = true;
                                 }
-                                if (!mnuBtnGamePlayBound)
-                                {
-                                    mnuBtnGamePlay.ButtonClicked += mnuBtnGamePlay_Clicked;
-                                    mnuBtnGamePlayBound = true;
-                                }
-                                if (!mnuBtnBackBound)
-                                {
-                                    mnuBtnBack.ButtonClicked += mnuBtnBack_Clicked;
-                                    mnuBtnBackBound = true;
-                                }
+                            }
+
+                            if (!mnuBtnVideoBound)
+                            {
+                                mnuBtnVideo.ButtonClicked += mnuBtnVideo_Clicked;
+                                mnuBtnVideoBound = true;
+                            }
+
+                            if (!mnuBtnGamePlayBound)
+                            {
+                                mnuBtnGamePlay.ButtonClicked += mnuBtnGamePlay_Clicked;
+                                mnuBtnGamePlayBound = true;
+                            }
+                            if (!mnuBtnBackBound)
+                            {
+                                mnuBtnBack.ButtonClicked += mnuBtnBack_Clicked;
+                                mnuBtnBackBound = true;
                             }
 
                             mnuBtnVideo.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy, width, height), "Video", font);
@@ -375,7 +487,7 @@ namespace TextureAtlas
                     oms = ms;
                     ms = Mouse.GetState();
 
-                    Rect = new Rectangle(((int)(gfx.PreferredBackBufferWidth/2) - (int)(gfx.PreferredBackBufferWidth * .3)), ((int)(gfx.PreferredBackBufferHeight/2) - (int)(gfx.PreferredBackBufferHeight * .25)), (int)(gfx.PreferredBackBufferWidth * .55), (int)(gfx.PreferredBackBufferHeight * .30));
+                    Rect = new Rectangle(((int)(gfx.PreferredBackBufferWidth / 2) - (int)(gfx.PreferredBackBufferWidth * .3)), ((int)(gfx.PreferredBackBufferHeight / 2) - (int)(gfx.PreferredBackBufferHeight * .25)), (int)(gfx.PreferredBackBufferWidth * .55), (int)(gfx.PreferredBackBufferHeight * .30));
 
                     spriteBatch.Begin();
                     spriteBatch.Draw(MenuBtn, Rect, Color.SlateGray);
@@ -415,6 +527,51 @@ namespace TextureAtlas
                     break;
 
             }
+        }
+
+        private void mnuGamePlayConfirm_Clicked(object sender, EventArgs e)
+        {
+            if (chkShowEnemyBars.IsChecked())
+            {
+                GlobalVariables.ShowEnemyBars = true;
+            }
+            else
+            {
+                GlobalVariables.ShowEnemyBars = false;
+            }
+            if (chkShowEnemyNames.IsChecked())
+            {
+                GlobalVariables.ShowEnemyNames = true;
+            }
+            else
+            {
+                GlobalVariables.ShowEnemyNames = false;
+            }
+            if (chkShowItemNames.IsChecked())
+            {
+                GlobalVariables.ShowItemNames = true;
+            }
+            else
+            {
+                GlobalVariables.ShowItemNames = false;
+            }
+            if (chkShowEnemyDamage.IsChecked())
+            {
+                GlobalVariables.ShowEnemyDamage = true;
+            }
+            else
+            {
+                GlobalVariables.ShowEnemyDamage = false;
+            }
+            GlobalVariables.SaveUserSettings();
+            blnGameplayOpen = false;
+            blnOptionsOpen = true;
+        }
+
+        private void mnuGamePlayCancel_Clicked(object sender, EventArgs e)
+        {
+            blnGameplayOpen = false;
+            blnOptionsOpen = true;
         }
 
         private void ChkYes_Checked(object sender, EventArgs e)
@@ -485,6 +642,7 @@ namespace TextureAtlas
         {
             DefaultPauseOpen = false;
             blnOptionsOpen = true;
+            StartTimer = true;
         }
 
         public void mnuBtnVideo_Clicked(object sender, EventArgs eventArgs)
@@ -500,11 +658,13 @@ namespace TextureAtlas
 
         public void mnuBtnGamePlay_Clicked(object sender, EventArgs evenArgs)
         {
+            blnIndexValues = true;
             blnGameplayOpen = true;
         }
 
         public void mnuBtnBack_Clicked(object sender, EventArgs eventArgs)
         {
+            mnuBtnOptions.ButtonClicked -= mnuBtnVideo_Clicked;
             DefaultPauseOpen = true;
         }
     }

@@ -31,8 +31,6 @@ namespace TextureAtlas
         public string affixdesc;
         public string ItemName;
         public string ItemRarity;
-        //default true for now
-        public Boolean ShowName = true;
         public List<int> affixvaluelist = new List<int>();
         public List<string> affixstatlist = new List<string>();
         public List<string> affixdesclist = new List<string>();
@@ -246,7 +244,7 @@ namespace TextureAtlas
             }
             
 
-            if (ShowName == true)
+            if (GlobalVariables.ShowItemNames)
             {
                 if (type == 1)
                 {

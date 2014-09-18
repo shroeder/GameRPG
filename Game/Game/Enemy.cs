@@ -290,45 +290,52 @@ namespace TextureAtlas
             spriteBatch.Begin();
             
             location.Y -= 1;
-            if (blnDie == false)
+            if (GlobalVariables.ShowEnemyBars)
             {
-                if ((hp/tothp) == 1)
-                    spriteBatch.Draw(HpBar, Rec1, Color.White);
-                if ((hp / tothp) >= .75 && (hp/tothp) < 1)
-                    spriteBatch.Draw(HPBAR75, new Rectangle((int)location.X, (int)location.Y, HPBAR75.Width, HPBAR75.Height), Color.White);
-                if ((hp / tothp) >= .50 && (hp / tothp) < .75)
-                    spriteBatch.Draw(HPBARHALF, new Rectangle((int)location.X, (int)location.Y, HPBARHALF.Width, HPBARHALF.Height), Color.White);
-                if ((hp / tothp) >= .25 && (hp / tothp) < .50)
-                    spriteBatch.Draw(HPBAR40, new Rectangle((int)location.X, (int)location.Y, HPBAR40.Width, HPBAR40.Height), Color.White);
-                if ((hp / tothp) >= 0 && (hp / tothp) < .25)
-                    spriteBatch.Draw(HPBARQUARTER, new Rectangle((int)location.X, (int)location.Y, HPBARQUARTER.Width, HPBARQUARTER.Height), Color.White);
-                spriteBatch.DrawString(font, hp + "/" + tothp, location, Color.Black);
-                if (blnShowDamage)
+                if (blnDie == false)
                 {
-                    if (m >= 2 && m <= 100)
-                    {
-                                        spriteBatch.DrawString(font2, DamageCounter.ToString(), new Vector2(location.X, ((location.Y - 40) - m)), Color.Red);
-                    m += (m / 2);
-                    }
-                    else
-                    {
-                        m = 2;
-                        blnShowDamage = false;
-                        DamageCounter = 0;
-                    }
+                    if ((hp / tothp) == 1)
+                        spriteBatch.Draw(HpBar, Rec1, Color.White);
+                    if ((hp / tothp) >= .75 && (hp / tothp) < 1)
+                        spriteBatch.Draw(HPBAR75, new Rectangle((int)location.X, (int)location.Y, HPBAR75.Width, HPBAR75.Height), Color.White);
+                    if ((hp / tothp) >= .50 && (hp / tothp) < .75)
+                        spriteBatch.Draw(HPBARHALF, new Rectangle((int)location.X, (int)location.Y, HPBARHALF.Width, HPBARHALF.Height), Color.White);
+                    if ((hp / tothp) >= .25 && (hp / tothp) < .50)
+                        spriteBatch.Draw(HPBAR40, new Rectangle((int)location.X, (int)location.Y, HPBAR40.Width, HPBAR40.Height), Color.White);
+                    if ((hp / tothp) >= 0 && (hp / tothp) < .25)
+                        spriteBatch.Draw(HPBARQUARTER, new Rectangle((int)location.X, (int)location.Y, HPBARQUARTER.Width, HPBARQUARTER.Height), Color.White);
+                    spriteBatch.DrawString(font, hp + "/" + tothp, location, Color.Black);
                 }
             }
-            
-            if ((tothp / maxhp) >= 0 && (tothp / maxhp) < .75)
-                spriteBatch.DrawString(font2, name, new Vector2(location.X,(location.Y - 20)), Color.Black);
-            if ((tothp / maxhp) >= .75 && (tothp / maxhp) < .9)
-                spriteBatch.DrawString(font2, "Hard " + name, new Vector2(location.X - 10, (location.Y - 20)), Color.Green);
-            if ((tothp / maxhp) >= .9 && (tothp / maxhp) < .95)
-                spriteBatch.DrawString(font2, "Elite " + name, new Vector2(location.X - 10, (location.Y - 20)), Color.Yellow);
-            if ((tothp / maxhp) >= .95 && (tothp / maxhp) < 1)
-                spriteBatch.DrawString(font2, "Epic " + name, new Vector2(location.X - 10, (location.Y - 20)), Color.Orange);
-            if ((tothp / maxhp) == 1)
-                spriteBatch.DrawString(font2, "Godly " + name, new Vector2(location.X - 10, (location.Y - 20)), Color.White);
+
+            if (blnShowDamage && !blnDie && GlobalVariables.ShowEnemyDamage)
+            {
+                if (m >= 2 && m <= 100)
+                {
+                    spriteBatch.DrawString(font2, DamageCounter.ToString(), new Vector2(location.X, ((location.Y - 40) - m)), Color.Red);
+                    m += (m / 2);
+                }
+                else
+                {
+                    m = 2;
+                    blnShowDamage = false;
+                    DamageCounter = 0;
+                }
+            }
+
+            if (GlobalVariables.ShowEnemyNames)
+            {
+                if ((tothp / maxhp) >= 0 && (tothp / maxhp) < .75)
+                    spriteBatch.DrawString(font2, name, new Vector2(location.X, (location.Y - 20)), Color.Black);
+                if ((tothp / maxhp) >= .75 && (tothp / maxhp) < .9)
+                    spriteBatch.DrawString(font2, "Hard " + name, new Vector2(location.X - 10, (location.Y - 20)), Color.Green);
+                if ((tothp / maxhp) >= .9 && (tothp / maxhp) < .95)
+                    spriteBatch.DrawString(font2, "Elite " + name, new Vector2(location.X - 10, (location.Y - 20)), Color.Yellow);
+                if ((tothp / maxhp) >= .95 && (tothp / maxhp) < 1)
+                    spriteBatch.DrawString(font2, "Epic " + name, new Vector2(location.X - 10, (location.Y - 20)), Color.Orange);
+                if ((tothp / maxhp) == 1)
+                    spriteBatch.DrawString(font2, "Godly " + name, new Vector2(location.X - 10, (location.Y - 20)), Color.White);
+            }
 
             if (blnDie)
             {
