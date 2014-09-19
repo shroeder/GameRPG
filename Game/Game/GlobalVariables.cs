@@ -89,8 +89,8 @@ namespace TextureAtlas
         {
             SaveSettings data = new SaveSettings();
 
-            data.ResolutionWidth = gfx.PreferredBackBufferWidth;
-            data.ResolutionHeight = gfx.PreferredBackBufferHeight;
+            data.ResolutionWidth = GlobalVariables.UserSetWidth;
+            data.ResolutionHeight = GlobalVariables.UserSetHeight;
             data.IsFullScreen = gfx.IsFullScreen;
             data.blnShowEnemyBars = ShowEnemyBars;
             data.blnShowEnemyNames = ShowEnemyNames;
@@ -146,6 +146,7 @@ namespace TextureAtlas
             ShowEnemyBars = data.blnShowEnemyBars;
             ShowEnemyNames = data.blnShowEnemyNames;
             ShowItemNames = data.blnShowItemNames;
+            ShowEnemyDamage = data.blnShowEnemyDamage;
 
         }
 
@@ -225,6 +226,70 @@ namespace TextureAtlas
 
                     return Font10;
             }
+        }
+
+        public static Vector2 GetInterSect(Rectangle me, Rectangle them, string XY = "")
+        {
+
+            bool MeRight;
+            bool MeAbove;
+
+            Vector2 MeTopLeft = new Vector2(me.X,me.Y);
+            Vector2 MeTopRight = new Vector2((me.X + me.Width),me.Y);
+            Vector2 MeBottomLeft = new Vector2(me.X,(me.Y + me.Height));
+            Vector2 MeBottomRight = new Vector2((me.X + me.Width ),(me.Y + me.Height));
+            
+            Vector2 ThemTopLeft = new Vector2(them.X,them.Y);
+            Vector2 ThemTopRight = new Vector2((them.X + them.Width),them.Y);
+            Vector2 ThemBottomLeft = new Vector2(them.X,(them.Y + them.Height));
+            Vector2 ThemBottomRight = new Vector2((them.X + them.Width), (them.Y + them.Height));
+
+            Vector2 ApplyValue = new Vector2(0,0);
+
+            if (me.Y > them.Y)
+            {
+                MeAbove = false;
+            }
+            else
+            {
+                MeAbove = true;
+            }
+            if (me.X > them.X)
+            {
+                MeRight = true;
+            }
+            else
+            {
+                MeRight = false; 
+            }
+
+            if (MeRight && MeAbove)
+            {
+                ApplyValue = ThemTopRight - MeBottomLeft;
+            }
+            else if (MeRight && !MeAbove)
+            {
+                ApplyValue = ThemBottomRight - MeTopLeft;
+            }
+            else if (!MeRight && MeAbove)
+            {
+                ApplyValue = ThemTopLeft - MeBottomRight;
+            }
+            else if (!MeRight && !MeAbove)
+            {
+                ApplyValue = ThemBottomLeft - MeTopRight;
+            }
+
+            if (XY == "x")
+            {
+                ApplyValue.Y = 0;
+            }
+            else if (XY == "y")
+            {
+                ApplyValue.X = 0;
+            }
+
+            return ApplyValue;
         }
     }
 }

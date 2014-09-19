@@ -45,6 +45,7 @@ namespace TextureAtlas
 
         public Vector2 OffSet = new Vector2(0, 0);
         public Vector2 position = new Vector2(150, 150);
+        public Vector2 oldPosition = new Vector2(0, 0);
         public Vector2 position2 = new Vector2();
         public Vector2 velocity = new Vector2(300, 0);
         public Vector2 velocityup = new Vector2(0, 300);
@@ -185,8 +186,26 @@ namespace TextureAtlas
 
             if (GlobalVariables.UserSetWidth > 0 && GlobalVariables.UserSetHeight > 0)
             {
-                graphics.PreferredBackBufferWidth = GlobalVariables.UserSetWidth;
-                graphics.PreferredBackBufferHeight = GlobalVariables.UserSetHeight;
+                if (!GlobalVariables.FullScreen)
+                {
+                    if (GlobalVariables.UserSetHeight > (GlobalVariables.ScreenHeight - 40))
+                    {
+                        graphics.PreferredBackBufferHeight = (GlobalVariables.ScreenHeight - 40);
+                    }
+                    else
+                    {
+                        graphics.PreferredBackBufferHeight = GlobalVariables.UserSetHeight;
+                    }
+                    if (GlobalVariables.UserSetWidth > GlobalVariables.ScreenWidth)
+                    {
+                        graphics.PreferredBackBufferWidth = GlobalVariables.ScreenWidth;
+                    }
+                    else
+                    {
+                        graphics.PreferredBackBufferWidth = GlobalVariables.UserSetWidth;
+                    }
+                }
+
                 graphics.IsFullScreen = GlobalVariables.UserSetFullScreen;
                 GlobalVariables.FullScreen = GlobalVariables.UserSetFullScreen;
             }
@@ -194,6 +213,8 @@ namespace TextureAtlas
             {
                 graphics.PreferredBackBufferWidth = GlobalVariables.ScreenWidth;
                 graphics.PreferredBackBufferHeight = GlobalVariables.ScreenHeight - 40;
+                GlobalVariables.UserSetWidth = GlobalVariables.ScreenWidth;
+                GlobalVariables.UserSetHeight = GlobalVariables.ScreenHeight - 40;
                 graphics.IsFullScreen = false;
                 GlobalVariables.FullScreen = false;
             }
@@ -212,6 +233,9 @@ namespace TextureAtlas
                 //ClientWindow Resized
                 graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
                 graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+                GlobalVariables.UserSetHeight = Window.ClientBounds.Width;
+                GlobalVariables.UserSetHeight = Window.ClientBounds.Height;
+                GlobalVariables.SaveUserSettings();
                 blnIsDirty = true;
             }
             else
@@ -229,6 +253,8 @@ namespace TextureAtlas
                         //Reset Graphics State to Old Graphics State
                         graphics.PreferredBackBufferWidth = GlobalVariables.OldWidth;
                         graphics.PreferredBackBufferHeight = GlobalVariables.OldHeight;
+                        GlobalVariables.UserSetHeight = GlobalVariables.OldWidth;
+                        GlobalVariables.UserSetHeight = GlobalVariables.OldHeight;
                         blnIsDirty = true;
 
                         //Flags are set to show Pause Menu at the Options Level
@@ -249,6 +275,9 @@ namespace TextureAtlas
                         //Track Old Values
                         GlobalVariables.OldWidth = graphics.PreferredBackBufferWidth;
                         GlobalVariables.OldHeight = graphics.PreferredBackBufferHeight;
+
+                        GlobalVariables.UserSetHeight = GlobalVariables.ScreenHeight;
+                        GlobalVariables.UserSetWidth = GlobalVariables.ScreenWidth;
 
                         //adjust screen size to fit screen
                         if (!GlobalVariables.FullScreen)
@@ -276,6 +305,7 @@ namespace TextureAtlas
 
                         graphics.PreferredBackBufferWidth = GlobalVariables.NewWidth;
                         graphics.PreferredBackBufferHeight = GlobalVariables.NewHeight;
+
                         blnIsDirty = true;
 
                         //Reset New Values To 0 to pass above validation
@@ -509,7 +539,7 @@ namespace TextureAtlas
                     {
                         //Health Set Here
                         HP = RNG.Next(500, 1500);
-                        Enemies.Add(new Enemy(texture, hpbarFull, hpbar75, hpbarHalf, hpbarQuarter, hpbar40, Font1, Font2, 4, 4, 1500, position2, name, HP));
+                        Enemies.Add(new Enemy(texture, hpbarFull, hpbar75, hpbarHalf, hpbarQuarter, hpbar40, Font1, Font2, 4, 4, 1500, position2, name, HP, 15,25));
                     }
                 }
             }
@@ -551,18 +581,20 @@ namespace TextureAtlas
                             }
                             else
                             {
+                                oldPosition = position;
                                 position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
                         }
                         else
                         {
+                            oldPosition = position;
                             position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
+                        animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                         animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-
                     }
                     else
                     {
@@ -572,9 +604,12 @@ namespace TextureAtlas
                         {
                             //Check to See if Char is trying to run into Enemies
 
-                            if (Math.Abs(((position.X - 10) - Enemies[l].Location.X)) < 35 && (Math.Abs(position.Y - Enemies[l].Location.Y) < 75))
+                            if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
                             {
                                 //Dis-Allow Char to move into new Position because they are running into an enemy
+
+                                position = oldPosition;
+                                animatedSprite.WorldPos = animatedSprite.oldWorldPos;
 
                                 Valid = false;
                                 break;
@@ -604,16 +639,19 @@ namespace TextureAtlas
                                 }
                                 else
                                 {
+                                    oldPosition = position;
                                     position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
                             }
                             else
                             {
+                                oldPosition = position;
                                 position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
 
+                            animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                             animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
                             //Check for Items
@@ -672,24 +710,29 @@ namespace TextureAtlas
                             }
                             else
                             {
+                                oldPosition = position;
                                 position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
                         }
                         else
                         {
+                            oldPosition = position;
                             position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
+                        animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                         animatedSprite.WorldPos += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
                     else
                     {
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            if (Math.Abs(((position.X + 10) - Enemies[l].Location.X)) < 35 && (Math.Abs(position.Y - Enemies[l].Location.Y) < 75))
+                            if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
                             {
+                                position = oldPosition;
+                                animatedSprite.WorldPos = animatedSprite.oldWorldPos;
                                 Valid = false;
                                 break;
                             }
@@ -709,16 +752,19 @@ namespace TextureAtlas
                                 }
                                 else
                                 {
+                                    oldPosition = position;
                                     position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
                             }
                             else
                             {
+                                oldPosition = position;
                                 position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
 
+                            animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                             animatedSprite.WorldPos += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
                             //Check for Items
@@ -770,24 +816,30 @@ namespace TextureAtlas
                             }
                             else
                             {
+                                oldPosition = position;
                                 position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
                         }
                         else
                         {
+                            oldPosition = position;
                             position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
+                        animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                         animatedSprite.WorldPos -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
                     else
                     {
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            if (Math.Abs(((position.X) - Enemies[l].Location.X)) < 35 && (Math.Abs((position.Y - 10) - Enemies[l].Location.Y) < 75))
+                            if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
                             {
+                                position = oldPosition;
+                                animatedSprite.WorldPos = animatedSprite.oldWorldPos;
+
                                 Valid = false;
                                 break;
                             }
@@ -885,8 +937,10 @@ namespace TextureAtlas
                     {
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            if (Math.Abs(((position.X) - Enemies[l].Location.X)) < 35 && (Math.Abs((position.Y + 10) - Enemies[l].Location.Y) < 75))
+                            if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
                             {
+                                position = oldPosition;
+                                animatedSprite.WorldPos = animatedSprite.oldWorldPos;
                                 Valid = false;
                                 break;
                             }

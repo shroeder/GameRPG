@@ -30,12 +30,18 @@ namespace TextureAtlas
         MouseState ms;
         MouseState oms;
 
-        public void draw(SpriteBatch spriteBatch, Texture2D img, int posX, int posY, int width, int height, string text, GraphicsDeviceManager gfx)
+        public void draw(SpriteBatch spriteBatch, Texture2D img, int posX, int posY, int width, int height, string text, GraphicsDeviceManager gfx, SpriteFont setFont = null)
         {
 
             oms = ms;
             ms = Mouse.GetState();
             SpriteFont font = GlobalVariables.MediumFont;
+
+            if (setFont != null)
+            {
+                font = setFont;
+            }
+
             int textWidth = Convert.ToInt32(font.MeasureString(text).X);
             int textHeight = Convert.ToInt32(font.MeasureString(text).Y);
 
@@ -43,7 +49,7 @@ namespace TextureAtlas
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(font, text, new Vector2(Rect.X - (textWidth + (int)(gfx.PreferredBackBufferWidth*.005)), Rect.Y - (textHeight/4)), Color.WhiteSmoke);
+            spriteBatch.DrawString(font, text, new Vector2(Rect.X - (textWidth + (int)(gfx.PreferredBackBufferWidth*.005)), Rect.Y - (int)(textHeight * .35)), Color.WhiteSmoke);
 
             spriteBatch.Draw(img, Rect, Color.White);
 

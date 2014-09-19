@@ -12,57 +12,67 @@ using Starbound.RealmFactoryCore;
 using System.Timers;
 namespace TextureAtlas
 {
- public class Enemy
+    public class Enemy
 
-#region Variables
+    #region Variables
     {
 
         public Vector2 velocity = new Vector2(150, 0);
         public Vector2 velocityup = new Vector2(0, 150);
-
-        public Texture2D Texture2 { get; set; }
-        public Texture2D HpBar { get; set; }
-        public int Rows { get; set; }
-        public int Columns { get; set; }
         public Vector2 Location { get; set; }
-        private int currentFrame;
-        private int totalFrames;
-        private int currentUpdate;
-        private int updatesPerFrame = 5;
-        public Rectangle spriteRectangle;
-        public Random RNG = new Random();
-        public int move;
-        public float maxhp;
-        public float graphicwidth;
-        public float graphicheight;
-        int counter = 1;
-        int limit = 125;
-        float counterDuration = 3f;
-        float currentTime = 0f;
-        public bool Valid = false;
         public Vector2 charpos;
         public Vector2 worldloc;
-        public string name;
-        public float hp;
-        public float tothp;
-        SpriteFont font;
-        SpriteFont font2;
-        public bool blnDie= false;
-        public bool blnDead = false;
-        public float i;
-        public int dir;
+
         public Texture2D HPBAR75;
         public Texture2D HPBARHALF;
         public Texture2D HPBARQUARTER;
         public Texture2D HPBAR40;
-        public float DamageCounter;
-        public bool blnShowDamage;
+        public Texture2D Texture2 { get; set; }
+        public Texture2D HpBar { get; set; }
+
+        public Rectangle Bounds;
+
+        public Random RNG = new Random();
+
+        SpriteFont font;
+        SpriteFont font2;
+
         public int m = 2;
+        public int dir;
+        public int move;
+        public int Rows { get; set; }
+        public int Columns { get; set; }
+        private int currentFrame;
+        private int totalFrames;
+        private int currentUpdate;
+        private int updatesPerFrame = 5;
+        private int counter = 1;
+        private int limit = 125;
+        private int offSetBoundsX;
+        private int offSetBoundsY;
 
-#endregion
+        public float DamageCounter;
+        public float i;
+        public float hp;
+        public float tothp;
+        public float maxhp;
+        public float graphicwidth;
+        public float graphicheight;
+        private float counterDuration = 3f;
+        private float currentTime = 0f;
 
-        public Enemy(Texture2D texture,Texture2D hpbar, Texture2D hpbar75, Texture2D hpbarHalf, Texture2D hpbarquarter,Texture2D hpbar40,SpriteFont Font,SpriteFont Font2, int rows, int columns,float MAXHP, Vector2 location,string Name, int HP)
+        public bool blnShowDamage;
+        public bool Valid = false;
+        public bool blnDie = false;
+        public bool blnDead = false;
+
+        public string name;
+
+    #endregion
+
+        public Enemy(Texture2D texture, Texture2D hpbar, Texture2D hpbar75, Texture2D hpbarHalf, Texture2D hpbarquarter, Texture2D hpbar40, SpriteFont Font, SpriteFont Font2, int rows, int columns, float MAXHP, Vector2 location, string Name, int HP, int offSetX, int offSetY)
         {
+
             Texture2 = texture;
             HpBar = hpbar;
             Rows = rows;
@@ -70,6 +80,8 @@ namespace TextureAtlas
             currentFrame = 0;
             totalFrames = Rows * Columns;
             Location = location;
+            offSetBoundsX = offSetX;
+            offSetBoundsY = offSetY;
             worldloc = location;
             name = Name;
             tothp = HP;
@@ -82,7 +94,7 @@ namespace TextureAtlas
             HPBARQUARTER = hpbarquarter;
             HPBAR40 = hpbar40;
         }
-        
+
         public void Update(GameTime gameTime, Vector2 HeroPosition)
         {
             if (blnDie == false)
@@ -130,7 +142,7 @@ namespace TextureAtlas
 
 
             }
-       }
+        }
 
         public void CharMovedRight(GameTime gameTime, Vector2 velocity)
         {
@@ -189,29 +201,29 @@ namespace TextureAtlas
         {
             Valid = true;
             if (worldloc.X < 1250)
+            {
+                if (Math.Abs(((Location.X + 10) - charpos.X)) < 35 && (Math.Abs(Location.Y - charpos.Y) < 75))
+                {
+                    Valid = false;
+                }
+                if (Valid)
+                {
+                    currentUpdate++;
+                    if (currentUpdate == updatesPerFrame)
                     {
-                        if (Math.Abs(((Location.X + 10) - charpos.X)) < 35 && (Math.Abs(Location.Y - charpos.Y) < 75))
-                                {
-                                    Valid = false;
-                                }
-                        if (Valid)
-                        {
-                            currentUpdate++;
-                            if (currentUpdate == updatesPerFrame)
-                            {
-                                currentFrame++;
-                                currentUpdate = 0;
-                                if (currentFrame < 9 || currentFrame > 12)
-                                    currentFrame = 9;
-                                Location += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                worldloc += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                if (currentFrame == 12)
-                                    currentFrame = 9;
-                                Location += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                worldloc += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                            }
-                        }
+                        currentFrame++;
+                        currentUpdate = 0;
+                        if (currentFrame < 9 || currentFrame > 12)
+                            currentFrame = 9;
+                        Location += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                        worldloc += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                        if (currentFrame == 12)
+                            currentFrame = 9;
+                        Location += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                        worldloc += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
+                }
+            }
         }
 
         public void UpdateDown(GameTime gameTime)
@@ -285,10 +297,11 @@ namespace TextureAtlas
             graphicwidth = width;
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
+            Bounds = new Rectangle(destinationRectangle.X + offSetBoundsX, destinationRectangle.Y + offSetBoundsY, destinationRectangle.Width - (offSetBoundsX * 2), destinationRectangle.Height - (offSetBoundsY * 2));
             Rectangle Rec1 = new Rectangle((int)location.X, (int)location.Y, width1, height1);
-            
+
             spriteBatch.Begin();
-            
+
             location.Y -= 1;
             if (GlobalVariables.ShowEnemyBars)
             {
@@ -339,20 +352,20 @@ namespace TextureAtlas
 
             if (blnDie)
             {
-                    if (i >= 0 && i <= 2)
-                    {
-                        spriteBatch.Draw(Texture2, new Rectangle(((int)location.X + 50), ((int)location.Y + 100), width, height), sourceRectangle, Color.White, i, new Vector2((Vector2.Zero.X + width), (Vector2.Zero.Y + height)), SpriteEffects.None, 0);
-                        i += .05f;
-                    }
-                    if (i > 2)
-                    {
-                        blnDead = true;
-                        blnDie = false;
-                    }
+                if (i >= 0 && i <= 2)
+                {
+                    spriteBatch.Draw(Texture2, new Rectangle(((int)location.X + 50), ((int)location.Y + 100), width, height), sourceRectangle, Color.White, i, new Vector2((Vector2.Zero.X + width), (Vector2.Zero.Y + height)), SpriteEffects.None, 0);
+                    i += .05f;
                 }
+                if (i > 2)
+                {
+                    blnDead = true;
+                    blnDie = false;
+                }
+            }
             else
             {
-                spriteBatch.Draw(Texture2, destinationRectangle, sourceRectangle, Color.White);            
+                spriteBatch.Draw(Texture2, destinationRectangle, sourceRectangle, Color.White);
             }
             spriteBatch.End();
         }

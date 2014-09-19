@@ -231,7 +231,7 @@ namespace TextureAtlas
                                 {
                                     slider1.Index = 2;
                                 }
-                                string sliderRes = Convert.ToString(GlobalVariables.ScreenWidth) + " X " + Convert.ToString(GlobalVariables.ScreenHeight);
+                                string sliderRes = Convert.ToString(GlobalVariables.UserSetWidth) + " X " + Convert.ToString(GlobalVariables.UserSetHeight);
                                 int i = 0;
                                 foreach (string str in Resolution_43)
                                 {
@@ -378,10 +378,11 @@ namespace TextureAtlas
                             {
                                 chkShowEnemyDamage = new CheckBox();
                             }
-                            chkShowItemNames.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2), (int)(gfx.PreferredBackBufferHeight * .10), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Item Names", gfx);
-                            chkShowEnemyNames.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2), (int)(gfx.PreferredBackBufferHeight * .15), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy Names", gfx);
-                            chkShowEnemyBars.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2), (int)(gfx.PreferredBackBufferHeight * .20), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy HP Bars", gfx);
-                            chkShowEnemyDamage.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2), (int)(gfx.PreferredBackBufferHeight * .25), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy Damage", gfx);
+                            SpriteFont setFont = GlobalVariables.LargeFont;
+                            chkShowItemNames.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2) + (int)(gfx.PreferredBackBufferWidth * .065), (int)(gfx.PreferredBackBufferHeight * .15), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Item Names", gfx,setFont);
+                            chkShowEnemyNames.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2) + (int)(gfx.PreferredBackBufferWidth * .065), (int)(gfx.PreferredBackBufferHeight * .25), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy Names", gfx, setFont);
+                            chkShowEnemyBars.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2) + (int)(gfx.PreferredBackBufferWidth * .065), (int)(gfx.PreferredBackBufferHeight * .35), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy HP Bars", gfx, setFont);
+                            chkShowEnemyDamage.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2) + (int)(gfx.PreferredBackBufferWidth * .065), (int)(gfx.PreferredBackBufferHeight * .45), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy Damage", gfx, setFont);
                             mnuGamePlayConfirm.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .45), width, height), "Confirm", font);
                             mnuGamePlayCancel.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .60), width, height), "Back", font);
                             if (blnIndexValues)

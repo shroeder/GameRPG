@@ -9,53 +9,35 @@ namespace TextureAtlas
     public class AnimatedSprite
     {
         #region Variables
-        //Variables
-        public Texture2D Texture { get; set; }
-        //Rows and Columns in Graphic Atlas for Character Image
-        public int Rows { get; set; }
-        public int Columns { get; set; }
-        //Frame of Movement within the Character Atlas
-        private int currentFrame;
-        private int totalFrames;
-        //Variables Controlling the Speed at which I iterate through Character Atlas(walking)
-        private int currentUpdate;
-        private int updatesPerFrame = 5;
-        //Variable for Character's position on Screen
-        public Vector2 position;
-        //Variable for Drawing of Character
+
+        public Rectangle Bounds;
         public Rectangle spriteRectangle;
-        //Variable for Drawing Weapon
+
+        public Texture2D Texture { get; set; }
         public Texture2D Sword;
         public Texture2D Sword2;
-        //Boolean Controlling Whether Char can attack or not
-        public bool attack = false;
-        //Rotation of Sword(Swinging)
-        public float i;
-        //Variable to determine character's direction faces(passed in via game1)
-        public int direction;
-        //Variable for Position of Sword Tip
+
+        public Vector2 position;
         public Vector2 SwordTip;
-        //Variable for Sword Tip Collision Decrement/Increment
-        public float l = 2.5f;
-        //Boolean to Display damage after full weapon swing
-        public bool blnDisplaydamage = false;
-        //Variable for World Position of Character
         public Vector2 WorldPos;
+        public Vector2 oldWorldPos;
 
-        //Generic Variable for Screen Size(Used to find Center of Screen)
-        public int screenWidth
-        {
-            get { return GraphicsDeviceManager.DefaultBackBufferWidth; }
-        }
+        public int direction;
+        public int Rows { get; set; }
+        public int Columns { get; set; }
+        private int currentFrame;
+        private int totalFrames;
+        private int currentUpdate;
+        private int updatesPerFrame = 5;
 
-        public int screenHeight
-        {
-            get { return GraphicsDeviceManager.DefaultBackBufferHeight; }
-        }
-        //Character Properties
+        public bool attack = false;
+        public bool blnDisplaydamage = false;
+
+        public float i;
+        public float l = 2.5f;
+
         public AnimatedSprite(Texture2D texture, Texture2D sword, Texture2D sword2,bool Attack, int dir, int rows, int columns, Vector2 Location)
         {
-            //Set Character Properties to those Passed in from the Game Class
             WorldPos = Location;
             Sword = sword;
             attack = Attack;
@@ -159,6 +141,7 @@ namespace TextureAtlas
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             //Size of the Individual Graphic Tile Within Texture Atlas
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
+            Bounds = new Rectangle(destinationRectangle.X + 15, destinationRectangle.Y + 25, destinationRectangle.Width - 30, destinationRectangle.Height - 50);
             //Size of Recation for Sword Graphic
             Rectangle DRect = new Rectangle((int)location.X, (int)location.Y, width1, height1);
             //Begin Draw

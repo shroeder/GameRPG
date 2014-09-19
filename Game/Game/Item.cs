@@ -16,29 +16,38 @@ namespace TextureAtlas
     class Item
     {
         #region Variables
-        public Vector2 location;
+
         public int type;
-        public string status;
         public int Rarity;
         public int quality;
-        public Texture2D LegBeam;
         public int affixes;
         public int affixroll;
         public int affixnumericroll;
+
         public Boolean hover = false;
         public Boolean invhover = false;
+
         public Vector2 worldloc;
+        public Vector2 location;
+
+        public string status;
         public string affixdesc;
         public string ItemName;
         public string ItemRarity;
+
         public List<int> affixvaluelist = new List<int>();
         public List<string> affixstatlist = new List<string>();
         public List<string> affixdesclist = new List<string>();
+
         public SpriteFont Font1;
+
         public Random RNG = new Random();
+
+        public Texture2D LegBeam;
         public Texture2D ItemTexture;
         public Texture2D LegendaryBg;
         public Texture2D TextBackground;
+
         public Color RarityColor;
 
         #endregion
