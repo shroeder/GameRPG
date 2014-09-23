@@ -8,73 +8,75 @@ namespace TextureAtlas
 {
     public class AnimatedSprite
     {
-        #region Variables
+        public enum DirToAttack
+        {
+            Up,
+            Down,
+            Left,
+            Right,
+            Nothing
+        }
+
+        public DirToAttack Direction = DirToAttack.Nothing;
 
         public Rectangle Bounds;
+        public Rectangle SwordBounds;
         public Rectangle spriteRectangle;
 
         public Texture2D Texture { get; set; }
-        public Texture2D Sword;
-        public Texture2D Sword2;
 
         public Vector2 position;
         public Vector2 SwordTip;
         public Vector2 WorldPos;
         public Vector2 oldWorldPos;
 
+        public int Width;
+        public int Height;
         public int direction;
         public int Rows { get; set; }
         public int Columns { get; set; }
         private int currentFrame;
         private int totalFrames;
         private int currentUpdate;
-        private int updatesPerFrame = 5;
+        private int updatesPerFrame = 10;
 
+        public bool IsAttacking = false;
         public bool attack = false;
         public bool blnDisplaydamage = false;
 
         public float i;
         public float l = 2.5f;
 
-        public AnimatedSprite(Texture2D texture, Texture2D sword, Texture2D sword2,bool Attack, int dir, int rows, int columns, Vector2 Location)
+        public AnimatedSprite(Texture2D texture, int dir, int rows, int columns, Vector2 Location)
         {
+            if (GlobalVariables.CharacterLevel <= 0)
+            {
+                GlobalVariables.CharacterLevel = 1;
+            }
+            Width = Convert.ToInt32(texture.Width / columns);
+            Height = Convert.ToInt32(texture.Height / rows);
+            position = Location;
             WorldPos = Location;
-            Sword = sword;
-            attack = Attack;
             direction = dir;
             Texture = texture;
             Rows = rows;
             Columns = columns;
             currentFrame = 0;
             totalFrames = Rows * Columns;
-            Sword2 = sword2;
             SwordTip = position;
         }
-        #endregion
-
-        #region Updates
-
-        //Character Moves Left
 
         public void UpdateLeft()
         {
-            //Iteration Through the Graphic Tiles of Character Walking
             currentUpdate++;
-            //Check to See if number of Update Cycles has Been Reached(Controls Speed at which Character appears to be walking)
             if (currentUpdate == updatesPerFrame)
             {
-                //Set First Stage of Walking
                 currentUpdate = 0;
-                //Check to See if Stage is out of Bounds for this Direction(Left)
-                if (currentFrame < 4 || currentFrame > 8)
-                    //Set Stage to beginning of walk cycle
-                    currentFrame = 4;
-                //Update Character Walk Cycle Stage
+                if (currentFrame < 12 || currentFrame > 16)
+                    currentFrame = 12;
                 currentFrame++;
-                //Check to See if Character Reached Last Stage of Walk Cycle
-                if (currentFrame == 8)
-                    //Reset to Beginning of Walk Cycle
-                    currentFrame = 4;
+                if (currentFrame == 16)
+                    currentFrame = 12;
             }
         }
 
@@ -84,11 +86,11 @@ namespace TextureAtlas
             if (currentUpdate == updatesPerFrame)
             {
                 currentUpdate = 0;
-                if (currentFrame < 8 || currentFrame > 12)
-                    currentFrame = 8;
+                if (currentFrame < 6 || currentFrame > 10)
+                    currentFrame = 6;
                 currentFrame++;
-                if (currentFrame == 12)
-                    currentFrame = 8;
+                if (currentFrame == 10)
+                    currentFrame = 6;
             }
         }
 
@@ -112,131 +114,161 @@ namespace TextureAtlas
             if (currentUpdate == updatesPerFrame)
             {
                 currentUpdate = 0;
-                if (currentFrame < 13)
-                    currentFrame = 13;
+                if (currentFrame < 18)
+                    currentFrame = 18;
                 currentFrame++;
-                if (currentFrame == 16)
-                    currentFrame = 13;
+                if (currentFrame == 22)
+                    currentFrame = 18;
             }
         }
 
-#endregion
+        public void UpdateDownRight(){}
+
+        public void UpdateDownLeft(){}
+
+        public void UpdateUpRight(){}
+
+        public void UpdateUpLeft(){}
+
+        public void AnimateAttack(Vector2 loc)
+        {
+            attack = true;
+            Vector2 Dif = position - loc;
+            if (Dif.X >= 0)
+            {
+                if (Dif.Y >= 0)
+                {
+                    if (Dif.X >= Dif.Y)
+                    {
+                        Direction = DirToAttack.Up;
+                    }
+                    else
+                    {
+                        Direction = DirToAttack.Left;
+                    }
+                }
+                else if (Dif.Y < 0)
+                {
+                    if (Math.Abs(Dif.Y) <= Dif.X)
+                    {
+                        Direction = DirToAttack.Down;
+                    }
+                    else
+                    {
+                        Direction = DirToAttack.Left;
+                    }
+                }
+                else
+                {
+                    Direction = DirToAttack.Left;
+                }
+            }
+            else
+            {
+                if (Dif.Y >= 0)
+                {
+                    if (Math.Abs(Dif.X) >= Dif.Y)
+                    {
+                        Direction = DirToAttack.Up;
+                    }
+                    else
+                    {
+                        Direction = DirToAttack.Right;
+                    }
+                }
+                else if (Dif.Y < 0)
+                {
+                    if (Math.Abs(Dif.Y) <= Math.Abs(Dif.X))
+                    {
+                        Direction = DirToAttack.Down;
+                    }
+                    else
+                    {
+                        Direction = DirToAttack.Right;
+                    }
+                }
+                else
+                {
+                    Direction = DirToAttack.Right;
+                }
+            }
+        }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 location)
         {
-            blnDisplaydamage = true;
-            //Width of Texture Atlas
-            int width = Texture.Width / Columns;
-            //Height of Texture Atlas
-            int height = Texture.Height / Rows;
-            //Width of Individual Tile in Texture Atlas
-            int row = (int)((float)currentFrame / (float)Columns);
-            //Height of Individual Tile in Texture Atlas
-            int column = currentFrame % Columns;
-            //Width for Sword Texture
-            int width1 = Sword.Width;
-            //height for Sword Texture
-            int height1 = Sword.Height;
-            //Size of Entire Texture Atlas
-            Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            //Size of the Individual Graphic Tile Within Texture Atlas
-            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
-            Bounds = new Rectangle(destinationRectangle.X + 15, destinationRectangle.Y + 25, destinationRectangle.Width - 30, destinationRectangle.Height - 50);
-            //Size of Recation for Sword Graphic
-            Rectangle DRect = new Rectangle((int)location.X, (int)location.Y, width1, height1);
-            //Begin Draw
-            spriteBatch.Begin();
-            //Draw Character Graphic to Screen
-            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
-            #region DrawAttack
-            //Check to see if Attack is allowed
             if (attack)
             {
-                //Direction Check for which way character is facing
-                //Down
-                if (direction == 1)
+                if (Direction == DirToAttack.Down)
                 {
-                    //Check Iteration in Rotation of Swing
-                    if (i >= 0 && i <= 2)
-                    {
-                        //Draw Sword at the rotation of i
-                        spriteBatch.Draw(Sword, new Rectangle((int)location.X + 40, (int)location.Y + 80, width1, height1), null, Color.Red, i, Vector2.Zero, SpriteEffects.None, 0);
-                        //Increment the rotation of the sword
-                        i += .2f;
-                        SwordTip.X = ((location.X + 80) - l);
-                        SwordTip.Y = (location.Y + 135);
-                        l += (l / 2);
+                    if (!IsAttacking){
+                        currentFrame = 4;
+                        IsAttacking = true;
+                        attack = true;
                     }
-                    //Check to See if the Animation is finished(Reached end of allowed Roation)
-                    if (i > 2)
+                    else
                     {
-                        //Set Attack to False
+                        currentFrame = 5;
+                        IsAttacking = false;
                         attack = false;
-                        //Return Rotation to Beginning of Range
-                        i = 0f;
-                        l = 2.5f;
-                        blnDisplaydamage = true;
                     }
                 }
-                //Left
-                if (direction == 2)
+                else if (Direction == DirToAttack.Up)
                 {
-                    if (i <= 2 && i >= 0)
+                    if (!IsAttacking)
                     {
-                        spriteBatch.Draw(Sword2, new Rectangle((int)location.X + 40, (int)location.Y + 80, width1, height1), null, Color.Red, i, new Vector2((Vector2.Zero.X + Sword2.Width),Vector2.Zero.Y), SpriteEffects.None, 0);
-                        i -= .2f;
-                        SwordTip.X = (location.X - 25);
-                        SwordTip.Y = (location.Y + l);
-                        l += (l / 2);
+                        currentFrame = 10;
+                        IsAttacking = true;
+                        attack = true;
                     }
-                    if (i < 0)
+                    else
                     {
+                        currentFrame = 11;
+                        IsAttacking = true;
                         attack = false;
-                        i = 2f;
-                        l = 2.5f;
-                        blnDisplaydamage = true;
                     }
                 }
-                //Right
-                if (direction == 3)
+                else if (Direction == DirToAttack.Left)
                 {
-                    if (i >= -2 && i <= 0)
+                    if (!IsAttacking)
                     {
-                        spriteBatch.Draw(Sword, new Rectangle((int)location.X + 40, (int)location.Y + 80, width1, height1), null, Color.Red, i, Vector2.Zero, SpriteEffects.None, 0);
-                        i += .2f;
-                        SwordTip.X = (location.X + 90);
-                        SwordTip.Y = (location.Y + l);
-                        l += (l / 2);
+                        currentFrame = 16;
+                        IsAttacking = true;
+                        attack = true;
                     }
-                    if (i > 0)
+                    else
                     {
+                        currentFrame = 17;
+                        IsAttacking = false;
                         attack = false;
-                        i = -2f;
-                        l = 2.5f;
-                        blnDisplaydamage = true;
                     }
                 }
-                //Up
-                if (direction == 4)
+                else if (Direction == DirToAttack.Right)
                 {
-                    if (i <= 4 && i >= 2)
+                    if (!IsAttacking)
                     {
-                        spriteBatch.Draw(Sword2, new Rectangle((int)location.X + 40, (int)location.Y + 80, width1, height1), null, Color.Red, i, new Vector2((Vector2.Zero.X + Sword2.Width), Vector2.Zero.Y), SpriteEffects.None, 0);
-                        i -= .2f;
-                        SwordTip.X = ((location.X + 80) - l);
-                        SwordTip.Y = (location.Y);
-                        l += (l / 2);
+                        currentFrame = 22;
+                        IsAttacking = true;
+                        attack = true;
                     }
-                    if (i < 2)
+                    else
                     {
+                        currentFrame = 23;
+                        IsAttacking = false;
                         attack = false;
-                        i = 4f;
-                        l = 2.5f;
-                        blnDisplaydamage = true;
                     }
                 }
             }
-            #endregion
+
+            int width = Texture.Width / Columns;
+            int height = Texture.Height / Rows;
+            int row = (int)((float)currentFrame / (float)Columns);
+            int column = currentFrame % Columns;
+            Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
+            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
+            Bounds = new Rectangle(destinationRectangle.X + 15, destinationRectangle.Y + 25, destinationRectangle.Width - 30, destinationRectangle.Height - 50);
+
+            spriteBatch.Begin();
+            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
             spriteBatch.End();
         }
 

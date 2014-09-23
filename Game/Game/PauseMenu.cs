@@ -378,13 +378,16 @@ namespace TextureAtlas
                             {
                                 chkShowEnemyDamage = new CheckBox();
                             }
+
                             SpriteFont setFont = GlobalVariables.LargeFont;
+
                             chkShowItemNames.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2) + (int)(gfx.PreferredBackBufferWidth * .065), (int)(gfx.PreferredBackBufferHeight * .15), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Item Names", gfx,setFont);
                             chkShowEnemyNames.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2) + (int)(gfx.PreferredBackBufferWidth * .065), (int)(gfx.PreferredBackBufferHeight * .25), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy Names", gfx, setFont);
                             chkShowEnemyBars.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2) + (int)(gfx.PreferredBackBufferWidth * .065), (int)(gfx.PreferredBackBufferHeight * .35), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy HP Bars", gfx, setFont);
                             chkShowEnemyDamage.draw(spriteBatch, MenuBtn, (int)(gfx.PreferredBackBufferWidth / 2) + (int)(gfx.PreferredBackBufferWidth * .065), (int)(gfx.PreferredBackBufferHeight * .45), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Show Enemy Damage", gfx, setFont);
                             mnuGamePlayConfirm.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .45), width, height), "Confirm", font);
                             mnuGamePlayCancel.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .60), width, height), "Back", font);
+
                             if (blnIndexValues)
                             {
                                 if (GlobalVariables.ShowItemNames)

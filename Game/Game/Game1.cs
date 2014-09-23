@@ -51,6 +51,8 @@ namespace TextureAtlas
         public Vector2 velocityup = new Vector2(0, 300);
         private Vector2 InvPos;
 
+        public bool LeftMouseHeld = false;
+        public bool PathFinding = true;
         public bool Toggle = false;
         public bool Valid = true;
         public bool blnRevert = false;
@@ -59,13 +61,9 @@ namespace TextureAtlas
         private bool blnDrawDebuggerClicked = false;
         private bool isDrag = false;
         private bool DoesDrop = false;
-        private bool BlnAttack = true;
         private bool blnEquip = false;
         private bool blnDSP = false;
         private bool blnOpen = false;
-        private bool BlnDelay = false;
-        private bool AniTick = false;
-        private bool Attack = false;
         private bool blnIsConfirming = false;
         private bool debugScreenDrawBgClickedBound = false;
         private bool pauseMenuExitBound = false;
@@ -85,6 +83,9 @@ namespace TextureAtlas
         private int DebugCycles = 40;
         private int IntDrop = 0;
         private int HP;
+        public int CountMouseHeld;
+
+        public GameTime theGameTime { get; set; }
 
         public Random RNG = new Random();
         private DebugScreen debugScreenUpdate = new DebugScreen();
@@ -102,7 +103,7 @@ namespace TextureAtlas
         private MessageDisplay MSG = new MessageDisplay();
         private Equipment equipment;
         private Inventory inventory;
-        private AnimatedSprite animatedSprite;
+        public AnimatedSprite animatedSprite;
 
         private Stopwatch DebugTimer;
         private Stopwatch DebugTimer1;
@@ -131,13 +132,10 @@ namespace TextureAtlas
 
         private float MouseOffSetx = 0f;
         private float MouseOffSety = 0f;
-        private float AnimationTimer = 0f;
-        private float AnimationDuration = .5f;
-        private float AtkTmr = .2f;
-        private float TimeBetweenAttacks = .2f;
 
         private Texture2D LegBG;
         private Texture2D texture;
+        private Texture2D HeroTxt;
         private Texture2D MenuBtn;
         private Texture2D Textbg;
         private Texture2D CharScrn;
@@ -158,7 +156,7 @@ namespace TextureAtlas
         private SpriteFont Font1;
         private SpriteFont Font2;
 
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         enum GameState
@@ -173,14 +171,13 @@ namespace TextureAtlas
 
         public Game1()
         {
+            GlobalVariables.LoadGameData();
+
             graphics = new GraphicsDeviceManager(this);
             GlobalVariables.gfx = graphics;
 
             GlobalVariables.ScreenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; ;
             GlobalVariables.ScreenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-
-            //Index fullScreen and Graphics width/height until storage can be put in place to 
-            //read values from storage
 
             GlobalVariables.LoadUserSettings();
 
@@ -321,6 +318,8 @@ namespace TextureAtlas
 
         protected override void Initialize()
         {
+            CountMouseHeld = 1;
+            GlobalVariables.CurrentDir = GlobalVariables.Dir.Nothing;
             Components.Add(new GamerServicesComponent(this));
             base.Initialize();
             GlobalVariables.TheGame = this;
@@ -338,6 +337,7 @@ namespace TextureAtlas
             imgPause = Content.Load<Texture2D>("PauseBG");
             fontMSG = Content.Load<SpriteFont>("MessageDisplay");
             texture = Content.Load<Texture2D>("Char");
+            HeroTxt = Content.Load<Texture2D>("HeroSS2H");
             hpbarFull = Content.Load<Texture2D>("hpbarFull");
             hpbar75 = Content.Load<Texture2D>("hpbar75");
             hpbarHalf = Content.Load<Texture2D>("hpbarHalf");
@@ -364,7 +364,7 @@ namespace TextureAtlas
             //Set Invstart Position
             InvPos = new Vector2(50, 50);
 
-            animatedSprite = new AnimatedSprite(texture, sword, sword2, Attack, dir, 4, 4, position);
+            animatedSprite = new AnimatedSprite(HeroTxt, dir, 8, 6, position);
 
             //Setup for Old/New Key States
             NState = Keyboard.GetState();
@@ -378,6 +378,8 @@ namespace TextureAtlas
 
         protected override void Update(GameTime gameTime)
         {
+            theGameTime = gameTime;
+
             if (!blnWindowSizeBound)
             {
                 this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
@@ -414,6 +416,28 @@ namespace TextureAtlas
 
             #endregion
 
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                CountMouseHeld += 1;
+            }
+            else
+            {
+                CountMouseHeld = 0;
+            }
+
+            if (CountMouseHeld > 20)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    LeftMouseHeld = true;
+                }
+                else
+                {
+                    LeftMouseHeld = false;
+                    CountMouseHeld = 0;
+                }
+            }
+
             #region Debug
 
             if (kState.IsKeyUp(Keys.F3) && NState.IsKeyDown(Keys.F3))
@@ -422,6 +446,11 @@ namespace TextureAtlas
                 {
                     blnLogTime = true;
                 }
+            }
+
+            if (kState.IsKeyUp(Keys.F10) && NState.IsKeyDown(Keys.F10))
+            {
+                GlobalVariables.SaveGameData();
             }
 
             #endregion
@@ -502,7 +531,7 @@ namespace TextureAtlas
             #region Spawner
             //Spawner
             //Spawn 15 Enemies, or Spawns more if f1 is held down
-            if (Enemies.Count < 15 || NState.IsKeyDown(Keys.F1))
+            if (Enemies.Count < 1 || NState.IsKeyDown(Keys.F1))
             {
                 Valid = true;
                 //Create Random Location
@@ -539,7 +568,7 @@ namespace TextureAtlas
                     {
                         //Health Set Here
                         HP = RNG.Next(500, 1500);
-                        Enemies.Add(new Enemy(texture, hpbarFull, hpbar75, hpbarHalf, hpbarQuarter, hpbar40, Font1, Font2, 4, 4, 1500, position2, name, HP, 15,25));
+                        Enemies.Add(new Enemy(texture, hpbarFull, hpbar75, hpbarHalf, hpbarQuarter, hpbar40, Font1, Font2, 4, 4, 1500, position2, name, HP, 15, 25, 1, 100, 100));
                     }
                 }
             }
@@ -549,40 +578,32 @@ namespace TextureAtlas
 
             //Character Movement Left
 
-            if (kState.IsKeyDown(Keys.A) || kState.IsKeyDown(Keys.Left))
+            if (kState.IsKeyDown(Keys.A) || kState.IsKeyDown(Keys.Left) || GlobalVariables.CurrentDir == GlobalVariables.Dir.Left || GlobalVariables.CurrentDir == GlobalVariables.Dir.UpLeft || GlobalVariables.CurrentDir == GlobalVariables.Dir.DownLeft)
             {
-                //Enemy Position is set to Valid
-
                 Valid = true;
-
-                //Check for If Character Tried to Run offScreen
 
                 if (position.X > 10)
                 {
-                    //Check for Enemies
                     if (Enemies.Count < 1)
                     {
-                        //Set Character Direction of Travel
-
                         animatedSprite.direction = 2;
-
-                        //Update The Look of Character
-
                         animatedSprite.UpdateLeft();
-
-                        //Move Character on Screen
-
                         if (position.X <= graphics.PreferredBackBufferWidth / 2)
                         {
                             if (animatedSprite.WorldPos.X >= (graphics.PreferredBackBufferWidth / 2) + 10)
                             {
                                 OffSet += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
+                                {
+                                    GlobalVariables.MoveToLoc += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                }
                                 IsScrolling = true;
                             }
                             else
                             {
                                 oldPosition = position;
                                 position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                animatedSprite.position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
                         }
@@ -590,6 +611,7 @@ namespace TextureAtlas
                         {
                             oldPosition = position;
                             position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                            animatedSprite.position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
@@ -598,17 +620,13 @@ namespace TextureAtlas
                     }
                     else
                     {
-                        //Check where enemies are
-
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            //Check to See if Char is trying to run into Enemies
-
                             if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
                             {
-                                //Dis-Allow Char to move into new Position because they are running into an enemy
-
+                                oldPosition += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 position = oldPosition;
+                                animatedSprite.oldWorldPos += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.WorldPos = animatedSprite.oldWorldPos;
 
                                 Valid = false;
@@ -618,29 +636,24 @@ namespace TextureAtlas
 
                         if (Valid)
                         {
-
-                            //Allow Character to move
-                            //Update Direction of Char
-
                             animatedSprite.direction = 2;
-
-                            //Update Look of Char
-
                             animatedSprite.UpdateLeft();
-
-                            //Update Char Position on Screen
-
                             if (position.X <= graphics.PreferredBackBufferWidth / 2)
                             {
                                 if (animatedSprite.WorldPos.X >= (graphics.PreferredBackBufferWidth / 2) + 10)
                                 {
                                     OffSet += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
+                                    {
+                                        GlobalVariables.MoveToLoc += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    }
                                     IsScrolling = true;
                                 }
                                 else
                                 {
                                     oldPosition = position;
                                     position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    animatedSprite.position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
                             }
@@ -648,18 +661,15 @@ namespace TextureAtlas
                             {
                                 oldPosition = position;
                                 position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                animatedSprite.position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
 
                             animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                             animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-                            //Check for Items
-
                             if (DroppedItems.Count > 0)
                             {
-                                //If Scrolling, Move Items With Scrolling Screen
-
                                 if (IsScrolling)
                                 {
                                     for (int lc = 0; lc < DroppedItems.Count; lc++)
@@ -669,19 +679,16 @@ namespace TextureAtlas
                                 }
                             }
 
-                            //Move Enemies on Screen in relation to the Characters Position on Screen(Only used in Scrolling)
-
                             if (IsScrolling)
                             {
                                 foreach (Enemy enemy in Enemies)
                                 {
-                                    enemy.CharMovedLeft(gameTime, velocity);
+                                    enemy.Location += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 }
                             }
                         }
                         else
                         {
-                            //allow char to change direction, but don't update his position on the map
                             animatedSprite.direction = 2;
                             animatedSprite.UpdateLeft();
                         }
@@ -691,9 +698,9 @@ namespace TextureAtlas
 
             //Character Movement Right
 
-            if (kState.IsKeyDown(Keys.D) || kState.IsKeyDown(Keys.Right))
+            if (kState.IsKeyDown(Keys.D) || kState.IsKeyDown(Keys.Right) || GlobalVariables.CurrentDir == GlobalVariables.Dir.Right || GlobalVariables.CurrentDir == GlobalVariables.Dir.UpRight || GlobalVariables.CurrentDir == GlobalVariables.Dir.DownRight)
             {
-                if (position.X < graphics.PreferredBackBufferWidth - 75)
+                if (position.X < graphics.PreferredBackBufferWidth - animatedSprite.Width)
                 {
                     Valid = true;
                     if (Enemies.Count < 1)
@@ -706,12 +713,17 @@ namespace TextureAtlas
                             if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 10)
                             {
                                 OffSet -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
+                                {
+                                    GlobalVariables.MoveToLoc -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                }
                                 IsScrolling = true;
                             }
                             else
                             {
                                 oldPosition = position;
                                 position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                animatedSprite.position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
                         }
@@ -719,6 +731,7 @@ namespace TextureAtlas
                         {
                             oldPosition = position;
                             position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                            animatedSprite.position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
@@ -731,7 +744,10 @@ namespace TextureAtlas
                         {
                             if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
                             {
+
+                                oldPosition -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 position = oldPosition;
+                                animatedSprite.oldWorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.WorldPos = animatedSprite.oldWorldPos;
                                 Valid = false;
                                 break;
@@ -748,12 +764,17 @@ namespace TextureAtlas
                                 if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 10)
                                 {
                                     OffSet -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
+                                    {
+                                        GlobalVariables.MoveToLoc -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    }
                                     IsScrolling = true;
                                 }
                                 else
                                 {
                                     oldPosition = position;
                                     position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    animatedSprite.position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
                             }
@@ -761,6 +782,7 @@ namespace TextureAtlas
                             {
                                 oldPosition = position;
                                 position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                animatedSprite.position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
 
@@ -783,7 +805,7 @@ namespace TextureAtlas
                             {
                                 foreach (Enemy enemy in Enemies)
                                 {
-                                    enemy.CharMovedRight(gameTime, velocity);
+                                    enemy.Location -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 }
                             }
                         }
@@ -797,27 +819,45 @@ namespace TextureAtlas
             }
 
             //Character Movement Up
-            if (kState.IsKeyDown(Keys.Up) || kState.IsKeyDown(Keys.W))
+            if (kState.IsKeyDown(Keys.Up) || kState.IsKeyDown(Keys.W) || GlobalVariables.CurrentDir == GlobalVariables.Dir.Up || GlobalVariables.CurrentDir == GlobalVariables.Dir.UpLeft || GlobalVariables.CurrentDir == GlobalVariables.Dir.UpRight)
             {
                 Valid = true;
                 if (position.Y > -10)
                 {
                     if (Enemies.Count < 1)
                     {
-                        animatedSprite.direction = 4;
-                        animatedSprite.UpdateUp();
+                        if (kState.IsKeyDown(Keys.Right) || kState.IsKeyDown(Keys.D))
+                        {
+                            animatedSprite.direction = 3;
+                            animatedSprite.UpdateRight();
+                        }
+                        else if (kState.IsKeyDown(Keys.Left) || kState.IsKeyDown(Keys.A))
+                        {
+                            animatedSprite.direction = 2;
+                            animatedSprite.UpdateLeft();
+                        }
+                        else
+                        {
+                            animatedSprite.direction = 4;
+                            animatedSprite.UpdateUp();
+                        }
 
                         if (position.Y <= graphics.PreferredBackBufferHeight / 2)
                         {
                             if (animatedSprite.WorldPos.Y >= (graphics.PreferredBackBufferHeight / 2) + 10)
                             {
                                 OffSet += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
+                                {
+                                    GlobalVariables.MoveToLoc += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                }
                                 IsScrolling = true;
                             }
                             else
                             {
                                 oldPosition = position;
                                 position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                animatedSprite.position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
                         }
@@ -825,6 +865,7 @@ namespace TextureAtlas
                         {
                             oldPosition = position;
                             position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                            animatedSprite.position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
@@ -837,7 +878,9 @@ namespace TextureAtlas
                         {
                             if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
                             {
+                                oldPosition += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 position = oldPosition;
+                                animatedSprite.oldWorldPos += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.WorldPos = animatedSprite.oldWorldPos;
 
                                 Valid = false;
@@ -855,17 +898,25 @@ namespace TextureAtlas
                                 if (animatedSprite.WorldPos.Y >= (graphics.PreferredBackBufferHeight / 2) + 10)
                                 {
                                     OffSet += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
+                                    {
+                                        GlobalVariables.MoveToLoc += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    }
                                     IsScrolling = true;
                                 }
                                 else
                                 {
+                                    oldPosition = position;
                                     position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    animatedSprite.position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
                             }
                             else
                             {
+                                oldPosition = position;
                                 position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                animatedSprite.position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
 
@@ -887,7 +938,7 @@ namespace TextureAtlas
                             {
                                 foreach (Enemy enemy in Enemies)
                                 {
-                                    enemy.CharMovedUp(gameTime, velocityup);
+                                    enemy.Location += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 }
                             }
                         }
@@ -901,32 +952,53 @@ namespace TextureAtlas
             }
 
             //Character Movement Down
-            if (kState.IsKeyDown(Keys.Down) || kState.IsKeyDown(Keys.S))
+            if (kState.IsKeyDown(Keys.Down) || kState.IsKeyDown(Keys.S) || GlobalVariables.CurrentDir == GlobalVariables.Dir.Down || GlobalVariables.CurrentDir == GlobalVariables.Dir.DownLeft || GlobalVariables.CurrentDir == GlobalVariables.Dir.DownRight)
             {
                 Valid = true;
-                if (position.Y < graphics.PreferredBackBufferHeight - 125)
+                if (position.Y < graphics.PreferredBackBufferHeight - animatedSprite.Height)
                 {
                     if (Enemies.Count < 1)
                     {
-                        animatedSprite.direction = 1;
-                        animatedSprite.UpdateDown();
+                        if (kState.IsKeyDown(Keys.Right) || kState.IsKeyDown(Keys.D))
+                        {
+                            animatedSprite.direction = 3;
+                            animatedSprite.UpdateRight();
+                        }
+                        else if (kState.IsKeyDown(Keys.Left) || kState.IsKeyDown(Keys.A))
+                        {
+                            animatedSprite.direction = 2;
+                            animatedSprite.UpdateLeft();
+                        }
+                        else
+                        {
+                            animatedSprite.direction = 1;
+                            animatedSprite.UpdateDown();
+                        }
 
                         if (position.Y >= graphics.PreferredBackBufferHeight / 2)
                         {
                             if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= (Rows * TileHeight) - 10)
                             {
                                 OffSet -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
+                                {
+                                    GlobalVariables.MoveToLoc -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                }
                                 IsScrolling = true;
                             }
                             else
                             {
+                                oldPosition = position;
                                 position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                animatedSprite.position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
                         }
                         else
                         {
+                            oldPosition = position;
                             position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                            animatedSprite.position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
@@ -939,7 +1011,9 @@ namespace TextureAtlas
                         {
                             if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
                             {
+                                oldPosition -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 position = oldPosition;
+                                animatedSprite.oldWorldPos -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.WorldPos = animatedSprite.oldWorldPos;
                                 Valid = false;
                                 break;
@@ -956,17 +1030,25 @@ namespace TextureAtlas
                                 if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= (Rows * TileHeight) - 10)
                                 {
                                     OffSet -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
+                                    {
+                                        GlobalVariables.MoveToLoc -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    }
                                     IsScrolling = true;
                                 }
                                 else
                                 {
+                                    oldPosition = position;
                                     position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                    animatedSprite.position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
                                 }
                             }
                             else
                             {
+                                oldPosition = position;
                                 position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                                animatedSprite.position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
 
@@ -989,7 +1071,7 @@ namespace TextureAtlas
                             {
                                 foreach (Enemy enemy in Enemies)
                                 {
-                                    enemy.CharMovedDown(gameTime, velocityup);
+                                    enemy.Location -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 }
                             }
                         }
@@ -1047,35 +1129,20 @@ namespace TextureAtlas
             #region ClickEvents
 
             #region Inventory
-            //Clicked Inventory
-
-            //Is Inventory Being Closed
+            
             if (mouseState.X < 65 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnOpen == true || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnOpen == true)
             {
                 blnOpen = false;
-                //Disable attacks while clicked to close inventory
-                BlnAttack = false;
-                BlnDelay = true;
             }
 
-            //Is Inventory Being Opened
             else if (mouseState.X < 65 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnOpen == false || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnOpen == false)
             {
-                //Dis-Allow Attacking while inventory is open
-                BlnAttack = false;
-                //Set Boolean for Inventory being open to true
                 blnOpen = true;
-
-                //Create new inventory with no items
                 inventory = new Inventory(InvItems, InvPos);
             }
-            if (isDrag == true && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Pressed)
-            {
-            }
-            //If Inventory Open, Check for Mouse being Clicked To Drag
+
             else if (blnOpen && (mouseState.X - InvPos.X) > 17 && (mouseState.X - InvPos.X) < 388 && (mouseState.Y - InvPos.Y) > 8 && (mouseState.Y - InvPos.Y) < 70 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Pressed)
             {
-                //Start Inventory Drag
                 isDrag = true;
             }
             else
@@ -1087,15 +1154,12 @@ namespace TextureAtlas
 
             if (isDrag)
             {
-                BlnAttack = false;
-                //Set MouseOffset for beginning of drag
                 if (MouseOffSetx == 0 && MouseOffSety == 0)
                 {
                     MouseOffSetx = (mouseState.X - InvPos.X);
                     MouseOffSety = (mouseState.Y - InvPos.Y);
                 }
 
-                //Pin the Inventory Texture's position to the mouse while the button is held
                 InvPos = new Vector2((mouseState.X - MouseOffSetx), (mouseState.Y - MouseOffSety));
                 if (InvPos.X < 0)
                 {
@@ -1114,33 +1178,21 @@ namespace TextureAtlas
                     InvPos.Y = 6;
                 }
 
-                //Update Item Boxes in relation to the Inventory Background
                 inventory.Update(InvPos);
 
             }
 
-            //Is Equip being closed
             if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == true || NState.IsKeyDown(Keys.U) && !kState.IsKeyDown(Keys.U) && blnEquip == true)
             {
                 blnEquip = false;
-                //Disable attacks while clicked to close equip
-                BlnAttack = false;
-                BlnDelay = true;
             }
 
-            //Is Equipment being Opened
             else if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == false || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnEquip == false)
             {
-                //Dis-Allow Attacking while equip is open
-                BlnAttack = false;
-                //Set Boolean for equip being open to true
                 blnEquip = true;
-
-                //Create new equip
                 equipment = new Equipment(EquipItem);
             }
 
-            //Inventory Open
             if (blnOpen)
             {
                 for (int intlc = 0; intlc < InvItems.Count; intlc++)
@@ -1172,16 +1224,12 @@ namespace TextureAtlas
                     {
                         MSG.tmrDSP = 0f;
                         blnDSP = true;
-                        BlnAttack = false;
-                        BlnDelay = true;
                         break;
                     }
                     else
                     {
                         InvItems.Add(DroppedItems[lc]);
                         DroppedItems.Remove(DroppedItems[lc]);
-                        BlnAttack = false;
-                        BlnDelay = true;
                         break;
                     }
                 }
@@ -1190,88 +1238,62 @@ namespace TextureAtlas
             #endregion
 
             #region Attack
-            //Timer while Animation is in effect
-            if (AniTick)
-                AnimationTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            //Delay After Attack(Attack Speed)
-            if (BlnDelay)
-                AtkTmr += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            //Conditions for Attack to be possible
-            if (mouseState.LeftButton == ButtonState.Pressed && AnimationTimer < AnimationDuration && (AtkTmr <= TimeBetweenAttacks) && BlnAttack)
+            //Logic to Check if a Character has clicked on an enemy
+            foreach (Enemy en in Enemies)
             {
-                //Set Initial Sword Position for each given Direction
-                if (animatedSprite.direction == 1)
-                    animatedSprite.i = 0f;
-                if (animatedSprite.direction == 2)
-                    animatedSprite.i = 2f;
-                if (animatedSprite.direction == 3)
-                    animatedSprite.i = -2f;
-                if (animatedSprite.direction == 4)
-                    animatedSprite.i = 4f;
-
-                //Activate Attack Animation
-                animatedSprite.attack = true;
-                //Start Animation Timer
-                AniTick = true;
-
-                //Boolean for Can Attack is set to False
-                BlnAttack = false;
-            }
-
-            //Check to See if Animation is Finished, If so Resets Timers and Starts Attack Delay timer
-            if (AnimationTimer >= AnimationDuration)
-            {
-                //Reset Timer
-                AnimationTimer = 0;
-                //Stop Timer
-                AniTick = false;
-                //Start Delay
-                BlnDelay = true;
-                //Check Character's Direction and Attack Boolean and Set Rotation of Image(Sword)
-                if (animatedSprite.direction == 1 && animatedSprite.attack == true)
-                    animatedSprite.i = 0f;
-                if (animatedSprite.direction == 2 && animatedSprite.attack == true)
-                    animatedSprite.i = 2f;
-                if (animatedSprite.direction == 3 && animatedSprite.attack == true)
-                    animatedSprite.i = -2f;
-                if (animatedSprite.direction == 4 && animatedSprite.attack == true)
-                    animatedSprite.i = 4f;
-            }
-
-            //Check For Completion of Delay after Attacks
-            if (AtkTmr >= TimeBetweenAttacks)
-            {
-                //Reset Timer
-                AtkTmr = 0;
-                //Stop Timer
-                BlnDelay = false;
-                BlnAttack = true;
-            }
-            #endregion
-
-            #endregion
-
-            #region HitMonster
-            for (int l = 0; l < Enemies.Count; l++)
-            {
-                if (Math.Abs((animatedSprite.SwordTip.X - (Enemies[l].Location.X + (Enemies[l].graphicwidth / 2)))) < 30 && Math.Abs((animatedSprite.SwordTip.Y - (Enemies[l].Location.Y + (Enemies[l].graphicheight / 2)))) < 40 && animatedSprite.attack)
+                if (en.Bounds.Intersects(new Rectangle(mouseState.X, mouseState.Y, 5, 5)) && mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    //TODO : Need to Make Damage Based Stat
-                    //Remove HP Per Hit From Enemy
-
-                    DamageCounter = RNG.Next(15, 50);
-                    Enemies[l].hp -= DamageCounter;
-                    Enemies[l].DamageCounter += DamageCounter;
-                    if (animatedSprite.blnDisplaydamage)
-                        Enemies[l].blnShowDamage = true;
-                    else
-                        Enemies[l].blnShowDamage = false;
-                    //Enemies.Remove(Enemies[l]);
-                    //break;
+                    en.CharacterAttacked = true;
                 }
             }
+
+            //Logic to see if any enemies have Bln set to trigger character animation
+            foreach(Enemy en in Enemies)
+            {
+                if (en.CharacterAttacked)
+                {
+                    animatedSprite.AnimateAttack(en.Location);
+
+                    string damage;
+                    bool IsHit = GlobalVariables.RollVsHit(en.Level, en.Evasion);
+                    bool IsCrit = GlobalVariables.RollVsCrit();
+                    if (IsHit)
+                    {
+                        damage = Convert.ToString(GlobalVariables.RollMeleeHitDamage(IsCrit, en.Armour));
+                        if (IsCrit)
+                        {
+                            damage += "Crit";
+                        }
+                    }
+                    else
+                    {
+                        damage = "Miss";
+                    }
+                    en.hp -= DamageCounter;
+                    en.DamageCounter = damage;
+
+                    break;
+                }
+            }
+
+            if (!blnOpen && !isDrag && !blnEquip && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && PathFinding)
+            {
+                PathFinding = false;
+            }
+            else if (!blnOpen && !isDrag && !blnEquip && mouseState.LeftButton == ButtonState.Pressed && !PathFinding)
+            {
+                GlobalVariables.MoveToLoc = new Vector2(0, 0);
+                PathFinding = GlobalVariables.MoveCharacterToPosition(animatedSprite, this, new Vector2(mouseState.X, mouseState.Y), velocity, velocityup, Enemies);
+            }
+
+            if (!PathFinding)
+            {
+                PathFinding = GlobalVariables.MoveCharacterToPosition(animatedSprite, this, new Vector2(mouseState.X, mouseState.Y), velocity, velocityup, Enemies);
+            }
+
+            #endregion
+
             #endregion
 
             #region Global Updates

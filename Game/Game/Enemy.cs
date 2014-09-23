@@ -37,7 +37,11 @@ namespace TextureAtlas
         SpriteFont font;
         SpriteFont font2;
 
-        public int m = 2;
+        public int Width;
+        public int Height;
+        public int Level;
+        public int Evasion;
+        public int Armour;
         public int dir;
         public int move;
         public int Rows { get; set; }
@@ -51,7 +55,7 @@ namespace TextureAtlas
         private int offSetBoundsX;
         private int offSetBoundsY;
 
-        public float DamageCounter;
+        public string DamageCounter;
         public float i;
         public float hp;
         public float tothp;
@@ -61,18 +65,24 @@ namespace TextureAtlas
         private float counterDuration = 3f;
         private float currentTime = 0f;
 
-        public bool blnShowDamage;
         public bool Valid = false;
         public bool blnDie = false;
         public bool blnDead = false;
+        public bool CharacterAttacked = false;
+
+        public float m = 2;
 
         public string name;
 
     #endregion
 
-        public Enemy(Texture2D texture, Texture2D hpbar, Texture2D hpbar75, Texture2D hpbarHalf, Texture2D hpbarquarter, Texture2D hpbar40, SpriteFont Font, SpriteFont Font2, int rows, int columns, float MAXHP, Vector2 location, string Name, int HP, int offSetX, int offSetY)
+        public Enemy(Texture2D texture, Texture2D hpbar, Texture2D hpbar75, Texture2D hpbarHalf, Texture2D hpbarquarter, Texture2D hpbar40, SpriteFont Font, SpriteFont Font2, int rows, int columns, float MAXHP, Vector2 location, string Name, int HP, int offSetX, int offSetY, int lvl, int eva, int armor)
         {
-
+            Width = Convert.ToInt32(texture.Width / columns);
+            Height = Convert.ToInt32(texture.Height / rows);
+            Level = lvl;
+            Evasion = eva;
+            Armour = armor;
             Texture2 = texture;
             HpBar = hpbar;
             Rows = rows;
@@ -142,30 +152,6 @@ namespace TextureAtlas
 
 
             }
-        }
-
-        public void CharMovedRight(GameTime gameTime, Vector2 velocity)
-        {
-            Location -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-            worldloc -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-        }
-
-        public void CharMovedLeft(GameTime gameTime, Vector2 velocity)
-        {
-            Location += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-            worldloc += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-        }
-
-        public void CharMovedUp(GameTime gameTime, Vector2 velocityup)
-        {
-            Location += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-            worldloc += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-        }
-
-        public void CharMovedDown(GameTime gameTime, Vector2 velocityup)
-        {
-            Location -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-            worldloc -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         public void UpdateLeft(GameTime gameTime)
@@ -321,18 +307,39 @@ namespace TextureAtlas
                 }
             }
 
-            if (blnShowDamage && !blnDie && GlobalVariables.ShowEnemyDamage)
+            if (DamageCounter != null)
             {
-                if (m >= 2 && m <= 100)
+                if (!blnDie && GlobalVariables.ShowEnemyDamage)
                 {
-                    spriteBatch.DrawString(font2, DamageCounter.ToString(), new Vector2(location.X, ((location.Y - 40) - m)), Color.Red);
-                    m += (m / 2);
-                }
-                else
-                {
-                    m = 2;
-                    blnShowDamage = false;
-                    DamageCounter = 0;
+                    if (m < 100)
+                    {
+                        bool crit;
+                        if (DamageCounter.Contains("Crit"))
+                        {
+                            crit = true;
+                            DamageCounter = DamageCounter.Replace("Crit", "");
+                        }
+                        else
+                        {
+                            crit = false;
+                        }
+                        if (crit)
+                        {
+                            spriteBatch.DrawString(GlobalVariables.MediumFont, DamageCounter, new Vector2(location.X, (location.Y - m)), Color.Yellow);
+                            m += (float)(GlobalVariables.UserSetHeight * .001);
+                        }
+                        else
+                        {
+                            spriteBatch.DrawString(GlobalVariables.SmallFont, DamageCounter, new Vector2(location.X, (location.Y - m)), Color.Red);
+                            m += (float)(GlobalVariables.UserSetHeight * .001);
+                        }
+
+                    }
+                    else
+                    {
+                        m = 2;
+                        DamageCounter = null;
+                    }
                 }
             }
 
@@ -370,6 +377,5 @@ namespace TextureAtlas
             spriteBatch.End();
         }
     }
-
 }
 
