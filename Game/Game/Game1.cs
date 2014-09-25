@@ -45,8 +45,6 @@ namespace TextureAtlas
 
         public Vector2 OffSet = new Vector2(0, 0);
         public Vector2 position = new Vector2(150, 150);
-        public Vector2 oldPosition = new Vector2(0, 0);
-        public Vector2 position2 = new Vector2();
         public Vector2 velocity = new Vector2(300, 0);
         public Vector2 velocityup = new Vector2(0, 300);
         private Vector2 InvPos;
@@ -72,18 +70,20 @@ namespace TextureAtlas
         private bool ResolutionConfirmChangeBound = false;
         private bool ResolutionConfirmRevertBound = false;
         private bool blnIsDirty = false;
-        private bool blnWindowSizeBound = false;
-
+        
+        public int CountMouseHeld;
         public int dir = 1;
         public int DamageCounter = 0;
-        public int Columns = 16;
-        public int Rows = 16;
+        public int Columns = 26;
+        public int Rows = 26;
         public int TileWidth = 160;
         public int TileHeight = 160;
         private int DebugCycles = 40;
         private int IntDrop = 0;
         private int HP;
-        public int CountMouseHeld;
+        private int MaxHP;
+        private int EnemyEvasion;
+        private int EnemyArmour;
 
         public GameTime theGameTime { get; set; }
 
@@ -133,6 +133,7 @@ namespace TextureAtlas
         private float MouseOffSetx = 0f;
         private float MouseOffSety = 0f;
 
+        private Texture2D EnemyTexture;
         private Texture2D LegBG;
         private Texture2D texture;
         private Texture2D HeroTxt;
@@ -171,6 +172,11 @@ namespace TextureAtlas
 
         public Game1()
         {
+            GlobalVariables.Rows = 26;
+            GlobalVariables.Columns = 26;
+            GlobalVariables.TileHeight = 160;
+            GlobalVariables.TileWidth = 160;
+
             GlobalVariables.LoadGameData();
 
             graphics = new GraphicsDeviceManager(this);
@@ -185,9 +191,9 @@ namespace TextureAtlas
             {
                 if (!GlobalVariables.FullScreen)
                 {
-                    if (GlobalVariables.UserSetHeight > (GlobalVariables.ScreenHeight - 40))
+                    if (GlobalVariables.UserSetHeight > GlobalVariables.ScreenHeight)
                     {
-                        graphics.PreferredBackBufferHeight = (GlobalVariables.ScreenHeight - 40);
+                        graphics.PreferredBackBufferHeight = GlobalVariables.ScreenHeight;
                     }
                     else
                     {
@@ -209,14 +215,12 @@ namespace TextureAtlas
             else
             {
                 graphics.PreferredBackBufferWidth = GlobalVariables.ScreenWidth;
-                graphics.PreferredBackBufferHeight = GlobalVariables.ScreenHeight - 40;
+                graphics.PreferredBackBufferHeight = GlobalVariables.ScreenHeight;
                 GlobalVariables.UserSetWidth = GlobalVariables.ScreenWidth;
-                GlobalVariables.UserSetHeight = GlobalVariables.ScreenHeight - 40;
+                GlobalVariables.UserSetHeight = GlobalVariables.ScreenHeight;
                 graphics.IsFullScreen = false;
                 GlobalVariables.FullScreen = false;
             }
-
-            this.Window.AllowUserResizing = true;
 
             Content.RootDirectory = "Content";
             IsFixedTimeStep = true;
@@ -225,99 +229,77 @@ namespace TextureAtlas
 
         void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (sender == this.Window)
+            if (blnRevert)
             {
-                //ClientWindow Resized
-                graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-                GlobalVariables.UserSetHeight = Window.ClientBounds.Width;
-                GlobalVariables.UserSetHeight = Window.ClientBounds.Height;
-                GlobalVariables.SaveUserSettings();
-                blnIsDirty = true;
-            }
-            else
-            {
-                this.Window.ClientSizeChanged -= new EventHandler<EventArgs>(Window_ClientSizeChanged);
-                blnWindowSizeBound = false;
-                if (blnRevert)
+                if (GlobalVariables.OldFullScreen != graphics.IsFullScreen)
                 {
-                    if (GlobalVariables.OldFullScreen != graphics.IsFullScreen)
-                    {
-                        Toggle = true;
-                    }
-                    else
-                    {
-                        //Reset Graphics State to Old Graphics State
-                        graphics.PreferredBackBufferWidth = GlobalVariables.OldWidth;
-                        graphics.PreferredBackBufferHeight = GlobalVariables.OldHeight;
-                        GlobalVariables.UserSetHeight = GlobalVariables.OldWidth;
-                        GlobalVariables.UserSetHeight = GlobalVariables.OldHeight;
-                        blnIsDirty = true;
-
-                        //Flags are set to show Pause Menu at the Options Level
-                        blnRevert = false;
-                        blnIsConfirming = false;
-                    }
+                    Toggle = true;
                 }
                 else
                 {
-                    if (graphics.IsFullScreen != GlobalVariables.FullScreen)
+                    //Reset Graphics State to Old Graphics State
+                    graphics.PreferredBackBufferWidth = GlobalVariables.OldWidth;
+                    graphics.PreferredBackBufferHeight = GlobalVariables.OldHeight;
+                    GlobalVariables.UserSetHeight = GlobalVariables.OldWidth;
+                    GlobalVariables.UserSetHeight = GlobalVariables.OldHeight;
+                    blnIsDirty = true;
+
+                    //Flags are set to show Pause Menu at the Options Level
+                    blnRevert = false;
+                    blnIsConfirming = false;
+                }
+            }
+            else
+            {
+                if (graphics.IsFullScreen != GlobalVariables.FullScreen)
+                {
+                    Toggle = true;
+                    GlobalVariables.OldFullScreen = graphics.IsFullScreen;
+                }
+                //Code for Video Option Changes
+                if (GlobalVariables.NewHeight > 0 && GlobalVariables.NewWidth > 0)
+                {
+                    //Track Old Values
+                    GlobalVariables.OldWidth = graphics.PreferredBackBufferWidth;
+                    GlobalVariables.OldHeight = graphics.PreferredBackBufferHeight;
+
+                    GlobalVariables.UserSetHeight = GlobalVariables.NewHeight;
+                    GlobalVariables.UserSetWidth = GlobalVariables.NewWidth;
+
+                    if (GlobalVariables.NewWidth >= GlobalVariables.ScreenWidth)
                     {
-                        Toggle = true;
-                        GlobalVariables.OldFullScreen = graphics.IsFullScreen;
+                        GlobalVariables.NewWidth = GlobalVariables.ScreenWidth;
                     }
-                    //Code for Video Option Changes
-                    if (GlobalVariables.NewHeight > 0 && GlobalVariables.NewWidth > 0)
+                    if (GlobalVariables.NewHeight >= GlobalVariables.ScreenHeight)
                     {
-                        //Track Old Values
-                        GlobalVariables.OldWidth = graphics.PreferredBackBufferWidth;
-                        GlobalVariables.OldHeight = graphics.PreferredBackBufferHeight;
-
-                        GlobalVariables.UserSetHeight = GlobalVariables.ScreenHeight;
-                        GlobalVariables.UserSetWidth = GlobalVariables.ScreenWidth;
-
-                        //adjust screen size to fit screen
-                        if (!GlobalVariables.FullScreen)
-                        {
-                            if (GlobalVariables.NewWidth >= GlobalVariables.ScreenWidth)
-                            {
-                                GlobalVariables.NewWidth = GlobalVariables.ScreenWidth;
-                            }
-                            if (GlobalVariables.NewHeight >= (GlobalVariables.ScreenHeight - 40))
-                            {
-                                GlobalVariables.NewHeight = (GlobalVariables.ScreenHeight - 40);
-                            }
-                        }
-                        else
-                        {
-                            if (GlobalVariables.NewWidth >= GlobalVariables.ScreenWidth)
-                            {
-                                GlobalVariables.NewWidth = GlobalVariables.ScreenWidth;
-                            }
-                            if (GlobalVariables.NewHeight >= GlobalVariables.ScreenHeight)
-                            {
-                                GlobalVariables.NewHeight = GlobalVariables.ScreenHeight;
-                            }
-                        }
-
-                        graphics.PreferredBackBufferWidth = GlobalVariables.NewWidth;
-                        graphics.PreferredBackBufferHeight = GlobalVariables.NewHeight;
-
-                        blnIsDirty = true;
-
-                        //Reset New Values To 0 to pass above validation
-                        GlobalVariables.NewWidth = 0;
-                        GlobalVariables.NewHeight = 0;
-
-                        //Show Dialogue to Keep or Revert
-                        blnIsConfirming = true;
+                        GlobalVariables.NewHeight = GlobalVariables.ScreenHeight;
                     }
+
+                    graphics.PreferredBackBufferWidth = GlobalVariables.NewWidth;
+                    graphics.PreferredBackBufferHeight = GlobalVariables.NewHeight;
+
+                    blnIsDirty = true;
+
+                    //Reset New Values To 0 to pass above validation
+                    GlobalVariables.NewWidth = 0;
+                    GlobalVariables.NewHeight = 0;
+
+                    //Show Dialogue to Keep or Revert
+                    blnIsConfirming = true;
                 }
             }
         }
 
         protected override void Initialize()
         {
+            IntPtr hWnd = this.Window.Handle;
+            var control = System.Windows.Forms.Control.FromHandle(hWnd);
+            var form = control.FindForm();
+            form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            if (GraphicsDevice.DisplayMode.Width == graphics.PreferredBackBufferWidth && GraphicsDevice.DisplayMode.Height == graphics.PreferredBackBufferHeight)
+            {
+                form.Location = new System.Drawing.Point(0, 0);
+            }
             CountMouseHeld = 1;
             GlobalVariables.CurrentDir = GlobalVariables.Dir.Nothing;
             Components.Add(new GamerServicesComponent(this));
@@ -378,13 +360,8 @@ namespace TextureAtlas
 
         protected override void Update(GameTime gameTime)
         {
-            theGameTime = gameTime;
 
-            if (!blnWindowSizeBound)
-            {
-                this.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
-                blnWindowSizeBound = true;
-            }
+            theGameTime = gameTime;
 
             #region StartTimer
 
@@ -534,16 +511,30 @@ namespace TextureAtlas
             if (Enemies.Count < 1 || NState.IsKeyDown(Keys.F1))
             {
                 Valid = true;
+                //Create Random Enemy
+                int Enemy = RNG.Next(1,1);
+                switch(Enemy){
+
+                    case 1:
+
+                        EnemyTexture = texture;
+                        name = "Turd Burglar";
+                        EnemyEvasion = 1;
+                        EnemyArmour = 1;
+                        HP = RNG.Next(500, 1500);
+                        MaxHP = 1500;
+                        break;
+
+                }
                 //Create Random Location
-                position2.X = RNG.Next(1, (Rows * TileHeight));
-                position2.Y = RNG.Next(1, (Columns * TileWidth));
+                Rectangle SpawnPos = new Rectangle((RNG.Next(1, ((Rows - 10) * TileHeight))),(RNG.Next(1, ((Columns - 10) * TileWidth))), EnemyTexture.Width, EnemyTexture.Height);
                 //Check to prevent enemies from spawn on top of each other or on Character
                 if (Enemies.Count >= 0)
                 {
                     if (Enemies.Count == 0)
                     {
                         //logic to prevent enemies from spawning on character, when no enemies are in list
-                        if (Math.Abs((position2.X - position.X)) < 50 && Math.Abs((position2.Y - position.Y)) < 90)
+                        if (SpawnPos.Intersects(animatedSprite.Bounds))
                         {
                             Valid = false;
                         }
@@ -551,13 +542,13 @@ namespace TextureAtlas
                     for (int l = 0; l < Enemies.Count; l++)
                     {
                         //Check to prevent enemies from spawning on top of eachother
-                        if (Math.Abs((position2.X - Enemies[l].Location.X)) < 50 && Math.Abs((position2.Y - Enemies[l].Location.Y)) < 90)
+                        if (SpawnPos.Intersects(Enemies[l].Bounds))
                         {
                             Valid = false;
                             break;
                         }
                         //check to prevent enemies from spawning on top of character
-                        if (Math.Abs((position2.X - position.X)) < 50 && Math.Abs((position2.Y - position.Y)) < 90)
+                        if (SpawnPos.Intersects(animatedSprite.Bounds))
                         {
                             Valid = false;
                             break;
@@ -566,15 +557,21 @@ namespace TextureAtlas
                     //If Valid Spawn Point
                     if (Valid)
                     {
-                        //Health Set Here
-                        HP = RNG.Next(500, 1500);
-                        Enemies.Add(new Enemy(texture, hpbarFull, hpbar75, hpbarHalf, hpbarQuarter, hpbar40, Font1, Font2, 4, 4, 1500, position2, name, HP, 15, 25, 1, 100, 100));
+                        Vector2 SpawnLocation = new Vector2(SpawnPos.X, SpawnPos.Y);
+
+                        Enemies.Add(new Enemy(EnemyTexture, hpbarFull, hpbar75, hpbarHalf, hpbarQuarter, hpbar40, Font1, Font2, 4, 4, MaxHP, SpawnLocation, name, HP, GlobalVariables.CharacterLevel, EnemyEvasion, EnemyArmour));
                     }
                 }
             }
             #endregion
 
             #region keyevent
+
+            if (kState.IsKeyDown(Keys.A) || kState.IsKeyDown(Keys.W) || kState.IsKeyDown(Keys.S) || kState.IsKeyDown(Keys.D) || kState.IsKeyDown(Keys.Left) || kState.IsKeyDown(Keys.Up) || kState.IsKeyDown(Keys.Down) || kState.IsKeyDown(Keys.Right))
+            {
+                PathFinding = true;
+                GlobalVariables.CurrentDir = GlobalVariables.Dir.Nothing;
+            }
 
             //Character Movement Left
 
@@ -601,7 +598,6 @@ namespace TextureAtlas
                             }
                             else
                             {
-                                oldPosition = position;
                                 position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
@@ -609,26 +605,22 @@ namespace TextureAtlas
                         }
                         else
                         {
-                            oldPosition = position;
                             position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             animatedSprite.position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
-                        animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                         animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
                     else
                     {
+                        Rectangle newRectangle = animatedSprite.Bounds;
+                        newRectangle.X -= Convert.ToInt32((velocity * (float)gameTime.ElapsedGameTime.TotalSeconds).X);
+
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
-                            {
-                                oldPosition += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                position = oldPosition;
-                                animatedSprite.oldWorldPos += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                animatedSprite.WorldPos = animatedSprite.oldWorldPos;
-
+                            
+                            if (newRectangle.Intersects(Enemies[l].Bounds)){
                                 Valid = false;
                                 break;
                             }
@@ -651,7 +643,6 @@ namespace TextureAtlas
                                 }
                                 else
                                 {
-                                    oldPosition = position;
                                     position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     animatedSprite.position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
@@ -659,13 +650,11 @@ namespace TextureAtlas
                             }
                             else
                             {
-                                oldPosition = position;
                                 position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.position -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
 
-                            animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                             animatedSprite.WorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
                             if (DroppedItems.Count > 0)
@@ -710,7 +699,7 @@ namespace TextureAtlas
 
                         if (position.X >= graphics.PreferredBackBufferWidth / 2)
                         {
-                            if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 10)
+                            if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= ((Columns - 10) * TileWidth) - 10)
                             {
                                 OffSet -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
@@ -721,7 +710,6 @@ namespace TextureAtlas
                             }
                             else
                             {
-                                oldPosition = position;
                                 position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
@@ -729,26 +717,23 @@ namespace TextureAtlas
                         }
                         else
                         {
-                            oldPosition = position;
                             position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             animatedSprite.position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
-                        animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                         animatedSprite.WorldPos += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
                     else
                     {
+                        Rectangle newRectangle = animatedSprite.Bounds;
+                        newRectangle.X += Convert.ToInt32((velocity * (float)gameTime.ElapsedGameTime.TotalSeconds).X);
+
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
-                            {
 
-                                oldPosition -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                position = oldPosition;
-                                animatedSprite.oldWorldPos -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                animatedSprite.WorldPos = animatedSprite.oldWorldPos;
+                            if (newRectangle.Intersects(Enemies[l].Bounds))
+                            {
                                 Valid = false;
                                 break;
                             }
@@ -761,7 +746,7 @@ namespace TextureAtlas
 
                             if (position.X >= graphics.PreferredBackBufferWidth / 2)
                             {
-                                if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= (Columns * TileWidth) - 10)
+                                if (animatedSprite.WorldPos.X + (graphics.PreferredBackBufferWidth / 2) <= ((Columns - 10) * TileWidth) - 10)
                                 {
                                     OffSet -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
@@ -772,7 +757,6 @@ namespace TextureAtlas
                                 }
                                 else
                                 {
-                                    oldPosition = position;
                                     position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     animatedSprite.position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
@@ -780,13 +764,11 @@ namespace TextureAtlas
                             }
                             else
                             {
-                                oldPosition = position;
                                 position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.position += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
                             }
 
-                            animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                             animatedSprite.WorldPos += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
 
                             //Check for Items
@@ -855,7 +837,6 @@ namespace TextureAtlas
                             }
                             else
                             {
-                                oldPosition = position;
                                 position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
@@ -863,30 +844,28 @@ namespace TextureAtlas
                         }
                         else
                         {
-                            oldPosition = position;
                             position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             animatedSprite.position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
                         }
 
-                        animatedSprite.oldWorldPos = animatedSprite.WorldPos;
                         animatedSprite.WorldPos -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                     }
                     else
                     {
+                        Rectangle newRectangle = animatedSprite.Bounds;
+                        newRectangle.Y -= Convert.ToInt32((velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds).Y);
+
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
-                            {
-                                oldPosition += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                position = oldPosition;
-                                animatedSprite.oldWorldPos += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                animatedSprite.WorldPos = animatedSprite.oldWorldPos;
 
+                            if (newRectangle.Intersects(Enemies[l].Bounds))
+                            {
                                 Valid = false;
                                 break;
                             }
                         }
+
                         if (Valid)
                         {
 
@@ -906,7 +885,6 @@ namespace TextureAtlas
                                 }
                                 else
                                 {
-                                    oldPosition = position;
                                     position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     animatedSprite.position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
@@ -914,7 +892,6 @@ namespace TextureAtlas
                             }
                             else
                             {
-                                oldPosition = position;
                                 position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.position -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
@@ -977,7 +954,7 @@ namespace TextureAtlas
 
                         if (position.Y >= graphics.PreferredBackBufferHeight / 2)
                         {
-                            if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= (Rows * TileHeight) - 10)
+                            if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= ((Rows - 10) * TileHeight) - 10)
                             {
                                 OffSet -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
@@ -988,7 +965,6 @@ namespace TextureAtlas
                             }
                             else
                             {
-                                oldPosition = position;
                                 position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
@@ -996,7 +972,6 @@ namespace TextureAtlas
                         }
                         else
                         {
-                            oldPosition = position;
                             position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             animatedSprite.position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                             IsScrolling = false;
@@ -1007,14 +982,14 @@ namespace TextureAtlas
 
                     else
                     {
+                        Rectangle newRectangle = animatedSprite.Bounds;
+                        newRectangle.Y += Convert.ToInt32((velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds).Y);
+
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            if (animatedSprite.Bounds.Intersects(Enemies[l].Bounds))
+
+                            if (newRectangle.Intersects(Enemies[l].Bounds))
                             {
-                                oldPosition -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                position = oldPosition;
-                                animatedSprite.oldWorldPos -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                                animatedSprite.WorldPos = animatedSprite.oldWorldPos;
                                 Valid = false;
                                 break;
                             }
@@ -1027,7 +1002,7 @@ namespace TextureAtlas
 
                             if (position.Y >= graphics.PreferredBackBufferHeight / 2)
                             {
-                                if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= (Rows * TileHeight) - 10)
+                                if (animatedSprite.WorldPos.Y + (graphics.PreferredBackBufferHeight / 2) <= ((Rows - 10) * TileHeight) - 10)
                                 {
                                     OffSet -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     if (GlobalVariables.MoveToLoc.X > 0 && GlobalVariables.MoveToLoc.Y > 0)
@@ -1038,7 +1013,6 @@ namespace TextureAtlas
                                 }
                                 else
                                 {
-                                    oldPosition = position;
                                     position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     animatedSprite.position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                     IsScrolling = false;
@@ -1046,7 +1020,6 @@ namespace TextureAtlas
                             }
                             else
                             {
-                                oldPosition = position;
                                 position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 animatedSprite.position += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
                                 IsScrolling = false;
@@ -1083,6 +1056,7 @@ namespace TextureAtlas
                     }
                 }
             }
+
             #endregion
 
             #region monster
@@ -1129,7 +1103,7 @@ namespace TextureAtlas
             #region ClickEvents
 
             #region Inventory
-            
+
             if (mouseState.X < 65 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnOpen == true || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnOpen == true)
             {
                 blnOpen = false;
@@ -1240,40 +1214,49 @@ namespace TextureAtlas
             #region Attack
 
             //Logic to Check if a Character has clicked on an enemy
-            foreach (Enemy en in Enemies)
+            if (mouseState.LeftButton == ButtonState.Pressed)
             {
-                if (en.Bounds.Intersects(new Rectangle(mouseState.X, mouseState.Y, 5, 5)) && mouseState.LeftButton == ButtonState.Pressed)
+                foreach (Enemy en in Enemies)
                 {
-                    en.CharacterAttacked = true;
+                    if (en.Bounds.Intersects(new Rectangle(mouseState.X, mouseState.Y, 5, 5)))
+                    {
+                        en.CharacterAttacked = true;
+                    }
                 }
             }
+            
 
             //Logic to see if any enemies have Bln set to trigger character animation
-            foreach(Enemy en in Enemies)
+            foreach (Enemy en in Enemies)
             {
-                if (en.CharacterAttacked)
+                if (en.CharacterAttacked && !PathFinding)
                 {
-                    animatedSprite.AnimateAttack(en.Location);
+                    PathFinding = GlobalVariables.MoveCharacterToPosition(animatedSprite, this, en.Location, velocity, velocityup, Enemies);
 
-                    string damage;
-                    bool IsHit = GlobalVariables.RollVsHit(en.Level, en.Evasion);
-                    bool IsCrit = GlobalVariables.RollVsCrit();
-                    if (IsHit)
+                    if (PathFinding)
                     {
-                        damage = Convert.ToString(GlobalVariables.RollMeleeHitDamage(IsCrit, en.Armour));
-                        if (IsCrit)
+                        animatedSprite.AnimateAttack(en.Bounds);
+
+                        string damage;
+                        bool IsHit = GlobalVariables.RollVsHit(en.Level, en.Evasion);
+                        bool IsCrit = GlobalVariables.RollVsCrit();
+                        if (IsHit)
                         {
-                            damage += "Crit";
+                            damage = Convert.ToString(GlobalVariables.RollMeleeHitDamage(IsCrit, en.Armour));
+                            if (IsCrit)
+                            {
+                                damage += "Crit";
+                            }
                         }
-                    }
-                    else
-                    {
-                        damage = "Miss";
-                    }
-                    en.hp -= DamageCounter;
-                    en.DamageCounter = damage;
+                        else
+                        {
+                            damage = "Miss";
+                        }
+                        en.hp -= DamageCounter;
+                        en.DamageCounter = damage;
 
-                    break;
+                        break;
+                    }
                 }
             }
 

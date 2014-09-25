@@ -76,7 +76,7 @@ namespace TextureAtlas
 
     #endregion
 
-        public Enemy(Texture2D texture, Texture2D hpbar, Texture2D hpbar75, Texture2D hpbarHalf, Texture2D hpbarquarter, Texture2D hpbar40, SpriteFont Font, SpriteFont Font2, int rows, int columns, float MAXHP, Vector2 location, string Name, int HP, int offSetX, int offSetY, int lvl, int eva, int armor)
+        public Enemy(Texture2D texture, Texture2D hpbar, Texture2D hpbar75, Texture2D hpbarHalf, Texture2D hpbarquarter, Texture2D hpbar40, SpriteFont Font, SpriteFont Font2, int rows, int columns, float MAXHP, Vector2 location, string Name, int HP, int lvl, int eva, int armor)
         {
             Width = Convert.ToInt32(texture.Width / columns);
             Height = Convert.ToInt32(texture.Height / rows);
@@ -90,8 +90,6 @@ namespace TextureAtlas
             currentFrame = 0;
             totalFrames = Rows * Columns;
             Location = location;
-            offSetBoundsX = offSetX;
-            offSetBoundsY = offSetY;
             worldloc = location;
             name = Name;
             tothp = HP;
@@ -159,7 +157,9 @@ namespace TextureAtlas
             Valid = true;
             if (worldloc.X > 10)
             {
-                if (Math.Abs(((Location.X - 10) - charpos.X)) < 35 && (Math.Abs(Location.Y - charpos.Y) < 75))
+                Rectangle newBounds = Bounds;
+                newBounds.X -= Convert.ToInt32((velocity * (float)gameTime.ElapsedGameTime.TotalSeconds).X);
+                if (newBounds.Intersects(GlobalVariables.CharacterBounds))
                 {
                     Valid = false;
                 }
@@ -186,9 +186,11 @@ namespace TextureAtlas
         public void UpdateRight(GameTime gameTime)
         {
             Valid = true;
-            if (worldloc.X < 1250)
+            if (worldloc.X < (GlobalVariables.Columns - 10) * GlobalVariables.TileWidth)
             {
-                if (Math.Abs(((Location.X + 10) - charpos.X)) < 35 && (Math.Abs(Location.Y - charpos.Y) < 75))
+                Rectangle newBounds = Bounds;
+                newBounds.X += Convert.ToInt32((velocity * (float)gameTime.ElapsedGameTime.TotalSeconds).X);
+                if (newBounds.Intersects(GlobalVariables.CharacterBounds))
                 {
                     Valid = false;
                 }
@@ -215,9 +217,11 @@ namespace TextureAtlas
         public void UpdateDown(GameTime gameTime)
         {
             Valid = true;
-            if (worldloc.Y < 550)
+            if (worldloc.Y < (GlobalVariables.TileHeight * (GlobalVariables.Rows - 10)))
             {
-                if (Math.Abs(((Location.X) - charpos.X)) < 35 && (Math.Abs((Location.Y + 10) - charpos.Y) < 75))
+                Rectangle newBounds = Bounds;
+                newBounds.Y += Convert.ToInt32((velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds).X);
+                if (newBounds.Intersects(GlobalVariables.CharacterBounds))
                 {
                     Valid = false;
                 }
@@ -246,7 +250,9 @@ namespace TextureAtlas
             Valid = true;
             if (worldloc.Y > -10)
             {
-                if (Math.Abs(((Location.X) - charpos.X)) < 35 && (Math.Abs((Location.Y - 10) - charpos.Y) < 75))
+                Rectangle newBounds = Bounds;
+                newBounds.Y -= Convert.ToInt32((velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds).X);
+                if (newBounds.Intersects(GlobalVariables.CharacterBounds))
                 {
                     Valid = false;
                 }
@@ -283,7 +289,13 @@ namespace TextureAtlas
             graphicwidth = width;
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
-            Bounds = new Rectangle(destinationRectangle.X + offSetBoundsX, destinationRectangle.Y + offSetBoundsY, destinationRectangle.Width - (offSetBoundsX * 2), destinationRectangle.Height - (offSetBoundsY * 2));
+
+            Bounds = destinationRectangle;
+            Bounds.X += Convert.ToInt32(width * .25);
+            Bounds.Y += Convert.ToInt32(height * .1);
+            Bounds.Width = Convert.ToInt32(width * .75);
+            Bounds.Height = Convert.ToInt32(height * .9);
+
             Rectangle Rec1 = new Rectangle((int)location.X, (int)location.Y, width1, height1);
 
             spriteBatch.Begin();

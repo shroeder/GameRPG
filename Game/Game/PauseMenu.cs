@@ -521,7 +521,7 @@ namespace TextureAtlas
 
                     spriteBatch.Begin();
 
-                    spriteBatch.DrawString(font, "Keep Changes?", new Vector2((Rect.X + (int)(gfx.PreferredBackBufferWidth * .20)), ((Rect.Y) + (int)(gfx.PreferredBackBufferHeight * .01))), Color.WhiteSmoke);
+                    spriteBatch.DrawString(font, "Keep Changes?", new Vector2((Rect.X + (int)(gfx.PreferredBackBufferWidth * .205)), ((Rect.Y) + (int)(gfx.PreferredBackBufferHeight * .02))), Color.WhiteSmoke);
 
                     spriteBatch.End();
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
@@ -18,6 +19,16 @@ namespace TextureAtlas
 {
     public static class GlobalVariables
     {
+        public enum CollisionDirection
+        {
+            UpRight,
+            UpLeft,
+            DownRight,
+            DownLeft
+        }
+
+        public static CollisionDirection CollideDirection { get; set; }
+
         public enum Pos
         {
             IsRight,
@@ -69,10 +80,16 @@ namespace TextureAtlas
 
         public static int CharacterMinDmg { get; set; }
         public static int CharacterMaxDmg { get; set; }
+        public static Rectangle CharacterBounds { get; set; }
+        public static int Rows { get; set; }
+        public static int Columns { get; set; }
+        public static int TileHeight { get; set; }
+        public static int TileWidth { get; set; }
 
         public static float OverRoll { get; set; }
 
         //Savable Values
+        public static int CharacterMeleeRange { get; set; }
         public static int CharacterWeaponType { get; set; }
         public static int GameDifficulty { get; set; }
         public static int CharacterLevel { get; set; }
@@ -178,6 +195,7 @@ namespace TextureAtlas
         [Serializable]
         public struct GameData
         {
+            public int MeleeRange { get; set; }
             public int WeaponType { get; set; }
             public int Difficulty { get; set; }
             public int Level { get; set; }
@@ -233,6 +251,7 @@ namespace TextureAtlas
         {
             GameData data = new GameData();
 
+            data.MeleeRange = CharacterMeleeRange;
             data.WeaponType = CharacterWeaponType;
             data.Difficulty = GameDifficulty;
             data.Level = CharacterLevel;
@@ -324,6 +343,7 @@ namespace TextureAtlas
             stream.Close();
             container.Dispose();
 
+            CharacterMeleeRange = data.MeleeRange;
             CharacterWeaponType = data.WeaponType;
             GameDifficulty = data.Difficulty;
             CharacterLevel = data.Level;
@@ -714,6 +734,21 @@ namespace TextureAtlas
 
         public static bool MoveCharacterToPosition(AnimatedSprite Character, Game1 Game, Vector2 MoveTo, Vector2 Velocity, Vector2 VelocityUp, List<Enemy> enemies)
         {
+
+            Rectangle HeroMeleeRange = new Rectangle((Character.Bounds.X - CharacterMeleeRange), (Character.Bounds.Y - CharacterMeleeRange), (Character.Bounds.Width + (CharacterMeleeRange * 2)), (Character.Bounds.Height + (CharacterMeleeRange * 2)));
+            
+            foreach (Enemy en in enemies){
+                if (en.CharacterAttacked){
+                    if (HeroMeleeRange.Intersects(en.Bounds))
+                    {
+                        CurrentDir = Dir.Nothing;
+                        MoveToLoc = new Vector2(0, 0);
+                        return true;
+                    }
+                }
+            }
+
+
             if (MoveToLoc.X == 0 && MoveToLoc.Y == 0)
             {
                 if (MoveTo.X < ((Character.Height + 10) / 2))

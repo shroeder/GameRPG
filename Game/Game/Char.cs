@@ -28,7 +28,6 @@ namespace TextureAtlas
         public Vector2 position;
         public Vector2 SwordTip;
         public Vector2 WorldPos;
-        public Vector2 oldWorldPos;
 
         public int Width;
         public int Height;
@@ -42,6 +41,7 @@ namespace TextureAtlas
 
         public bool IsAttacking = false;
         public bool attack = false;
+        public bool FinishAttack = false;
         public bool blnDisplaydamage = false;
 
         public float i;
@@ -53,6 +53,12 @@ namespace TextureAtlas
             {
                 GlobalVariables.CharacterLevel = 1;
             }
+
+            if (GlobalVariables.CharacterMeleeRange == 0)
+            {
+                GlobalVariables.CharacterMeleeRange = 20;
+            }
+
             Width = Convert.ToInt32(texture.Width / columns);
             Height = Convert.ToInt32(texture.Height / rows);
             position = Location;
@@ -122,139 +128,106 @@ namespace TextureAtlas
             }
         }
 
-        public void UpdateDownRight(){}
+        public void UpdateDownRight() { }
 
-        public void UpdateDownLeft(){}
+        public void UpdateDownLeft() { }
 
-        public void UpdateUpRight(){}
+        public void UpdateUpRight() { }
 
-        public void UpdateUpLeft(){}
+        public void UpdateUpLeft() { }
 
-        public void AnimateAttack(Vector2 loc)
+        public void AnimateAttack(Rectangle EnemyBounds)
         {
             attack = true;
-            Vector2 Dif = position - loc;
-            if (Dif.X >= 0)
-            {
-                if (Dif.Y >= 0)
-                {
-                    if (Dif.X >= Dif.Y)
-                    {
-                        Direction = DirToAttack.Up;
-                    }
-                    else
-                    {
-                        Direction = DirToAttack.Left;
-                    }
-                }
-                else if (Dif.Y < 0)
-                {
-                    if (Math.Abs(Dif.Y) <= Dif.X)
-                    {
-                        Direction = DirToAttack.Down;
-                    }
-                    else
-                    {
-                        Direction = DirToAttack.Left;
-                    }
-                }
-                else
-                {
-                    Direction = DirToAttack.Left;
-                }
-            }
-            else
-            {
-                if (Dif.Y >= 0)
-                {
-                    if (Math.Abs(Dif.X) >= Dif.Y)
-                    {
-                        Direction = DirToAttack.Up;
-                    }
-                    else
-                    {
-                        Direction = DirToAttack.Right;
-                    }
-                }
-                else if (Dif.Y < 0)
-                {
-                    if (Math.Abs(Dif.Y) <= Math.Abs(Dif.X))
-                    {
-                        Direction = DirToAttack.Down;
-                    }
-                    else
-                    {
-                        Direction = DirToAttack.Right;
-                    }
-                }
-                else
-                {
-                    Direction = DirToAttack.Right;
-                }
-            }
+
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 location)
         {
             if (attack)
             {
-                if (Direction == DirToAttack.Down)
+                if (currentFrame > -1 && currentFrame < 4)
                 {
-                    if (!IsAttacking){
+                    //Down
+                    if (attack)
+                    {
                         currentFrame = 4;
+                        attack = false;
                         IsAttacking = true;
-                        attack = true;
                     }
-                    else
+                    else if(IsAttacking)
                     {
                         currentFrame = 5;
                         IsAttacking = false;
-                        attack = false;
+                        FinishAttack = true;
+                    }
+                    else if (FinishAttack)
+                    {
+                        currentFrame = 0;
+                        FinishAttack = false;
                     }
                 }
-                else if (Direction == DirToAttack.Up)
+                else if (currentFrame > 5 && currentFrame < 10)
                 {
-                    if (!IsAttacking)
+                    //Right
+                    if (attack)
                     {
                         currentFrame = 10;
+                        attack = false;
                         IsAttacking = true;
-                        attack = true;
                     }
-                    else
+                    else if (IsAttacking)
                     {
                         currentFrame = 11;
-                        IsAttacking = true;
-                        attack = false;
+                        IsAttacking = false;
+                        FinishAttack = true;
+                    }
+                    else if (FinishAttack)
+                    {
+                        currentFrame = 6;
+                        FinishAttack = false;
                     }
                 }
-                else if (Direction == DirToAttack.Left)
+                else if (currentFrame > 12 && currentFrame < 16)
                 {
-                    if (!IsAttacking)
+                    //Left
+                    if (attack)
                     {
                         currentFrame = 16;
+                        attack = false;
                         IsAttacking = true;
-                        attack = true;
                     }
-                    else
+                    else if (IsAttacking)
                     {
                         currentFrame = 17;
                         IsAttacking = false;
-                        attack = false;
+                        FinishAttack = true;
+                    }
+                    else if (FinishAttack)
+                    {
+                        currentFrame = 12;
+                        FinishAttack = false;
                     }
                 }
-                else if (Direction == DirToAttack.Right)
+                else if (currentFrame > 18 && currentFrame < 22)
                 {
-                    if (!IsAttacking)
+                    //Up
+                    if (attack)
                     {
                         currentFrame = 22;
+                        attack = false;
                         IsAttacking = true;
-                        attack = true;
                     }
-                    else
+                    else if (IsAttacking)
                     {
                         currentFrame = 23;
                         IsAttacking = false;
-                        attack = false;
+                        FinishAttack = true;
+                    }
+                    else if (FinishAttack)
+                    {
+                        currentFrame = 18;
+                        FinishAttack = false;
                     }
                 }
             }
@@ -265,7 +238,16 @@ namespace TextureAtlas
             int column = currentFrame % Columns;
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
-            Bounds = new Rectangle(destinationRectangle.X + 15, destinationRectangle.Y + 25, destinationRectangle.Width - 30, destinationRectangle.Height - 50);
+
+            Bounds = destinationRectangle;
+            Bounds.X += Convert.ToInt32(width * .25);
+            Bounds.Y += Convert.ToInt32(height * .1);
+            Bounds.Width = Convert.ToInt32(width * .60);
+            Bounds.Height = Convert.ToInt32(height * .8);
+
+            new Rectangle(destinationRectangle.X + 15, destinationRectangle.Y + 25, destinationRectangle.Width - 30, destinationRectangle.Height - 50);
+
+            GlobalVariables.CharacterBounds = Bounds;
 
             spriteBatch.Begin();
             spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
@@ -275,4 +257,3 @@ namespace TextureAtlas
     }
 }
 
-   
