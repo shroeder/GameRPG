@@ -40,14 +40,15 @@ namespace TextureAtlas
 
         private KeyboardState kState;
         private KeyboardState NState;
-        private MouseState MoldState;
-        private MouseState mouseState;
+        public MouseState MoldState;
+        public MouseState mouseState;
 
         public Vector2 OffSet = new Vector2(0, 0);
         public Vector2 position = new Vector2(150, 150);
         public Vector2 velocity = new Vector2(300, 0);
         public Vector2 velocityup = new Vector2(0, 300);
         private Vector2 InvPos;
+        private Vector2 OldPos = new Vector2(0,0);
 
         public bool LeftMouseHeld = false;
         public bool PathFinding = true;
@@ -70,7 +71,7 @@ namespace TextureAtlas
         private bool ResolutionConfirmChangeBound = false;
         private bool ResolutionConfirmRevertBound = false;
         private bool blnIsDirty = false;
-        
+
         public int CountMouseHeld;
         public int dir = 1;
         public int DamageCounter = 0;
@@ -84,6 +85,7 @@ namespace TextureAtlas
         private int MaxHP;
         private int EnemyEvasion;
         private int EnemyArmour;
+        private int Intlc;
 
         public GameTime theGameTime { get; set; }
 
@@ -300,7 +302,7 @@ namespace TextureAtlas
             {
                 form.Location = new System.Drawing.Point(0, 0);
             }
-            CountMouseHeld = 1;
+            CountMouseHeld = 0;
             GlobalVariables.CurrentDir = GlobalVariables.Dir.Nothing;
             Components.Add(new GamerServicesComponent(this));
             base.Initialize();
@@ -361,6 +363,38 @@ namespace TextureAtlas
         protected override void Update(GameTime gameTime)
         {
 
+            if (!PathFinding)
+            {
+                Intlc += 1;
+                if (OldPos.X == 0 && OldPos.Y == 0)
+                {
+                    OldPos = animatedSprite.WorldPos;
+                }
+                else
+                {
+                    if (Intlc >= 20)
+                    {
+                        Vector2 newvalue = OldPos - animatedSprite.WorldPos;
+                        if (newvalue.X < 50 && newvalue.X > -50 && newvalue.Y < 50 && newvalue.Y > -50)
+                        {
+                            PathFinding = true;
+                            GlobalVariables.CurrentDir = GlobalVariables.Dir.Nothing;
+                            GlobalVariables.MoveToLoc = new Vector2(0, 0);
+                        }
+                        else
+                        {
+                            OldPos = new Vector2(0, 0);
+                            Intlc = 0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                OldPos = new Vector2(0, 0);
+                Intlc = 0;
+            }
+
             theGameTime = gameTime;
 
             #region StartTimer
@@ -402,7 +436,7 @@ namespace TextureAtlas
                 CountMouseHeld = 0;
             }
 
-            if (CountMouseHeld > 20)
+            if (CountMouseHeld > 10)
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
@@ -413,6 +447,10 @@ namespace TextureAtlas
                     LeftMouseHeld = false;
                     CountMouseHeld = 0;
                 }
+            }
+            else
+            {
+                LeftMouseHeld = false;
             }
 
             #region Debug
@@ -1214,7 +1252,7 @@ namespace TextureAtlas
             #region Attack
 
             //Logic to Check if a Character has clicked on an enemy
-            if (mouseState.LeftButton == ButtonState.Pressed)
+            if (mouseState.LeftButton == ButtonState.Pressed && !LeftMouseHeld)
             {
                 foreach (Enemy en in Enemies)
                 {
@@ -1262,6 +1300,10 @@ namespace TextureAtlas
 
             if (!blnOpen && !isDrag && !blnEquip && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && PathFinding)
             {
+                foreach (Enemy en in Enemies)
+                {
+                    en.CharacterAttacked = false;
+                }
                 PathFinding = false;
             }
             else if (!blnOpen && !isDrag && !blnEquip && mouseState.LeftButton == ButtonState.Pressed && !PathFinding)

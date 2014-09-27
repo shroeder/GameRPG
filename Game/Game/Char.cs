@@ -41,6 +41,7 @@ namespace TextureAtlas
 
         public bool IsAttacking = false;
         public bool attack = false;
+        public bool attack1 = false;
         public bool FinishAttack = false;
         public bool blnDisplaydamage = false;
 
@@ -56,7 +57,7 @@ namespace TextureAtlas
 
             if (GlobalVariables.CharacterMeleeRange == 0)
             {
-                GlobalVariables.CharacterMeleeRange = 20;
+                GlobalVariables.CharacterMeleeRange = 40;
             }
 
             Width = Convert.ToInt32(texture.Width / columns);
@@ -139,6 +140,7 @@ namespace TextureAtlas
         public void AnimateAttack(Rectangle EnemyBounds)
         {
             attack = true;
+            attack1 = true;
 
         }
 
@@ -146,88 +148,97 @@ namespace TextureAtlas
         {
             if (attack)
             {
-                if (currentFrame > -1 && currentFrame < 4)
+                currentUpdate++;
+                if (currentUpdate >= 6)
                 {
-                    //Down
-                    if (attack)
+                    currentUpdate = 0;
+                    if (currentFrame > -1 && currentFrame < 6)
                     {
-                        currentFrame = 4;
-                        attack = false;
-                        IsAttacking = true;
+                        //Down
+                        if (attack1)
+                        {
+                            currentFrame = 4;
+                            attack1 = false;
+                            IsAttacking = true;
+                        }
+                        else if (IsAttacking)
+                        {
+                            FinishAttack = true;
+                            IsAttacking = false;
+                            currentFrame = 5;
+                        }
+                        else if (FinishAttack)
+                        {
+                            currentFrame = 0;
+                            attack = false;
+                            FinishAttack = false;
+                        }
                     }
-                    else if(IsAttacking)
+                    else if (currentFrame > 5 && currentFrame < 12)
                     {
-                        currentFrame = 5;
-                        IsAttacking = false;
-                        FinishAttack = true;
+                        //Right
+                        if (attack1)
+                        {
+                            currentFrame = 10;
+                            attack1 = false;
+                            IsAttacking = true;
+                        }
+                        else if (IsAttacking)
+                        {
+                            FinishAttack = true;
+                            IsAttacking = false;
+                            currentFrame = 11;
+                        }
+                        else if (FinishAttack)
+                        {
+                            currentFrame = 6;
+                            attack = false;
+                            FinishAttack = false;
+                        }
                     }
-                    else if (FinishAttack)
+                    else if (currentFrame > 12 && currentFrame < 18)
                     {
-                        currentFrame = 0;
-                        FinishAttack = false;
+                        //Left
+                        if (attack1)
+                        {
+                            currentFrame = 16;
+                            attack1 = false;
+                            IsAttacking = true;
+                        }
+                        else if (IsAttacking)
+                        {
+                            FinishAttack = true;
+                            IsAttacking = false;
+                            currentFrame = 17;
+                        }
+                        else if (FinishAttack)
+                        {
+                            currentFrame = 12;
+                            attack = false;
+                            FinishAttack = false;
+                        }
                     }
-                }
-                else if (currentFrame > 5 && currentFrame < 10)
-                {
-                    //Right
-                    if (attack)
+                    else if (currentFrame > 18 && currentFrame < 24)
                     {
-                        currentFrame = 10;
-                        attack = false;
-                        IsAttacking = true;
-                    }
-                    else if (IsAttacking)
-                    {
-                        currentFrame = 11;
-                        IsAttacking = false;
-                        FinishAttack = true;
-                    }
-                    else if (FinishAttack)
-                    {
-                        currentFrame = 6;
-                        FinishAttack = false;
-                    }
-                }
-                else if (currentFrame > 12 && currentFrame < 16)
-                {
-                    //Left
-                    if (attack)
-                    {
-                        currentFrame = 16;
-                        attack = false;
-                        IsAttacking = true;
-                    }
-                    else if (IsAttacking)
-                    {
-                        currentFrame = 17;
-                        IsAttacking = false;
-                        FinishAttack = true;
-                    }
-                    else if (FinishAttack)
-                    {
-                        currentFrame = 12;
-                        FinishAttack = false;
-                    }
-                }
-                else if (currentFrame > 18 && currentFrame < 22)
-                {
-                    //Up
-                    if (attack)
-                    {
-                        currentFrame = 22;
-                        attack = false;
-                        IsAttacking = true;
-                    }
-                    else if (IsAttacking)
-                    {
-                        currentFrame = 23;
-                        IsAttacking = false;
-                        FinishAttack = true;
-                    }
-                    else if (FinishAttack)
-                    {
-                        currentFrame = 18;
-                        FinishAttack = false;
+                        //Up
+                        if (attack1)
+                        {
+                            currentFrame = 22;
+                            attack1 = false;
+                            IsAttacking = true;
+                        }
+                        else if (IsAttacking)
+                        {
+                            FinishAttack = true;
+                            IsAttacking = false;
+                            currentFrame = 23;
+                        }
+                        else if (FinishAttack)
+                        {
+                            currentFrame = 18;
+                            attack = false;
+                            FinishAttack = false;
+                        }
                     }
                 }
             }

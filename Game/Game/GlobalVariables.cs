@@ -39,8 +39,11 @@ namespace TextureAtlas
             IsUpLeft,
             IsDownRight,
             IsDownLeft,
-            IsHere
+            IsHere,
+            Nothing
         }
+
+        public static Pos CharPos = Pos.Nothing;
 
         //Enum set if and when I were to hit an enemy by moving in a direction
         public enum EnemyPos
@@ -736,9 +739,11 @@ namespace TextureAtlas
         {
 
             Rectangle HeroMeleeRange = new Rectangle((Character.Bounds.X - CharacterMeleeRange), (Character.Bounds.Y - CharacterMeleeRange), (Character.Bounds.Width + (CharacterMeleeRange * 2)), (Character.Bounds.Height + (CharacterMeleeRange * 2)));
-            
-            foreach (Enemy en in enemies){
-                if (en.CharacterAttacked){
+
+            foreach (Enemy en in enemies)
+            {
+                if (en.CharacterAttacked)
+                {
                     if (HeroMeleeRange.Intersects(en.Bounds))
                     {
                         CurrentDir = Dir.Nothing;
@@ -779,11 +784,10 @@ namespace TextureAtlas
             Velocity = (Velocity * (float)Game.theGameTime.ElapsedGameTime.TotalSeconds);
             VelocityUp = (VelocityUp * (float)Game.theGameTime.ElapsedGameTime.TotalSeconds);
 
-            Pos CharPos;
             List<EnemyPos> EnmyPos = new List<EnemyPos>();
             Vector2 Difference = (new Vector2((Character.position.X + (Character.Width / 2)), Character.position.Y + (Character.Height / 2))) - MoveToLoc;
 
-            if (Difference.X <= 10 && Difference.X >= -10 &&  Difference.Y <= 10 && Difference.Y >= -10)
+            if (Difference.X <= 10 && Difference.X >= -10 && Difference.Y <= 10 && Difference.Y >= -10)
             {
                 CurrentDir = Dir.Nothing;
                 MoveToLoc = new Vector2(0, 0);
@@ -797,7 +801,8 @@ namespace TextureAtlas
                 if (Dif.X < 0)
                 {
                     //Im to the left
-                    if ((Character.position.X + Character.Width - (Character.Width * .25)) + Velocity.X >= enemy.Location.X  && Math.Abs(Character.position.Y - enemy.Location.Y) < Character.Height - (Character.Height * .25))
+                    Rectangle newRect = new Rectangle(Character.Bounds.X, Character.Bounds.Y, Character.Bounds.Width + Convert.ToInt32(Velocity.X), Character.Bounds.Height);
+                    if (newRect.Intersects(enemy.Bounds))
                     {
                         EnmyPos.Add(EnemyPos.IsRight);
                     }
@@ -805,7 +810,9 @@ namespace TextureAtlas
                 if (Dif.X > 0)
                 {
                     //Im to the right
-                    if ((enemy.Location.X + (enemy.Width * .75)) + Velocity.X >= Character.position.X && Math.Abs(Character.position.Y - enemy.Location.Y) < Character.Height - (Character.Height * .25))
+
+                    Rectangle newRect = new Rectangle(Character.Bounds.X - Convert.ToInt32(Velocity.X), Character.Bounds.Y, Character.Bounds.Width, Character.Bounds.Height);
+                    if (newRect.Intersects(enemy.Bounds))
                     {
                         EnmyPos.Add(EnemyPos.IsLeft);
                     }
@@ -813,7 +820,9 @@ namespace TextureAtlas
                 if (Dif.Y < 0)
                 {
                     //Im Above
-                    if ((Character.position.Y + (Character.Height * .75)) + VelocityUp.Y >= enemy.Location.Y && Math.Abs(Character.position.X - enemy.Location.X) < Character.Width - (Character.Width * .25))
+
+                    Rectangle newRect = new Rectangle(Character.Bounds.X, Character.Bounds.Y, Character.Bounds.Width, Character.Bounds.Height + Convert.ToInt32(VelocityUp.Y));
+                    if (newRect.Intersects(enemy.Bounds))
                     {
                         EnmyPos.Add(EnemyPos.IsDown);
                     }
@@ -821,52 +830,53 @@ namespace TextureAtlas
                 if (Dif.Y > 0)
                 {
                     //Im Below
-                    if ((enemy.Location.Y + (enemy.Height * .75)) + VelocityUp.Y >= Character.position.Y && Math.Abs(Character.position.X - enemy.Location.X) < Character.Width - (Character.Width * .25))
+
+                    Rectangle newRect = new Rectangle(Character.Bounds.X, Character.Bounds.Y - Convert.ToInt32(VelocityUp.Y), Character.Bounds.Width, Character.Bounds.Height);
+                    if (newRect.Intersects(enemy.Bounds))
                     {
                         EnmyPos.Add(EnemyPos.IsUp);
                     }
                 }
             }
 
-            if (Difference.X > 0 && Math.Abs(Difference.Y) < 10)
-            {
-                CharPos = Pos.IsRight;
-            }
-            else if (Difference.X < 0 && Math.Abs(Difference.Y) < 10)
-            {
-                CharPos = Pos.IsLeft;
-            }
-            else if (Math.Abs(Difference.X) < 10 && Difference.Y > 0)
-            {
-                CharPos = Pos.IsDown;
-            }
-            else if (Math.Abs(Difference.X) < 10 && Difference.Y < 0)
-            {
-                CharPos = Pos.IsUp;
-            }
-            else if (Difference.X < 0 && Difference.Y < 0)
-            {
-                CharPos = Pos.IsUpLeft;
-            }
-            else if (Difference.X > 0 && Difference.Y < 0)
-            {
-                CharPos = Pos.IsUpright;
-            }
-            else if (Difference.X < 0 && Difference.Y > 0)
-            {
-                CharPos = Pos.IsDownLeft;
-            }
-            else if (Difference.X > 0 && Difference.Y > 0)
-            {
-                CharPos = Pos.IsDownRight;
-            }
-            else
-            {
-                CharPos = Pos.IsHere;
-                CurrentDir = Dir.Nothing;
-                MoveToLoc = new Vector2(0, 0);
-                return true;
-            }
+                if (Difference.X > 0 && Math.Abs(Difference.Y) < 10)
+                {
+                    CharPos = Pos.IsRight;
+                }
+                else if (Difference.X < 0 && Math.Abs(Difference.Y) < 10)
+                {
+                    CharPos = Pos.IsLeft;
+                }
+                else if (Math.Abs(Difference.X) < 10 && Difference.Y > 0)
+                {
+                    CharPos = Pos.IsDown;
+                }
+                else if (Math.Abs(Difference.X) < 10 && Difference.Y < 0)
+                {
+                    CharPos = Pos.IsUp;
+                }
+                else if (Difference.X < 0 && Difference.Y < 0)
+                {
+                    CharPos = Pos.IsUpLeft;
+                }
+                else if (Difference.X > 0 && Difference.Y < 0)
+                {
+                    CharPos = Pos.IsUpright;
+                }
+                else if (Difference.X < 0 && Difference.Y > 0)
+                {
+                    CharPos = Pos.IsDownLeft;
+                }
+                else if (Difference.X > 0 && Difference.Y > 0)
+                {
+                    CharPos = Pos.IsDownRight;
+                }
+                else
+                {
+                    CharPos = Pos.IsHere;
+                    MoveToLoc = new Vector2(0, 0);
+                    return true;
+                }
 
             if (Difference.X < Velocity.X && Difference.X > 0)
             {
@@ -885,8 +895,6 @@ namespace TextureAtlas
                 VelocityUp.Y = Difference.Y;
             }
 
-            bool result = true;
-
             if (EnmyPos.Count == 0)
             {
                 UpdateChar(CharPos, Character, Game, Velocity, VelocityUp);
@@ -895,17 +903,6 @@ namespace TextureAtlas
             else
             {
                 PathFind(CharPos, EnmyPos);
-                result = PathFindingFail;
-            }
-
-            if (!result)
-            {
-                CurrentDir = Dir.Nothing;
-                MoveToLoc = new Vector2(0, 0);
-                return true;
-            }
-            else
-            {
                 UpdateChar(CharPos, Character, Game, Velocity, VelocityUp, CurrentDir);
                 return false;
             }
@@ -929,6 +926,7 @@ namespace TextureAtlas
                     valid = true;
                 }
             }
+
             return valid;
         }
 
@@ -994,325 +992,85 @@ namespace TextureAtlas
 
         public static void PathFind(Pos CharPos, List<EnemyPos> EnmyPos)
         {
-            //See if previously I this AI redirect me down, meaning there were enimies up, left, and right, leaving only down
-            //If so I need to try to move right then left, otherwise I would have gone down then right back up into the same situation
+            PathFindingFail = true;
+            bool result = false;
+
             switch (CharPos)
             {
                 case Pos.IsDown:
+
+                    result = TryUp(EnmyPos);
+                    if (!result)
+                    {
+                        TryRight(EnmyPos);
+                    }
+
+                    break;
+
                 case Pos.IsDownLeft:
+
+                    result = TryRight(EnmyPos);
+                    if (!result){
+                        TryDown(EnmyPos);
+                    }
+
+                    break;
+
                 case Pos.IsDownRight:
 
-                    if (CurrentDir != Dir.Down)
-                    {
-                        bool result;
-                        result = TryUp(EnmyPos);
-                        if (!result)
-                        {
-                            result = TryRight(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryLeft(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryDown(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            PathFindingFail = false;
-                            break;
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
+                    result = TryUp(EnmyPos);
+                    if (!result){
+                        TryRight(EnmyPos);
                     }
-                    else
-                    {
-                        bool result;
-                        result = TryRight(EnmyPos);
-                        if (!result)
-                        {
-                            result = TryLeft(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryDown(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            PathFindingFail = false;
-                            break;
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                    }
+
+                    break;
 
                 case Pos.IsUp:
+
+                    result = TryLeft(EnmyPos);
+                    if (!result){
+                        TryDown(EnmyPos);
+                    }
+
+                    break;
+
                 case Pos.IsUpLeft:
+
+                    result = TryDown(EnmyPos);
+                    if (!result){
+                        TryLeft(EnmyPos);
+                    }
+
+                    break;
+
                 case Pos.IsUpright:
 
-                    if (CurrentDir != Dir.Up)
-                    {
-                        bool result;
-                        result = TryDown(EnmyPos);
-                        if (!result)
-                        {
-                            result = TryRight(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryLeft(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryUp(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            PathFindingFail = false;
-                            break;
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
+                    result = TryLeft(EnmyPos);
+                    if (!result){
+                        TryUp(EnmyPos);
                     }
-                    else
-                    {
-                        bool result;
-                        result = TryRight(EnmyPos);
-                        if (!result)
-                        {
-                            result = TryLeft(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryUp(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            PathFindingFail = false;
-                            break;
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                    }
+
+                    break;
 
                 case Pos.IsLeft:
 
-                    if (CurrentDir != Dir.Left)
-                    {
-                        bool result;
-                        result = TryRight(EnmyPos);
-                        if (!result)
-                        {
-                            result = TryUp(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryDown(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryLeft(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            PathFindingFail = false;
-                            break;
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
+                    result = TryDown(EnmyPos);
+                    if (!result){
+                        TryLeft(EnmyPos);
                     }
-                    else
-                    {
-                        bool result;
-                        result = TryUp(EnmyPos);
-                        if (!result)
-                        {
-                            result = TryDown(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryLeft(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            PathFindingFail = false;
-                            break;
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                    }
+
+                    break;
 
                 case Pos.IsRight:
 
-                    if (CurrentDir != Dir.Right)
+                    result = TryUp(EnmyPos);
+                    if (!result)
                     {
-                        bool result;
-                        result = TryLeft(EnmyPos);
-                        if (!result)
-                        {
-                            result = TryUp(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryDown(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryRight(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            PathFindingFail = false;
-                            break;
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
+                        TryRight(EnmyPos);
                     }
-                    else
-                    {
-                        bool result;
-                        result = TryUp(EnmyPos);
-                        if (!result)
-                        {
-                            result = TryDown(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            result = TryRight(EnmyPos);
-                        }
-                        else
-                        {
-                            PathFindingFail = true;
-                            break;
-                        }
-                        if (!result)
-                        {
-                            PathFindingFail = false;
-                            break;
-                        }
-                        else
-                        {
-                            PathFindingFail =  true;
-                            break;
-                        }
-                    }
+
+                    break;
+
             }
         }
     }
