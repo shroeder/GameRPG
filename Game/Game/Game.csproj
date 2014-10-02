@@ -79,10 +79,12 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Affix.cs" />
     <Compile Include="BackGround.cs" />
     <Compile Include="Char.cs" />
     <Compile Include="CheckBox.cs" />
     <Compile Include="DebugScreen.cs" />
+    <Compile Include="DrawItem.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="GlobalVariables.cs" />
     <Compile Include="Inventory.cs" />

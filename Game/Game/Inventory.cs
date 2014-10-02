@@ -17,6 +17,7 @@ namespace TextureAtlas
     {
         #region Variables
         //Load Items
+        public bool blnIsClamp = false;
         public List<Vector2> InvBoxes = new List<Vector2>();
         public List<Item> Items = new List<Item>();
         public Color color = Color.White;
@@ -24,9 +25,19 @@ namespace TextureAtlas
         public Vector2 Box1Start = new Vector2(27,57);
         public Vector2 BoxRight = new Vector2(52, 0);
         public Vector2 BoxDown = new Vector2(0, 44);
+        public MouseState ms;
+        public MouseState oms;
+        public Item ClampedItem;
         #endregion
+
+        public event EventHandler ClampItem;
+
         public Inventory(List<Item> ListItems, Vector2 InvPos)
         {
+            oms = ms;
+            ms = Mouse.GetState();
+
+
             Items = ListItems;
 
             #region SetBoxes
@@ -55,6 +66,7 @@ namespace TextureAtlas
 
         public void Update(Vector2 InvPos)
         {
+
             #region SetBoxes
             InvBoxes[0] = (Box1Start) + new Vector2(InvPos.X, InvPos.Y);
             InvBoxes[1] =(Box1Start) + new Vector2(InvPos.X, InvPos.Y) + BoxRight;
@@ -85,36 +97,34 @@ namespace TextureAtlas
             {
                 for (int i = 0; i < Items.Count; i++)
                 {
-                    if (Items[i].Rarity == 1)
+                    if (Items[i].quality == 1)
                     {
                         color = Color.White;
                     }
-                    if (Items[i].Rarity == 2)
+                    if (Items[i].quality == 2)
                     {
                         color = Color.AliceBlue;
                     }
-                    if (Items[i].Rarity == 3)
+                    if (Items[i].quality == 3)
                     {
                         color = Color.DeepSkyBlue;
                     }
-                    if (Items[i].Rarity == 4)
+                    if (Items[i].quality == 4)
                     {
                         color = Color.Orange;
                     }
-                    if (Items[i].Rarity == 5)
+                    if (Items[i].quality == 5)
                     {
                         color = Color.Purple;
                     }
-                    if (Items[i].Rarity == 6)
+                    if (Items[i].quality == 6)
                     {
                         color = Color.Brown;
                     }
 
-#region Inventory
-                    //Row 1
                     if (i == 0)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[0].X,(int)InvBoxes[0].Y,45,30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -123,7 +133,7 @@ namespace TextureAtlas
                     }
                     if (i == 1)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[1].X, (int)InvBoxes[1].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -132,7 +142,7 @@ namespace TextureAtlas
                     }
                     if (i == 2)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[2].X, (int)InvBoxes[2].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -141,7 +151,7 @@ namespace TextureAtlas
                     }
                     if (i == 3)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[3].X, (int)InvBoxes[3].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -152,7 +162,7 @@ namespace TextureAtlas
                     //Row 2
                     if (i == 4)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[4].X, (int)InvBoxes[4].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -161,7 +171,7 @@ namespace TextureAtlas
                     }
                     if (i == 5)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[5].X, (int)InvBoxes[5].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -170,7 +180,7 @@ namespace TextureAtlas
                     }
                     if (i == 6)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[6].X, (int)InvBoxes[6].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -179,7 +189,7 @@ namespace TextureAtlas
                     }
                     if (i == 7)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[7].X, (int)InvBoxes[7].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -190,7 +200,7 @@ namespace TextureAtlas
                     //Row 3
                     if (i == 8)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[8].X, (int)InvBoxes[8].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -199,7 +209,7 @@ namespace TextureAtlas
                     }
                     if (i == 9)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[9].X, (int)InvBoxes[9].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -208,7 +218,7 @@ namespace TextureAtlas
                     }
                     if (i == 10)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[10].X, (int)InvBoxes[10].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -217,7 +227,7 @@ namespace TextureAtlas
                     }
                     if (i == 11)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[11].X, (int)InvBoxes[11].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -228,7 +238,7 @@ namespace TextureAtlas
                     //Row 4
                     if (i == 12)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[12].X, (int)InvBoxes[12].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -237,7 +247,7 @@ namespace TextureAtlas
                     }
                     if (i == 13)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[13].X, (int)InvBoxes[13].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -246,7 +256,7 @@ namespace TextureAtlas
                     }
                     if (i == 14)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[14].X, (int)InvBoxes[14].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -255,7 +265,7 @@ namespace TextureAtlas
                     }
                     if (i == 15)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[15].X, (int)InvBoxes[15].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -266,7 +276,7 @@ namespace TextureAtlas
                     //Row 5
                     if (i == 16)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[16].X, (int)InvBoxes[16].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -275,7 +285,7 @@ namespace TextureAtlas
                     }
                     if (i == 17)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[17].X, (int)InvBoxes[17].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -284,7 +294,7 @@ namespace TextureAtlas
                     }
                     if (i == 18)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[18].X, (int)InvBoxes[18].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -293,7 +303,7 @@ namespace TextureAtlas
                     }
                     if (i == 19)
                     {
-                        if (Items[i].Rarity > 4)
+                        if (Items[i].quality > 4)
                         {
                             spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[19].X, (int)InvBoxes[19].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                         }
@@ -303,49 +313,62 @@ namespace TextureAtlas
 
                     if (Items[i].invhover)
                     {
-                        //Draw Shaded backgorund
-                        spriteBatch.Draw(Items[i].TextBackground, Items[i].location, Color.White);
 
-                        //Draw Item Description
-                        if (Items[i].Rarity == 6)
+                        if (ms.LeftButton == ButtonState.Pressed && oms.LeftButton == ButtonState.Released)
                         {
-                            spriteBatch.DrawString(Items[i].Font1, Items[i].ItemName + " " + Items[i].ItemRarity, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + 30)), Items[i].RarityColor);
+                            if (ClampItem != null)
+                            {
+                                blnIsClamp = true;
+                                Items.Remove(Items[i]);
+                                ClampedItem = Items[i];
+                                ClampItem(this, EventArgs.Empty);
+                            }
                         }
-                        else
+
+                        if (blnIsClamp)
                         {
-                            spriteBatch.DrawString(Items[i].Font1, Items[i].ItemRarity + " " + Items[i].ItemName, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + 30)), Items[i].RarityColor);
+                            return;
                         }
+
+                        //Draw Shaded backgorund
+                        
+                        GlobalVariables.WaitToDraw(0, Items[i].location, new Rectangle(0, 0, Items[i].TextureBack.Width, 70 + (int)(22 * Items[i].affixes)), Color.Black,null,Items[i].TextureBack);
+
+                        GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + 30)), new Rectangle(0, 0, 0, 0), Items[i].RarityColor, Items[i].Font1, null, Items[i].ItemName);
+                        //spriteBatch.DrawString(Items[i].Font1, Items[i].ItemName, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + 30)), Items[i].RarityColor);
 
                         //Initialize Scalar Value
                         ScalarText = 20;
 
                         //Draw Item aFfixes
-                        for (int intlc = 0; intlc < Items[i].affixdesclist.Count; intlc++)
+                        for (int intlc = 0; intlc < Items[i].AffixList.Count; intlc++)
                         {
                             if (intlc < 4)
                             {
-                                spriteBatch.DrawString(Items[i].Font1, Items[i].affixdesclist[intlc], new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.White);
+                                //spriteBatch.DrawString(Items[i].Font1, Items[i].AffixList[intlc].Desc, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.White);
+                                GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.White, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
                                 ScalarText += 20;
                             }
                             if (intlc == 4)
                             {
-                                spriteBatch.DrawString(Items[i].Font1, Items[i].affixdesclist[intlc], new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Orange);
+                                //spriteBatch.DrawString(Items[i].Font1, Items[i].AffixList[intlc].Desc, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Orange);
+                                GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Orange, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
                                 ScalarText += 20;
                             }
                             if (intlc == 5)
                             {
-                                spriteBatch.DrawString(Items[i].Font1, Items[i].affixdesclist[intlc], new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Purple);
+                                //spriteBatch.DrawString(Items[i].Font1, Items[i].AffixList[intlc].Desc, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Purple);
+                                GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Purple, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
                                 ScalarText += 20;
                             }
                             if (intlc > 5)
                             {
-                                spriteBatch.DrawString(Items[i].Font1, Items[i].affixdesclist[intlc], new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Brown);
+                                //spriteBatch.DrawString(Items[i].Font1, Items[i].AffixList[intlc].Desc, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Brown);
+                                GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Brown, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
                                 ScalarText += 20;
                             }
                         }
                     }
-#endregion
-
                 }
             }
         }

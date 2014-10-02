@@ -13,16 +13,12 @@ using System.Timers;
 
 namespace TextureAtlas
 {
-    class Item
+    public class Item
     {
         #region Variables
 
-        public int type;
-        public int Rarity;
         public int quality;
         public int affixes;
-        public int affixroll;
-        public int affixnumericroll;
 
         public Boolean hover = false;
         public Boolean invhover = false;
@@ -30,182 +26,92 @@ namespace TextureAtlas
         public Vector2 worldloc;
         public Vector2 location;
 
-        public string status;
-        public string affixdesc;
-        public string ItemName;
-        public string ItemRarity;
+        public Rectangle Bounds;
 
-        public List<int> affixvaluelist = new List<int>();
-        public List<string> affixstatlist = new List<string>();
-        public List<string> affixdesclist = new List<string>();
+        public string ItemName;
+
+        public List<Affix> AffixList = new List<Affix>();
 
         public SpriteFont Font1;
 
         public Random RNG = new Random();
 
         public Texture2D LegBeam;
+        public Texture2D TextureBack;
         public Texture2D ItemTexture;
         public Texture2D LegendaryBg;
-        public Texture2D TextBackground;
 
         public Color RarityColor;
 
         #endregion
 
-        public Item(Vector2 Location, Texture2D tex, string Status, SpriteFont Font, Texture2D LegendaryBG, Texture2D Legbeam, Texture2D Textbg)
+        public Item(Vector2 Location, Texture2D tex, int ItemType, int ItemLevel, int SubType = 0)
         {
-            //Selection of Item Type
-            //type = RNG.Next(1-6);
-
-            //set location
-            TextBackground = Textbg;
-            LegBeam = Legbeam;
-            LegendaryBg = LegendaryBG;
+            LegBeam = GlobalVariables.LegendaryBeam;
+            LegendaryBg = GlobalVariables.LegendaryBG;
+            TextureBack = GlobalVariables.TextureBack;
             worldloc = Location;
             location = Location;
-            status = Status;
             ItemTexture = tex;
-            Font1 = Font;
+            Bounds = new Rectangle((int)location.X, (int)location.Y, tex.Width, tex.Height);
+            Font1 = GlobalVariables.Font10;
+            quality = GlobalVariables.RollVsRarity();
+            ItemName = "";
 
-            //Temporary Selection of sword for debug
-            type = 1;
+            switch (quality)
+            {
+                case 1:
+                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                    affixes = 2;
+                    break;
+                case 2:
+                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                    affixes = 3;
+                    break;
+                case 3:
+                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                    affixes = 4;
+                    break;
+                case 4:
+                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                    affixes = 5;
+                    break;
+                case 5:
+                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                    affixes = 6;
+                    break;
+                case 6:
+                    ItemName = GlobalVariables.GetUniqueByTypes(ItemType,SubType);
+                    affixes = 10;
+                    break;
+            }
+
+            AffixList = GlobalVariables.RollVsAffix(affixes, ItemType, ItemLevel, SubType);
             
-            //Selection of Item Quality
-            quality = RNG.Next(1,101);
-            //Designation of Item Types
-            if (quality <= 60)
-            {
-                affixes = 2;
-                Rarity = 1;
-            }
-            if (quality > 60 && quality <= 80)
-            {
-                affixes = 3;
-                Rarity = 2;
-            }
-            if (quality > 80 && quality <= 95)
-            {
-                affixes = 4;
-                Rarity = 3;
-            }
-            if (quality > 95 && quality <= 98)
-            {
-                affixes = 5;
-                Rarity = 4;
-            }
-            if (quality > 98 && quality <= 99)
-            {
-                affixes = 6;
-                Rarity = 5;
-            }
-            if (quality > 99 )
-            {
-                affixes = 10;
-                Rarity = 6;
-            }
-            for (int intlc = 0; intlc <= affixes; intlc++)
-            {
-                //If type is weapon then include case 1 which will be base weapon damage
-                if (type == 1)
-                {
-                ItemName = "Two-Handed Sword";
-                affixroll = RNG.Next(1,10);
-
-                switch (affixroll)
-                {
-                    case 1:
-                        affixnumericroll = RNG.Next(1, 4);
-                        affixdesc = "Physical Damage Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("PHYSDMG");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 2:
-                        affixnumericroll = RNG.Next(1, 4);
-                        affixdesc = "Dex Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("DEX");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 3:
-                        affixnumericroll = RNG.Next(1, 4);
-                        affixdesc = "Str Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("STR");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 4:
-                        affixnumericroll = RNG.Next(10, 25);
-                        affixdesc = "Dodge Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("DODGE");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 5:
-                        affixnumericroll = RNG.Next(25, 250);
-                        affixdesc = "Mana Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("MANA");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 6:
-                        affixnumericroll = RNG.Next(25, 125);
-                        affixdesc = "Health Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("HP");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 7:
-                        affixnumericroll = RNG.Next(1, 5);
-                        affixdesc = "Armor Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("AR");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 8:
-                        affixnumericroll = RNG.Next(1, 10);
-                        affixdesc = "Spell Power Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("SPLPWR");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 9:
-                        affixnumericroll = RNG.Next(1, 10);
-                        affixdesc = "Int Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("INT");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                    case 10:
-                        affixnumericroll = RNG.Next(10, 30);
-                        affixdesc = "Movement Speed Increased by : " + affixnumericroll.ToString();
-                        affixstatlist.Add("MOVE");
-                        affixvaluelist.Add(affixnumericroll);
-                        affixdesclist.Add(affixdesc);
-                        break;
-                }
-                }
-            }
         }
 
         public void CharMovedRight(GameTime gameTime, Vector2 velocity)
         {
             location -= (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            Bounds.X = (int)location.X;
         }
 
         public void CharMovedLeft(GameTime gameTime, Vector2 velocity)
         {
             location += (velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            Bounds.X = (int)location.X;
         }
 
         public void CharMovedUp(GameTime gameTime, Vector2 velocityup)
         {
             location += (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            Bounds.Y = (int)location.Y;
         }
 
         public void CharMovedDown(GameTime gameTime, Vector2 velocityup)
         {
             location -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
+            Bounds.Y = (int)location.Y;
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 location)
@@ -213,118 +119,85 @@ namespace TextureAtlas
 
             spriteBatch.Begin();
 
-            if (Rarity == 1)
+            if (quality == 1)
             {
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.White);
-                ItemRarity = "";
                 RarityColor = Color.White;
             }
-            if (Rarity == 2)
+            if (quality == 2)
             {
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.AliceBlue);
-                ItemRarity = "Reinforced";
                 RarityColor = Color.AliceBlue;
             }
-            if (Rarity == 3)
+            if (quality == 3)
             {
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.DeepSkyBlue);
-                ItemRarity = "Magic";
                 RarityColor = Color.DeepSkyBlue;
             }
-            if (Rarity == 4)
+            if (quality == 4)
             {
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.Orange);
-                ItemRarity = "Rare";
                 RarityColor = Color.Orange;
             }
-            if (Rarity == 5)
+            if (quality == 5)
             {
                 spriteBatch.Draw(LegendaryBg, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.White);
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.Purple);
-                ItemRarity = "Mythic";
                 RarityColor = Color.Purple;
             }
-            if (Rarity == 6)
+            if (quality == 6)
             {
                 spriteBatch.Draw(LegendaryBg, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.White);
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.Brown);
-                ItemRarity = "Of Legend";
                 RarityColor = Color.Brown;
             }
             
 
             if (GlobalVariables.ShowItemNames)
             {
-                if (type == 1)
-                {
-                    if (Rarity == 1)
-                    {
                         if (hover)
                         {
-                            spriteBatch.DrawString(Font1, "Sword", new Vector2(location.X, (location.Y - 20)), Color.Black);
+                            spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X, (location.Y - 20)), Color.Black);
+
+                            //Draw Shaded backgorund
+                            GlobalVariables.WaitToDraw(0, location, new Rectangle(0, 0, TextureBack.Width, 70 + (int)(22 * affixes)), Color.Black, null, TextureBack);
+
+                            GlobalVariables.WaitToDraw(1,  new Vector2((location.X + 100), (location.Y + 30)), new Rectangle(0, 0, 0, 0),RarityColor, Font1, null,ItemName);
+
+                            //Initialize Scalar Value
+                            int ScalarText = 20;
+
+
+                            //Draw Item aFfixes
+                            for (int intlc = 0; intlc < AffixList.Count; intlc++)
+                            {
+                                if (intlc < 4)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((location.X + 100), (location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.White, Font1, null, AffixList[intlc].Desc);
+                                    ScalarText += 20;
+                                }
+                                if (intlc == 4)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((location.X + 100), (location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Orange, Font1, null, AffixList[intlc].Desc);
+                                    ScalarText += 20;
+                                }
+                                if (intlc == 5)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((location.X + 100), (location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Purple, Font1, null, AffixList[intlc].Desc);
+                                    ScalarText += 20;
+                                }
+                                if (intlc > 5)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((location.X + 100), (location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Brown, Font1, null, AffixList[intlc].Desc);
+                                    ScalarText += 20;
+                                }
+                            }
+
                         }
                         else 
                         {
-                            spriteBatch.DrawString(Font1, "Sword", new Vector2(location.X, (location.Y - 20)), Color.White);
+                            spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X, (location.Y - 20)), RarityColor);
                         } 
-                    }
-                    if (Rarity == 2)
-                    {
-                        if (hover)
-                        {
-                            spriteBatch.DrawString(Font1, "Reinforced Sword", new Vector2(location.X, (location.Y - 20)), Color.Black);
-                        }
-                        else
-                        {
-                            spriteBatch.DrawString(Font1, "Reinforced Sword", new Vector2(location.X, (location.Y - 20)), Color.AliceBlue);
-                        } 
-                    }
-                    if (Rarity == 3)
-                    {
-                        if (hover)
-                        {
-                            spriteBatch.DrawString(Font1, "Magic Sword", new Vector2(location.X, (location.Y - 20)), Color.Black);
-                        }
-                        else
-                        {
-                            spriteBatch.DrawString(Font1, "Magic Sword", new Vector2(location.X, (location.Y - 20)), Color.DeepSkyBlue);
-                        } 
-                    }
-                    if (Rarity == 4)
-                    {
-                        if (hover)
-                        {
-                            spriteBatch.DrawString(Font1, "Rare Sword", new Vector2(location.X, (location.Y - 20)), Color.Black);
-                        }
-                        else
-                        {
-                            spriteBatch.DrawString(Font1, "Rare Sword", new Vector2(location.X, (location.Y - 20)), Color.Orange);
-                        } 
-                    }
-                    if (Rarity == 5)
-                    {
-                        if (hover)
-                        {
-                            spriteBatch.DrawString(Font1, "Mythic Sword", new Vector2(location.X, (location.Y - 20)), Color.Black);
-                        }
-                        else
-                        {
-                            spriteBatch.DrawString(Font1, "Mythic Sword", new Vector2(location.X, (location.Y - 20)), Color.Purple);
-                        } 
-                    }
-                    if (Rarity == 6)
-                    {
-                        spriteBatch.Draw(LegBeam, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), Convert.ToInt32((location.X + 100)), Convert.ToInt32((location.Y + 10))), Color.Brown);
-                        if (hover)
-                        {
-                            spriteBatch.DrawString(Font1, "Sword of Legend", new Vector2(location.X, (location.Y - 20)), Color.Black);
-                        }
-                        else
-                        {
-                            spriteBatch.DrawString(Font1, "Sword of Legend", new Vector2(location.X, (location.Y - 20)), Color.Brown);
-                        } 
-                    }
-                }
             }
             spriteBatch.End();
         }

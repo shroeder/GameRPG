@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using Starbound.RealmFactoryCore;
 using System.Timers;
 using System.IO;
 using System.Xml.Serialization;
@@ -48,8 +47,9 @@ namespace TextureAtlas
         public Vector2 velocity = new Vector2(300, 0);
         public Vector2 velocityup = new Vector2(0, 300);
         private Vector2 InvPos;
-        private Vector2 OldPos = new Vector2(0,0);
+        private Vector2 OldPos = new Vector2(0, 0);
 
+        public bool blnClamp = false;
         public bool LeftMouseHeld = false;
         public bool PathFinding = true;
         public bool Toggle = false;
@@ -63,6 +63,7 @@ namespace TextureAtlas
         private bool blnEquip = false;
         private bool blnDSP = false;
         private bool blnOpen = false;
+        private bool blnPaused = false;
         private bool blnIsConfirming = false;
         private bool debugScreenDrawBgClickedBound = false;
         private bool pauseMenuExitBound = false;
@@ -72,6 +73,8 @@ namespace TextureAtlas
         private bool ResolutionConfirmRevertBound = false;
         private bool blnIsDirty = false;
 
+        public int EnemyTextureColumns;
+        public int EnemyTextureRows;
         public int CountMouseHeld;
         public int dir = 1;
         public int DamageCounter = 0;
@@ -106,6 +109,7 @@ namespace TextureAtlas
         private Equipment equipment;
         private Inventory inventory;
         public AnimatedSprite animatedSprite;
+        public Item theItem;
 
         private Stopwatch DebugTimer;
         private Stopwatch DebugTimer1;
@@ -127,23 +131,18 @@ namespace TextureAtlas
         private List<Item> DroppedItems = new List<Item>();
         public List<Enemy> Enemies = new List<Enemy>();
 
-        private LevelSet levelSet;
-        private Level currentlevel;
-
         private Rectangle TileRect = new Rectangle(0, 0, 80, 80);
 
         private float MouseOffSetx = 0f;
         private float MouseOffSety = 0f;
 
+        private Texture2D CharWeapon;
         private Texture2D EnemyTexture;
-        private Texture2D LegBG;
         private Texture2D texture;
         private Texture2D HeroTxt;
         private Texture2D MenuBtn;
-        private Texture2D Textbg;
         private Texture2D CharScrn;
         private Texture2D Grass1;
-        private Texture2D legbeam;
         private Texture2D hpbarFull;
         private Texture2D InvText;
         private Texture2D imgPause;
@@ -311,11 +310,19 @@ namespace TextureAtlas
 
         protected override void LoadContent()
         {
+            //Indexed to test sword, need to create equipment menu where we then update this value
+            GlobalVariables.CharacterWeaponType = 1;
+            if (GlobalVariables.CharacterWeaponType == 1)
+            {
+                GlobalVariables.CharacterWeaponName = "Two-Handed Sword";
+                if (GlobalVariables.CharacterWeaponName == "Two-Handed Sword")
+                {
+                    CharWeapon = Content.Load<Texture2D>("HeroSS2H1");
+                }
+            }
             this.IsMouseVisible = true;
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            levelSet = Content.Load<LevelSet>("realm1");
-            currentlevel = levelSet.GetLevel("Level 1").CreateInstance();
-            LegBG = Content.Load<Texture2D>("LegendaryBG");
+            GlobalVariables.LegendaryBG = Content.Load<Texture2D>("LegendaryBG");
             MenuBtn = Content.Load<Texture2D>("MenuBtn");
             Font1 = Content.Load<SpriteFont>("HpFont");
             imgPause = Content.Load<Texture2D>("PauseBG");
@@ -339,16 +346,16 @@ namespace TextureAtlas
             sword2 = Content.Load<Texture2D>("sword2");
             InvText = Content.Load<Texture2D>("Inventory");
             buttonbg = Content.Load<Texture2D>("ButtonBG");
-            legbeam = Content.Load<Texture2D>("LegBeam");
-            Textbg = Content.Load<Texture2D>("ItemDscBG");
-            CharScrn = Content.Load<Texture2D>("HeroSelection");
+            GlobalVariables.LegendaryBeam = Content.Load<Texture2D>("LegBeam");
+            GlobalVariables.TextureBack = Content.Load<Texture2D>("ItemDscBG");
+            CharScrn = Content.Load<Texture2D>("Equipment");
             Grass1 = Content.Load<Texture2D>("grass_tile_001");
             GlobalVariables.CheckMark = Content.Load<Texture2D>("check");
 
             //Set Invstart Position
             InvPos = new Vector2(50, 50);
 
-            animatedSprite = new AnimatedSprite(HeroTxt, dir, 8, 6, position);
+            animatedSprite = new AnimatedSprite(HeroTxt, dir, 8, 6, position, CharWeapon);
 
             //Setup for Old/New Key States
             NState = Keyboard.GetState();
@@ -397,6 +404,91 @@ namespace TextureAtlas
 
             theGameTime = gameTime;
 
+            //Inventory
+
+            if (mouseState.X < 65 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnOpen == true || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnOpen == true)
+            {
+                blnOpen = false;
+            }
+
+            else if (mouseState.X < 65 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnOpen == false || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnOpen == false)
+            {
+                blnOpen = true;
+                inventory = new Inventory(InvItems, InvPos);
+                inventory.ClampItem += ClampTheItem;
+            }
+
+            else if (blnOpen && (mouseState.X - InvPos.X) > 17 && (mouseState.X - InvPos.X) < 388 && (mouseState.Y - InvPos.Y) > 8 && (mouseState.Y - InvPos.Y) < 70 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Pressed)
+            {
+                isDrag = true;
+            }
+            else if (isDrag && MoldState.LeftButton == ButtonState.Pressed && mouseState.LeftButton == ButtonState.Pressed)
+            {
+                isDrag = true;
+            }
+            else
+            {
+                isDrag = false;
+                MouseOffSetx = 0f;
+                MouseOffSety = 0f;
+            }
+
+            if (isDrag)
+            {
+                if (MouseOffSetx == 0 && MouseOffSety == 0)
+                {
+                    MouseOffSetx = (mouseState.X - InvPos.X);
+                    MouseOffSety = (mouseState.Y - InvPos.Y);
+                }
+
+                InvPos = new Vector2((mouseState.X - MouseOffSetx), (mouseState.Y - MouseOffSety));
+                if (InvPos.X < 0)
+                {
+                    InvPos.X = 1;
+                }
+                if ((InvPos.X + 250) > graphics.PreferredBackBufferWidth)
+                {
+                    InvPos.X = (graphics.PreferredBackBufferWidth - 250);
+                }
+                if ((InvPos.Y + 300) > graphics.PreferredBackBufferHeight)
+                {
+                    InvPos.Y = (graphics.PreferredBackBufferHeight - 300);
+                }
+                if (InvPos.Y < 5)
+                {
+                    InvPos.Y = 6;
+                }
+
+                inventory.Update(InvPos);
+
+            }
+
+            if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == false || NState.IsKeyDown(Keys.E) && !kState.IsKeyDown(Keys.E) && blnEquip == false)
+            {
+                blnEquip = true;
+                equipment = new Equipment(EquipItem);
+            }
+
+            else if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == true || NState.IsKeyDown(Keys.E) && !kState.IsKeyDown(Keys.E) && blnEquip == true)
+            {
+                blnEquip = false;
+            }
+
+            if (blnOpen)
+            {
+                for (int intlc = 0; intlc < InvItems.Count; intlc++)
+                {
+                    if ((mouseState.X - InvItems[intlc].location.X) < 50 && (mouseState.X - InvItems[intlc].location.X) > 0 && (mouseState.Y - InvItems[intlc].location.Y) < 30 && (mouseState.Y - InvItems[intlc].location.Y) > 0)
+                    {
+                        InvItems[intlc].invhover = true;
+                    }
+                    else
+                    {
+                        InvItems[intlc].invhover = false;
+                    }
+                }
+            }
+
             #region StartTimer
 
             if (blnLogTime && UpdateTimes.Count < DebugCycles)
@@ -412,6 +504,7 @@ namespace TextureAtlas
             if (!base.IsActive)
             {
                 CurrentGameState = GameState.Inactive;
+                blnPaused = true;
                 return;
             }
 
@@ -514,9 +607,11 @@ namespace TextureAtlas
                     if (CurrentGameState == GameState.Active)
                     {
                         CurrentGameState = GameState.Inactive;
+                        blnPaused = true;
                     }
                     else
                     {
+                        blnPaused = false;
                         pauseMenu = null;
                         CurrentGameState = GameState.Active;
                     }
@@ -550,12 +645,15 @@ namespace TextureAtlas
             {
                 Valid = true;
                 //Create Random Enemy
-                int Enemy = RNG.Next(1,1);
-                switch(Enemy){
+                int Enemy = RNG.Next(1, 1);
+                switch (Enemy)
+                {
 
                     case 1:
 
                         EnemyTexture = texture;
+                        EnemyTextureColumns = 4;
+                        EnemyTextureRows = 4;
                         name = "Turd Burglar";
                         EnemyEvasion = 1;
                         EnemyArmour = 1;
@@ -565,7 +663,11 @@ namespace TextureAtlas
 
                 }
                 //Create Random Location
-                Rectangle SpawnPos = new Rectangle((RNG.Next(1, ((Rows - 10) * TileHeight))),(RNG.Next(1, ((Columns - 10) * TileWidth))), EnemyTexture.Width, EnemyTexture.Height);
+                int EnemyHeight = EnemyTexture.Height / EnemyTextureRows;
+                int EnemyWidth = EnemyTexture.Width / EnemyTextureColumns;
+                int maxX = (Columns - 10) * TileWidth;
+                int maxY = (Rows - 10) * TileHeight;
+                Rectangle SpawnPos = new Rectangle(RNG.Next(1, maxX), RNG.Next(1, maxY), EnemyWidth, EnemyHeight);
                 //Check to prevent enemies from spawn on top of each other or on Character
                 if (Enemies.Count >= 0)
                 {
@@ -596,7 +698,6 @@ namespace TextureAtlas
                     if (Valid)
                     {
                         Vector2 SpawnLocation = new Vector2(SpawnPos.X, SpawnPos.Y);
-
                         Enemies.Add(new Enemy(EnemyTexture, hpbarFull, hpbar75, hpbarHalf, hpbarQuarter, hpbar40, Font1, Font2, 4, 4, MaxHP, SpawnLocation, name, HP, GlobalVariables.CharacterLevel, EnemyEvasion, EnemyArmour));
                     }
                 }
@@ -657,8 +758,9 @@ namespace TextureAtlas
 
                         for (int l = 0; l < Enemies.Count; l++)
                         {
-                            
-                            if (newRectangle.Intersects(Enemies[l].Bounds)){
+
+                            if (newRectangle.Intersects(Enemies[l].Bounds))
+                            {
                                 Valid = false;
                                 break;
                             }
@@ -699,6 +801,10 @@ namespace TextureAtlas
                             {
                                 if (IsScrolling)
                                 {
+                                    if (theItem != null)
+                                    {
+                                        theItem.Bounds.X += (int)(velocity * (float)gameTime.ElapsedGameTime.TotalSeconds).X;
+                                    }
                                     for (int lc = 0; lc < DroppedItems.Count; lc++)
                                     {
                                         DroppedItems[lc].CharMovedLeft(gameTime, velocity);
@@ -814,6 +920,10 @@ namespace TextureAtlas
                             {
                                 if (DroppedItems.Count > 0)
                                 {
+                                    if (theItem != null)
+                                    {
+                                        theItem.Bounds.X -= (int)(velocity * (float)gameTime.ElapsedGameTime.TotalSeconds).X;
+                                    }
                                     for (int lc = 0; lc < DroppedItems.Count; lc++)
                                     {
                                         DroppedItems[lc].CharMovedRight(gameTime, velocity);
@@ -942,6 +1052,10 @@ namespace TextureAtlas
                             {
                                 if (IsScrolling)
                                 {
+                                    if (theItem != null)
+                                    {
+                                        theItem.Bounds.Y += (int)(velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds).Y;
+                                    }
                                     for (int lc = 0; lc < DroppedItems.Count; lc++)
                                     {
                                         DroppedItems[lc].CharMovedUp(gameTime, velocityup);
@@ -1070,6 +1184,10 @@ namespace TextureAtlas
                             {
                                 if (IsScrolling)
                                 {
+                                    if (theItem != null)
+                                    {
+                                        theItem.Bounds.Y -= (int)(velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds).Y;
+                                    }
                                     for (int lc = 0; lc < DroppedItems.Count; lc++)
                                     {
                                         DroppedItems[lc].CharMovedDown(gameTime, velocityup);
@@ -1110,14 +1228,51 @@ namespace TextureAtlas
                     }
                     if (Enemies[l].blnDead)
                     {
-                        IntDrop = RNG.Next(1, 100);
-                        if (IntDrop > 90)
+                        IntDrop = RNG.Next(1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .1), 100);
+                        if (IntDrop > 50)
                         {
                             DoesDrop = true;
                         }
                         if (DoesDrop)
                         {
-                            DroppedItems.Add(new Item(Enemies[l].Location, sword, "Ground", Font2, LegBG, legbeam, Textbg));
+                            int ItemType = GlobalVariables.RollVsItemType();
+
+                            //assigned to values to fix compile time errs
+                            int SubType = 0;
+                            Texture2D DroppedItem = sword;
+
+                            ContentManager contentManager = new ContentManager(Content.ServiceProvider, Content.RootDirectory);
+                            switch (ItemType)
+                            {
+
+                                //Weapon
+                                case 1:
+
+                                    SubType = GlobalVariables.RollVsWeaponType();
+
+                                    switch (SubType)
+                                    {
+                                        //Two-Handed Sword
+                                        case 1:
+
+                                            int TypeOfTwoHander = GlobalVariables.RollVsTwoHanderType();
+
+                                            switch (TypeOfTwoHander)
+                                            {
+
+                                                case 1:
+
+                                                    DroppedItem = contentManager.Load<Texture2D>("Two-HandedSword");
+                                                    break;
+                                            }
+
+                                            break;
+                                    }
+
+                                    break;
+
+                            }
+                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, SubType, Enemies[l].Level));
                         }
                         DoesDrop = false;
                         Enemies.Remove(Enemies[l]);
@@ -1140,115 +1295,6 @@ namespace TextureAtlas
 
             #region ClickEvents
 
-            #region Inventory
-
-            if (mouseState.X < 65 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnOpen == true || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnOpen == true)
-            {
-                blnOpen = false;
-            }
-
-            else if (mouseState.X < 65 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnOpen == false || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnOpen == false)
-            {
-                blnOpen = true;
-                inventory = new Inventory(InvItems, InvPos);
-            }
-
-            else if (blnOpen && (mouseState.X - InvPos.X) > 17 && (mouseState.X - InvPos.X) < 388 && (mouseState.Y - InvPos.Y) > 8 && (mouseState.Y - InvPos.Y) < 70 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Pressed)
-            {
-                isDrag = true;
-            }
-            else
-            {
-                isDrag = false;
-                MouseOffSetx = 0f;
-                MouseOffSety = 0f;
-            }
-
-            if (isDrag)
-            {
-                if (MouseOffSetx == 0 && MouseOffSety == 0)
-                {
-                    MouseOffSetx = (mouseState.X - InvPos.X);
-                    MouseOffSety = (mouseState.Y - InvPos.Y);
-                }
-
-                InvPos = new Vector2((mouseState.X - MouseOffSetx), (mouseState.Y - MouseOffSety));
-                if (InvPos.X < 0)
-                {
-                    InvPos.X = 1;
-                }
-                if ((InvPos.X + 250) > graphics.PreferredBackBufferWidth)
-                {
-                    InvPos.X = (graphics.PreferredBackBufferWidth - 250);
-                }
-                if ((InvPos.Y + 300) > graphics.PreferredBackBufferHeight)
-                {
-                    InvPos.Y = (graphics.PreferredBackBufferHeight - 300);
-                }
-                if (InvPos.Y < 5)
-                {
-                    InvPos.Y = 6;
-                }
-
-                inventory.Update(InvPos);
-
-            }
-
-            if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == true || NState.IsKeyDown(Keys.U) && !kState.IsKeyDown(Keys.U) && blnEquip == true)
-            {
-                blnEquip = false;
-            }
-
-            else if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == false || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnEquip == false)
-            {
-                blnEquip = true;
-                equipment = new Equipment(EquipItem);
-            }
-
-            if (blnOpen)
-            {
-                for (int intlc = 0; intlc < InvItems.Count; intlc++)
-                {
-                    if ((mouseState.X - InvItems[intlc].location.X) < 50 && (mouseState.X - InvItems[intlc].location.X) > 0 && (mouseState.Y - InvItems[intlc].location.Y) < 30 && (mouseState.Y - InvItems[intlc].location.Y) > 0)
-                    {
-                        InvItems[intlc].invhover = true;
-                    }
-                    else
-                    {
-                        InvItems[intlc].invhover = false;
-                    }
-                }
-            }
-
-            for (int lc = 0; lc < DroppedItems.Count; lc++)
-            {
-                if ((mouseState.X - DroppedItems[lc].location.X) > 0 && (mouseState.X - DroppedItems[lc].location.X) < 75 && (mouseState.Y - DroppedItems[lc].location.Y) > 0 && (mouseState.Y - DroppedItems[lc].location.Y) < 40)
-                {
-                    DroppedItems[lc].hover = true;
-                }
-                else
-                {
-                    DroppedItems[lc].hover = false;
-                }
-                if (DroppedItems[lc].hover && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
-                {
-                    if (InvItems.Count == 20)
-                    {
-                        MSG.tmrDSP = 0f;
-                        blnDSP = true;
-                        break;
-                    }
-                    else
-                    {
-                        InvItems.Add(DroppedItems[lc]);
-                        DroppedItems.Remove(DroppedItems[lc]);
-                        break;
-                    }
-                }
-            }
-
-            #endregion
-
             #region Attack
 
             //Logic to Check if a Character has clicked on an enemy
@@ -1262,7 +1308,42 @@ namespace TextureAtlas
                     }
                 }
             }
-            
+
+
+            for (int lc = 0; lc < DroppedItems.Count; lc++)
+            {
+                if ((mouseState.X - DroppedItems[lc].location.X) > 0 && (mouseState.X - DroppedItems[lc].location.X) < 75 && (mouseState.Y - DroppedItems[lc].location.Y) > 0 && (mouseState.Y - DroppedItems[lc].location.Y) < 40)
+                {
+                    DroppedItems[lc].hover = true;
+                }
+                else
+                {
+                    DroppedItems[lc].hover = false;
+                }
+                if (DroppedItems[lc].hover && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+                {
+                    theItem = DroppedItems[lc];
+                    break;
+                }
+            }
+
+            if (theItem != null)
+            {
+                if (animatedSprite.Bounds.Intersects(theItem.Bounds))
+                {
+                    if (InvItems.Count == 20)
+                    {
+                        MSG.tmrDSP = 0f;
+                        blnDSP = true;
+                    }
+                    else
+                    {
+                        InvItems.Add(theItem);
+                        DroppedItems.Remove(theItem);
+                    }
+                    theItem = null;
+                }
+            }
 
             //Logic to see if any enemies have Bln set to trigger character animation
             foreach (Enemy en in Enemies)
@@ -1421,30 +1502,11 @@ namespace TextureAtlas
                 DebugTimer1.Reset();
             }
 
-            if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles)
-            {
-                DebugTimer1 = new Stopwatch();
-                DebugTimer1.Start();
-            }
+
 
             //Inventory Selector
 
             spriteBatch.Begin();
-            if (blnOpen)
-            {
-                spriteBatch.Draw(InvText, new Rectangle((int)InvPos.X, (int)InvPos.Y, 250, 300), Color.White);
-                if (InvItems.Count > 0)
-                {
-                    inventory.Draw(spriteBatch);
-                }
-            }
-
-            if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles && DebugTimer1 != null)
-            {
-                DebugTimer1.Stop();
-                DrawTimes_Inventory.Add(DebugTimer1.ElapsedTicks);
-                DebugTimer1.Reset();
-            }
 
             if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles)
             {
@@ -1457,8 +1519,32 @@ namespace TextureAtlas
             if (blnEquip)
             {
                 //Draw Empty Background for Character Equipment
-
                 equipment.draw(spriteBatch, CharScrn, Font2);
+
+            }
+
+            if (blnOpen)
+            {
+                if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles)
+                {
+                    DebugTimer1 = new Stopwatch();
+                    DebugTimer1.Start();
+                }
+
+                spriteBatch.Draw(InvText, new Rectangle((int)InvPos.X, (int)InvPos.Y, 250, 300), Color.White);
+
+                if (InvItems.Count > 0)
+                {
+                    inventory.Draw(spriteBatch);
+                }
+
+                if (blnLogTime && DrawTimes_Inventory.Count < DebugCycles && DebugTimer1 != null)
+                {
+                    DebugTimer1.Stop();
+                    DrawTimes_Inventory.Add(DebugTimer1.ElapsedTicks);
+                    DebugTimer1.Reset();
+                }
+
             }
 
             if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles && DebugTimer1 != null)
@@ -1494,15 +1580,40 @@ namespace TextureAtlas
                 DebugTimer1.Reset();
             }
 
+            //Wait To Draw
+            spriteBatch.Begin();
+            foreach (DrawItem draw in GlobalVariables.ItemsToBeDrawn)
+            {
+                switch (draw.CaseOfDraw)
+                {
+                    case 0:
+                        //Texture
+                        spriteBatch.Draw(draw.theTexture, draw.theLocation, draw.theRectangle, draw.theColor);
+                        break;
+                    case 1:
+                        //String
+                        spriteBatch.DrawString(draw.theFont, draw.theText, draw.theLocation, draw.theColor);
+                        break;
+                }
+            }
+            GlobalVariables.ItemsToBeDrawn = new List<DrawItem>();
+            spriteBatch.End();
+
             if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles)
             {
                 DebugTimer1 = new Stopwatch();
                 DebugTimer1.Start();
             }
 
+            //Draw ClampedItem
+            if (blnClamp)
+            {
+                inventory.ClampedItem.Draw(spriteBatch, new Vector2(mouseState.X, mouseState.Y));
+            }
+
             //Pause Menu
 
-            if (CurrentGameState == GameState.Inactive)
+            if (blnPaused)
             {
 
                 SpriteFont TheFont = GlobalVariables.AutoFont(graphics, 1);
@@ -1668,6 +1779,11 @@ namespace TextureAtlas
             GlobalVariables.SaveUserSettings();
         }
 
+        private void ClampTheItem(object sender, EventArgs e)
+        {
+            blnClamp = true;
+        }
+
         private void RevertChange(object sender, EventArgs e)
         {
             pauseMenu.blnIndexValues = true;
@@ -1687,6 +1803,7 @@ namespace TextureAtlas
         public void ResumeGame(object sender, EventArgs eventArgs)
         {
             CurrentGameState = GameState.Active;
+            blnPaused = false;
         }
 
         public void ExitGame(object sender, EventArgs eventArgs)

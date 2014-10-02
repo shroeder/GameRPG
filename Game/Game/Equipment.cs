@@ -29,7 +29,7 @@ namespace TextureAtlas
             font1 = font;
             CharBG = EquipSheet;
 
-            spriteBatach.Draw(CharBG, new Rectangle(250, 100, CharBG.Width, CharBG.Height), Color.White);
+            spriteBatach.Draw(CharBG, new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .3), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .1), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .6), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6)), Color.White);
         }
     }
 }

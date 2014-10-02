@@ -186,7 +186,7 @@ namespace TextureAtlas
         public void UpdateRight(GameTime gameTime)
         {
             Valid = true;
-            if (worldloc.X < (GlobalVariables.Columns - 10) * GlobalVariables.TileWidth)
+            if (worldloc.X < ((GlobalVariables.Columns - 10) * GlobalVariables.TileWidth) - Width)
             {
                 Rectangle newBounds = Bounds;
                 newBounds.X += Convert.ToInt32((velocity * (float)gameTime.ElapsedGameTime.TotalSeconds).X);
@@ -217,7 +217,7 @@ namespace TextureAtlas
         public void UpdateDown(GameTime gameTime)
         {
             Valid = true;
-            if (worldloc.Y < (GlobalVariables.TileHeight * (GlobalVariables.Rows - 10)))
+            if (worldloc.Y < ((GlobalVariables.TileHeight * (GlobalVariables.Rows - 10))) - Height)
             {
                 Rectangle newBounds = Bounds;
                 newBounds.Y += Convert.ToInt32((velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds).X);

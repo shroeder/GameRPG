@@ -24,6 +24,7 @@ namespace TextureAtlas
         public Rectangle spriteRectangle;
 
         public Texture2D Texture { get; set; }
+        public Texture2D CharWeapon { get; set; }
 
         public Vector2 position;
         public Vector2 SwordTip;
@@ -48,7 +49,7 @@ namespace TextureAtlas
         public float i;
         public float l = 2.5f;
 
-        public AnimatedSprite(Texture2D texture, int dir, int rows, int columns, Vector2 Location)
+        public AnimatedSprite(Texture2D texture, int dir, int rows, int columns, Vector2 Location, Texture2D charweapon = null)
         {
             if (GlobalVariables.CharacterLevel <= 0)
             {
@@ -65,6 +66,10 @@ namespace TextureAtlas
             position = Location;
             WorldPos = Location;
             direction = dir;
+            if (charweapon != null)
+            {
+                CharWeapon = charweapon;
+            }
             Texture = texture;
             Rows = rows;
             Columns = columns;
@@ -76,7 +81,7 @@ namespace TextureAtlas
         public void UpdateLeft()
         {
             currentUpdate++;
-            if (currentUpdate == updatesPerFrame)
+            if (currentUpdate >= updatesPerFrame)
             {
                 currentUpdate = 0;
                 if (currentFrame < 12 || currentFrame > 16)
@@ -196,7 +201,7 @@ namespace TextureAtlas
                             FinishAttack = false;
                         }
                     }
-                    else if (currentFrame > 12 && currentFrame < 18)
+                    else if (currentFrame > 11 && currentFrame < 18)
                     {
                         //Left
                         if (attack1)
@@ -218,7 +223,7 @@ namespace TextureAtlas
                             FinishAttack = false;
                         }
                     }
-                    else if (currentFrame > 18 && currentFrame < 24)
+                    else if (currentFrame > 17 && currentFrame < 24)
                     {
                         //Up
                         if (attack1)
@@ -262,6 +267,14 @@ namespace TextureAtlas
 
             spriteBatch.Begin();
             spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
+            if (CharWeapon != null)
+            {
+                if (attack)
+                {
+                    //TODO : Once equipment screen is set up, draw the items display color onto the character
+                    spriteBatch.Draw(CharWeapon, destinationRectangle, sourceRectangle, Color.White);
+                }
+            }
             spriteBatch.End();
         }
 
