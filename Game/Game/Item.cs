@@ -112,12 +112,19 @@ namespace TextureAtlas
         {
             location -= (velocityup * (float)gameTime.ElapsedGameTime.TotalSeconds);
             Bounds.Y = (int)location.Y;
-        }
+        } 
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 location)
+        public void Draw(SpriteBatch spriteBatch, Vector2 location, bool Clamp = false)
         {
 
             spriteBatch.Begin();
+
+            if (Clamp)
+            {
+                spriteBatch.Draw(ItemTexture, new Rectangle((int)location.X,(int)location.Y,ItemTexture.Width,ItemTexture.Height), RarityColor);
+                spriteBatch.End();
+                return;
+            }
 
             if (quality == 1)
             {

@@ -46,7 +46,7 @@ namespace TextureAtlas
         public Vector2 position = new Vector2(150, 150);
         public Vector2 velocity = new Vector2(300, 0);
         public Vector2 velocityup = new Vector2(0, 300);
-        private Vector2 InvPos;
+        private Vector2 InvPos = new Vector2(150,150);
         private Vector2 OldPos = new Vector2(0, 0);
 
         public bool blnClamp = false;
@@ -55,6 +55,7 @@ namespace TextureAtlas
         public bool Toggle = false;
         public bool Valid = true;
         public bool blnRevert = false;
+        private bool blnIgnore = false;
         private bool IsScrolling = false;
         private bool blnLogTime = false;
         private bool blnDrawDebuggerClicked = false;
@@ -107,7 +108,7 @@ namespace TextureAtlas
         private PauseMenu ResolutionConfirm = new PauseMenu();
         private MessageDisplay MSG = new MessageDisplay();
         private Equipment equipment;
-        private Inventory inventory;
+        public Inventory inventory;
         public AnimatedSprite animatedSprite;
         public Item theItem;
 
@@ -126,7 +127,6 @@ namespace TextureAtlas
         private List<long> DrawTimes_PauseMenu = new List<long>();
         private List<long> DrawTimes_BackGround = new List<long>();
         private List<long> DrawTimes_Other = new List<long>();
-        private List<Item> InvItems = new List<Item>();
         private List<Item> EquipItem = new List<Item>();
         private List<Item> DroppedItems = new List<Item>();
         public List<Enemy> Enemies = new List<Enemy>();
@@ -144,7 +144,7 @@ namespace TextureAtlas
         private Texture2D CharScrn;
         private Texture2D Grass1;
         private Texture2D hpbarFull;
-        private Texture2D InvText;
+        public Texture2D InvText;
         private Texture2D imgPause;
         private Texture2D hpbar75;
         private Texture2D hpbarHalf;
@@ -306,6 +306,12 @@ namespace TextureAtlas
             Components.Add(new GamerServicesComponent(this));
             base.Initialize();
             GlobalVariables.TheGame = this;
+            //TODO set logic to read inventory from save file
+            //until inventory is set up and stable, index the value
+
+            GlobalVariables.Inventory = new List<Item>();
+            inventory = new Inventory(GlobalVariables.Inventory, new Vector2(150, 150));
+
         }
 
         protected override void LoadContent()
@@ -414,8 +420,6 @@ namespace TextureAtlas
             else if (mouseState.X < 65 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnOpen == false || NState.IsKeyDown(Keys.I) && !kState.IsKeyDown(Keys.I) && blnOpen == false)
             {
                 blnOpen = true;
-                inventory = new Inventory(InvItems, InvPos);
-                inventory.ClampItem += ClampTheItem;
             }
 
             else if (blnOpen && (mouseState.X - InvPos.X) > 17 && (mouseState.X - InvPos.X) < 388 && (mouseState.Y - InvPos.Y) > 8 && (mouseState.Y - InvPos.Y) < 70 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Pressed)
@@ -459,8 +463,6 @@ namespace TextureAtlas
                     InvPos.Y = 6;
                 }
 
-                inventory.Update(InvPos);
-
             }
 
             if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == false || NState.IsKeyDown(Keys.E) && !kState.IsKeyDown(Keys.E) && blnEquip == false)
@@ -472,21 +474,6 @@ namespace TextureAtlas
             else if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == true || NState.IsKeyDown(Keys.E) && !kState.IsKeyDown(Keys.E) && blnEquip == true)
             {
                 blnEquip = false;
-            }
-
-            if (blnOpen)
-            {
-                for (int intlc = 0; intlc < InvItems.Count; intlc++)
-                {
-                    if ((mouseState.X - InvItems[intlc].location.X) < 50 && (mouseState.X - InvItems[intlc].location.X) > 0 && (mouseState.Y - InvItems[intlc].location.Y) < 30 && (mouseState.Y - InvItems[intlc].location.Y) > 0)
-                    {
-                        InvItems[intlc].invhover = true;
-                    }
-                    else
-                    {
-                        InvItems[intlc].invhover = false;
-                    }
-                }
             }
 
             #region StartTimer
@@ -667,7 +654,7 @@ namespace TextureAtlas
                 int EnemyWidth = EnemyTexture.Width / EnemyTextureColumns;
                 int maxX = (Columns - 10) * TileWidth;
                 int maxY = (Rows - 10) * TileHeight;
-                Rectangle SpawnPos = new Rectangle(RNG.Next(1, maxX), RNG.Next(1, maxY), EnemyWidth, EnemyHeight);
+                Rectangle SpawnPos = new Rectangle(RNG.Next(100, maxX), RNG.Next(100, maxY), EnemyWidth, EnemyHeight);
                 //Check to prevent enemies from spawn on top of each other or on Character
                 if (Enemies.Count >= 0)
                 {
@@ -1331,17 +1318,17 @@ namespace TextureAtlas
             {
                 if (animatedSprite.Bounds.Intersects(theItem.Bounds))
                 {
-                    if (InvItems.Count == 20)
+                    if (inventory.Count() == 20)
                     {
                         MSG.tmrDSP = 0f;
                         blnDSP = true;
                     }
                     else
                     {
-                        InvItems.Add(theItem);
+                        inventory.Add(theItem);
                         DroppedItems.Remove(theItem);
+                        theItem = null;
                     }
-                    theItem = null;
                 }
             }
 
@@ -1379,7 +1366,43 @@ namespace TextureAtlas
                 }
             }
 
-            if (!blnOpen && !isDrag && !blnEquip && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && PathFinding)
+            //Condition where the pathfinding should not pathfind:P
+            Rectangle rect = new Rectangle(mouseState.X, mouseState.Y, 1, 1);
+
+            if (blnOpen)
+            {
+                if (rect.Intersects(inventory.Bounds) && mouseState.LeftButton == ButtonState.Pressed || blnClamp && mouseState.LeftButton == ButtonState.Pressed || mouseState.X < 150 && mouseState.Y < 50 && mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    blnIgnore = true;
+                }
+                else
+                {
+                    blnIgnore = false;
+                }
+            }
+            else 
+            {
+                if (blnClamp && mouseState.LeftButton == ButtonState.Pressed || mouseState.X < 150 && mouseState.Y < 50 && mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    blnIgnore = true;
+                }
+                else
+                {
+                    blnIgnore = false;
+                }
+            }
+
+            if (blnClamp)
+            {
+                if (rect.Intersects(inventory.Bounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+                {
+                    inventory.ItemDropped(new Vector2(mouseState.X, mouseState.Y), inventory.ClampedItem);
+                }
+            }
+
+            inventory.Update(InvPos);
+
+            if (!isDrag && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && PathFinding)
             {
                 foreach (Enemy en in Enemies)
                 {
@@ -1387,13 +1410,24 @@ namespace TextureAtlas
                 }
                 PathFinding = false;
             }
-            else if (!blnOpen && !isDrag && !blnEquip && mouseState.LeftButton == ButtonState.Pressed && !PathFinding)
+
+            if (blnIgnore)
+            {
+
+                GlobalVariables.MoveToLoc = new Vector2(0, 0);
+                GlobalVariables.CurrentDir = GlobalVariables.Dir.Nothing;
+                PathFinding = true;
+
+            }
+
+            else if (!isDrag && mouseState.LeftButton == ButtonState.Pressed && !PathFinding)
             {
                 GlobalVariables.MoveToLoc = new Vector2(0, 0);
                 PathFinding = GlobalVariables.MoveCharacterToPosition(animatedSprite, this, new Vector2(mouseState.X, mouseState.Y), velocity, velocityup, Enemies);
+
             }
 
-            if (!PathFinding)
+            if (!PathFinding && !isDrag)
             {
                 PathFinding = GlobalVariables.MoveCharacterToPosition(animatedSprite, this, new Vector2(mouseState.X, mouseState.Y), velocity, velocityup, Enemies);
             }
@@ -1533,7 +1567,7 @@ namespace TextureAtlas
 
                 spriteBatch.Draw(InvText, new Rectangle((int)InvPos.X, (int)InvPos.Y, 250, 300), Color.White);
 
-                if (InvItems.Count > 0)
+                if (inventory.Items.Count > 0)
                 {
                     inventory.Draw(spriteBatch);
                 }
@@ -1608,7 +1642,7 @@ namespace TextureAtlas
             //Draw ClampedItem
             if (blnClamp)
             {
-                inventory.ClampedItem.Draw(spriteBatch, new Vector2(mouseState.X, mouseState.Y));
+                inventory.ClampedItem.Draw(spriteBatch, new Vector2(mouseState.X - (inventory.ClampedItem.ItemTexture.Width / 2), mouseState.Y - (inventory.ClampedItem.ItemTexture.Height / 2)), true);
             }
 
             //Pause Menu
@@ -1777,11 +1811,6 @@ namespace TextureAtlas
             pauseMenu.blnVideoOpen = true;
             pauseMenu.DefaultPauseOpen = false;
             GlobalVariables.SaveUserSettings();
-        }
-
-        private void ClampTheItem(object sender, EventArgs e)
-        {
-            blnClamp = true;
         }
 
         private void RevertChange(object sender, EventArgs e)

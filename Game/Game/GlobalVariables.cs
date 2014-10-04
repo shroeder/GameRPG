@@ -79,6 +79,8 @@ namespace TextureAtlas
 
         public static List<DrawItem> ItemsToBeDrawn = new List<DrawItem>();
 
+        public static List<Item> Inventory { get; set; }
+
         public static Texture2D CheckMark { get; set; }
         public static Texture2D LegendaryBG { get; set; }
         public static Texture2D LegendaryBeam { get; set; }
@@ -631,22 +633,22 @@ namespace TextureAtlas
                 }
                 else if (rarity >= 60 && rarity < 80)
                 {
-                    returnValue =  3;
+                    returnValue = 3;
                 }
                 else if (rarity >= 80 && rarity < 90)
                 {
-                    returnValue =  4;
+                    returnValue = 4;
                 }
                 else if (rarity >= 90)
                 {
                     int isUnique = rng.Next(0 + CharacterLuck + (int)CharacterMagicFindRarity + (int)CharacterMagicFindQuantity, 1000);
                     if (isUnique > 600)
                     {
-                        returnValue =  6; 
+                        returnValue = 6;
                     }
                     else
                     {
-                        returnValue =  5;
+                        returnValue = 5;
                     }
                 }
                 else
@@ -656,7 +658,7 @@ namespace TextureAtlas
             }
             else
             {
-                returnValue =  1;
+                returnValue = 1;
             }
 
             return returnValue;
@@ -707,7 +709,7 @@ namespace TextureAtlas
                     switch (SubType)
                     {
                         case 1:
-                            ItemName =  "Paladin's GreatSword";
+                            ItemName = "Paladin's GreatSword";
                             break;
                     }
 
@@ -813,210 +815,210 @@ namespace TextureAtlas
             returnAffix.Desc = "";
             returnAffix.Value = 0;
             int index = rng.Next(1, AffixRange.Count);
-                //Random Stats
-                switch (AffixRange[index])
-                {
-                    //Base Damage
-                    case 1:
-                        returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                        returnAffix.Desc = "Strength Increased By : " + returnAffix.Value.ToString();
-                        returnAffix.Stat = "STR";
-                        break;
-                    case 2:
-                        returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                        returnAffix.Stat = "AGI";
-                        returnAffix.Desc = "Agility Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 3:
-                        returnAffix.Value = rng.Next((int)(ItemLvl),(int)(ItemLvl * 2));
-                        returnAffix.Stat = "WIS";
-                        returnAffix.Desc = "Wisdom Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 4:
-                        returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                        returnAffix.Stat = "DEX";
-                        returnAffix.Desc = "Dexterity Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 5:
-                        returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                        returnAffix.Stat = "LUC";
-                        returnAffix.Desc = "Luck Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 6:
-                        returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                        returnAffix.Stat = "INT";
-                        returnAffix.Desc = "Intelligence Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 7:
-                        returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                        returnAffix.Stat = "VIT";
-                        returnAffix.Desc = "Vitality Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 8:
-                        returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                        returnAffix.Stat = "CON";
-                        returnAffix.Desc = "Constitution Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 9:
-                        returnAffix.Value = rng.Next((int)(ItemLvl),(int)(ItemLvl * 3));
-                        returnAffix.Stat = "ACC";
-                        returnAffix.Desc = "Accuracy Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 10:
-                        returnAffix.Value = rng.Next((int)(ItemLvl),(int)(ItemLvl * 4));
-                        returnAffix.Stat = "MACC";
-                        returnAffix.Desc = "Melee Accuracy Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 11:
-                        returnAffix.Value = rng.Next((int)(ItemLvl),(int)(ItemLvl * 5));
-                        returnAffix.Stat = "RACC";
-                        returnAffix.Desc = "Ranged Accuracy Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 12:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .1),(int)(ItemLvl * .2));
-                        returnAffix.Stat = "CC";
-                        returnAffix.Desc = "Critical Chance Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 13:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .5),(int)(ItemLvl * 2));
-                        returnAffix.Stat = "CD";
-                        returnAffix.Desc = "Critical Damage Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 14:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .1),(int)(ItemLvl * .2));
-                        returnAffix.Stat = "ATKSPD";
-                        returnAffix.Desc = "Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 15:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .1),(int)(ItemLvl * .2));
-                        returnAffix.Stat = "CDR";
-                        returnAffix.Desc = "CoolDowns Reduced By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 16:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * 3),(int)(ItemLvl * 6));
-                        returnAffix.Stat = "HPFLAT";
-                        returnAffix.Desc = "Health Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 17:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * 3),(int)(ItemLvl * 6));
-                        returnAffix.Stat = "MPFLAT";
-                        returnAffix.Desc = "Mana Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 18:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .1),(int)(ItemLvl * .2));
-                        returnAffix.Stat = "HP";
-                        returnAffix.Desc = "Health Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 19:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .1),(int)(ItemLvl * .2));
-                        returnAffix.Stat = "MP";
-                        returnAffix.Desc = "Mana Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 20:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .5),(int)(ItemLvl * 2));
-                        returnAffix.Stat = "ARM";
-                        returnAffix.Desc = "Armour Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 21:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .5),(int)(ItemLvl * 2));
-                        returnAffix.Stat = "EVA";
-                        returnAffix.Desc = "Evasion Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 22:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .2),(int)(ItemLvl * .5));
-                        returnAffix.Stat = "MF";
-                        returnAffix.Desc = "Magic Find Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 23:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .2),(int)(ItemLvl * .5));
-                        returnAffix.Stat = "MQ";
-                        returnAffix.Desc = "Magic Quantity Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 24:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .05),(int)(ItemLvl * .1));
-                        returnAffix.Stat = "MR";
-                        returnAffix.Desc = "Melee Range Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 25:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .05),(int)(ItemLvl * .1));
-                        returnAffix.Stat = "EXP";
-                        returnAffix.Desc = "Experience Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 26:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .2),(int)(ItemLvl * .5));
-                        returnAffix.Stat = "FPDMG";
-                        returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 27:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .05),(int)(ItemLvl * .1));
-                        returnAffix.Stat = "PDMG";
-                        returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 28:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
-                        returnAffix.Stat = "FMPDMG";
-                        returnAffix.Desc = "Melee Physical Damage Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 29:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
-                        returnAffix.Stat = "MPDMG";
-                        returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 30:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
-                        returnAffix.Stat = "FRPDMG";
-                        returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 31:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
-                        returnAffix.Stat = "RPDMG";
-                        returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 32:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .3));
-                        returnAffix.Stat = "RATKSPD";
-                        returnAffix.Desc = "Ranged Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 33:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .3));
-                        returnAffix.Stat = "MATKSPD";
-                        returnAffix.Desc = "Melee Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 34:
-                        returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
-                        returnAffix.Stat = "CSPD";
-                        returnAffix.Desc = "Cast Speed Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 35:
-                        returnAffix.Value = rng.Next(1,30);
-                        returnAffix.Stat = "MVSPD";
-                        returnAffix.Desc = "Movement Speed Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 36:
-                        returnAffix.Value = rng.Next(1,10);
-                        returnAffix.Stat = "ARPEN";
-                        returnAffix.Desc = "Armour Penetration Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                        //WeaponSpecific
-                    case 37:
-                        returnAffix.Value = rng.Next(30,250);
-                        returnAffix.Stat = "WPDMG";
-                        returnAffix.Desc = "Weapon Damage Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
-                    case 38:
-                        returnAffix.Value = rng.Next((int)(ItemLvl),(int)ItemLvl * 2);
-                        returnAffix.Stat = "FWPDMG";
-                        returnAffix.Desc = "Weapon Damage Increased By : " + returnAffix.Value.ToString();
-                        break;
-                    case 39:
-                        returnAffix.Value = rng.Next(10,30);
-                        returnAffix.Stat = "WATKSPD";
-                        returnAffix.Desc = "Weapon Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
-                        break;
+            //Random Stats
+            switch (AffixRange[index])
+            {
+                //Base Damage
+                case 1:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
+                    returnAffix.Desc = "Strength Increased By : " + returnAffix.Value.ToString();
+                    returnAffix.Stat = "STR";
+                    break;
+                case 2:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "AGI";
+                    returnAffix.Desc = "Agility Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 3:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "WIS";
+                    returnAffix.Desc = "Wisdom Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 4:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "DEX";
+                    returnAffix.Desc = "Dexterity Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 5:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "LUC";
+                    returnAffix.Desc = "Luck Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 6:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "INT";
+                    returnAffix.Desc = "Intelligence Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 7:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "VIT";
+                    returnAffix.Desc = "Vitality Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 8:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "CON";
+                    returnAffix.Desc = "Constitution Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 9:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 3));
+                    returnAffix.Stat = "ACC";
+                    returnAffix.Desc = "Accuracy Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 10:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 4));
+                    returnAffix.Stat = "MACC";
+                    returnAffix.Desc = "Melee Accuracy Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 11:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 5));
+                    returnAffix.Stat = "RACC";
+                    returnAffix.Desc = "Ranged Accuracy Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 12:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
+                    returnAffix.Stat = "CC";
+                    returnAffix.Desc = "Critical Chance Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 13:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "CD";
+                    returnAffix.Desc = "Critical Damage Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 14:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
+                    returnAffix.Stat = "ATKSPD";
+                    returnAffix.Desc = "Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 15:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
+                    returnAffix.Stat = "CDR";
+                    returnAffix.Desc = "CoolDowns Reduced By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 16:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * 3), (int)(ItemLvl * 6));
+                    returnAffix.Stat = "HPFLAT";
+                    returnAffix.Desc = "Health Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 17:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * 3), (int)(ItemLvl * 6));
+                    returnAffix.Stat = "MPFLAT";
+                    returnAffix.Desc = "Mana Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 18:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
+                    returnAffix.Stat = "HP";
+                    returnAffix.Desc = "Health Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 19:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
+                    returnAffix.Stat = "MP";
+                    returnAffix.Desc = "Mana Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 20:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "ARM";
+                    returnAffix.Desc = "Armour Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 21:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
+                    returnAffix.Stat = "EVA";
+                    returnAffix.Desc = "Evasion Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 22:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
+                    returnAffix.Stat = "MF";
+                    returnAffix.Desc = "Magic Find Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 23:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
+                    returnAffix.Stat = "MQ";
+                    returnAffix.Desc = "Magic Quantity Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 24:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
+                    returnAffix.Stat = "MR";
+                    returnAffix.Desc = "Melee Range Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 25:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
+                    returnAffix.Stat = "EXP";
+                    returnAffix.Desc = "Experience Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 26:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
+                    returnAffix.Stat = "FPDMG";
+                    returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 27:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
+                    returnAffix.Stat = "PDMG";
+                    returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 28:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
+                    returnAffix.Stat = "FMPDMG";
+                    returnAffix.Desc = "Melee Physical Damage Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 29:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
+                    returnAffix.Stat = "MPDMG";
+                    returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 30:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
+                    returnAffix.Stat = "FRPDMG";
+                    returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 31:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
+                    returnAffix.Stat = "RPDMG";
+                    returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 32:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .3));
+                    returnAffix.Stat = "RATKSPD";
+                    returnAffix.Desc = "Ranged Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 33:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .3));
+                    returnAffix.Stat = "MATKSPD";
+                    returnAffix.Desc = "Melee Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 34:
+                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
+                    returnAffix.Stat = "CSPD";
+                    returnAffix.Desc = "Cast Speed Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 35:
+                    returnAffix.Value = rng.Next(1, 30);
+                    returnAffix.Stat = "MVSPD";
+                    returnAffix.Desc = "Movement Speed Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 36:
+                    returnAffix.Value = rng.Next(1, 10);
+                    returnAffix.Stat = "ARPEN";
+                    returnAffix.Desc = "Armour Penetration Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                //WeaponSpecific
+                case 37:
+                    returnAffix.Value = rng.Next(30, 250);
+                    returnAffix.Stat = "WPDMG";
+                    returnAffix.Desc = "Weapon Damage Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 38:
+                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)ItemLvl * 2);
+                    returnAffix.Stat = "FWPDMG";
+                    returnAffix.Desc = "Weapon Damage Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 39:
+                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Stat = "WATKSPD";
+                    returnAffix.Desc = "Weapon Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
             }
 
-                AffixRange.Remove(AffixRange[index]);  
-                return returnAffix;
+            AffixRange.Remove(AffixRange[index]);
+            return returnAffix;
         }
 
         public static float RollMeleeHitDamage(bool isCrit, int enemyArmour)
@@ -1033,7 +1035,7 @@ namespace TextureAtlas
         public static int RollVsItemType()
         {
             Random rng = new Random();
-            int type = rng.Next(1,1);
+            int type = rng.Next(1, 1);
             return type;
         }
 
@@ -1234,44 +1236,44 @@ namespace TextureAtlas
                 }
             }
 
-                if (Difference.X > 0 && Math.Abs(Difference.Y) < 10)
-                {
-                    CharPos = Pos.IsRight;
-                }
-                else if (Difference.X < 0 && Math.Abs(Difference.Y) < 10)
-                {
-                    CharPos = Pos.IsLeft;
-                }
-                else if (Math.Abs(Difference.X) < 10 && Difference.Y > 0)
-                {
-                    CharPos = Pos.IsDown;
-                }
-                else if (Math.Abs(Difference.X) < 10 && Difference.Y < 0)
-                {
-                    CharPos = Pos.IsUp;
-                }
-                else if (Difference.X < 0 && Difference.Y < 0)
-                {
-                    CharPos = Pos.IsUpLeft;
-                }
-                else if (Difference.X > 0 && Difference.Y < 0)
-                {
-                    CharPos = Pos.IsUpright;
-                }
-                else if (Difference.X < 0 && Difference.Y > 0)
-                {
-                    CharPos = Pos.IsDownLeft;
-                }
-                else if (Difference.X > 0 && Difference.Y > 0)
-                {
-                    CharPos = Pos.IsDownRight;
-                }
-                else
-                {
-                    CharPos = Pos.IsHere;
-                    MoveToLoc = new Vector2(0, 0);
-                    return true;
-                }
+            if (Difference.X > 0 && Math.Abs(Difference.Y) < 10)
+            {
+                CharPos = Pos.IsRight;
+            }
+            else if (Difference.X < 0 && Math.Abs(Difference.Y) < 10)
+            {
+                CharPos = Pos.IsLeft;
+            }
+            else if (Math.Abs(Difference.X) < 10 && Difference.Y > 0)
+            {
+                CharPos = Pos.IsDown;
+            }
+            else if (Math.Abs(Difference.X) < 10 && Difference.Y < 0)
+            {
+                CharPos = Pos.IsUp;
+            }
+            else if (Difference.X < 0 && Difference.Y < 0)
+            {
+                CharPos = Pos.IsUpLeft;
+            }
+            else if (Difference.X > 0 && Difference.Y < 0)
+            {
+                CharPos = Pos.IsUpright;
+            }
+            else if (Difference.X < 0 && Difference.Y > 0)
+            {
+                CharPos = Pos.IsDownLeft;
+            }
+            else if (Difference.X > 0 && Difference.Y > 0)
+            {
+                CharPos = Pos.IsDownRight;
+            }
+            else
+            {
+                CharPos = Pos.IsHere;
+                MoveToLoc = new Vector2(0, 0);
+                return true;
+            }
 
             if (Difference.X < Velocity.X && Difference.X > 0)
             {
@@ -1405,7 +1407,8 @@ namespace TextureAtlas
                 case Pos.IsDownLeft:
 
                     result = TryRight(EnmyPos);
-                    if (!result){
+                    if (!result)
+                    {
                         TryDown(EnmyPos);
                     }
 
@@ -1414,7 +1417,8 @@ namespace TextureAtlas
                 case Pos.IsDownRight:
 
                     result = TryUp(EnmyPos);
-                    if (!result){
+                    if (!result)
+                    {
                         TryRight(EnmyPos);
                     }
 
@@ -1423,7 +1427,8 @@ namespace TextureAtlas
                 case Pos.IsUp:
 
                     result = TryLeft(EnmyPos);
-                    if (!result){
+                    if (!result)
+                    {
                         TryDown(EnmyPos);
                     }
 
@@ -1432,7 +1437,8 @@ namespace TextureAtlas
                 case Pos.IsUpLeft:
 
                     result = TryDown(EnmyPos);
-                    if (!result){
+                    if (!result)
+                    {
                         TryLeft(EnmyPos);
                     }
 
@@ -1441,7 +1447,8 @@ namespace TextureAtlas
                 case Pos.IsUpright:
 
                     result = TryLeft(EnmyPos);
-                    if (!result){
+                    if (!result)
+                    {
                         TryUp(EnmyPos);
                     }
 
@@ -1450,7 +1457,8 @@ namespace TextureAtlas
                 case Pos.IsLeft:
 
                     result = TryDown(EnmyPos);
-                    if (!result){
+                    if (!result)
+                    {
                         TryLeft(EnmyPos);
                     }
 

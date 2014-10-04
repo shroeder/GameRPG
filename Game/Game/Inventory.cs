@@ -13,82 +13,192 @@ using System.Timers;
 
 namespace TextureAtlas
 {
-    class Inventory
+    public class Inventory
     {
         #region Variables
         //Load Items
-        public bool blnIsClamp = false;
-        public List<Vector2> InvBoxes = new List<Vector2>();
-        public List<Item> Items = new List<Item>();
+        public List<Rectangle> InvBoxes = new List<Rectangle>();
+        public List<Item> Items = new List<Item>(new Item[] { null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null });
         public Color color = Color.White;
         public int ScalarText = 0;
-        public Vector2 Box1Start = new Vector2(27,57);
+        public Vector2 Box1Start = new Vector2(27, 57);
         public Vector2 BoxRight = new Vector2(52, 0);
         public Vector2 BoxDown = new Vector2(0, 44);
         public MouseState ms;
+        public Rectangle Bounds;
         public MouseState oms;
         public Item ClampedItem;
         #endregion
 
-        public event EventHandler ClampItem;
-
         public Inventory(List<Item> ListItems, Vector2 InvPos)
         {
-            oms = ms;
-            ms = Mouse.GetState();
 
+            Bounds = new Rectangle((int)InvPos.X, (int)InvPos.Y, GlobalVariables.TheGame.InvText.Width - 155, GlobalVariables.TheGame.InvText.Height - 240);
 
-            Items = ListItems;
+            for (int intlc = 0; intlc < ListItems.Count; intlc++)
+            {
+                for (int intlc1 = 0; intlc1 < Items.Count; intlc1++)
+                {
+                    if (Items[intlc1] == null)
+                    {
+                        Items[intlc1] = ListItems[intlc];
+                        break;
+                    }
+                }
+            }
 
             #region SetBoxes
-            InvBoxes.Add((Box1Start) + new Vector2(InvPos.X,InvPos.Y));
-            InvBoxes.Add((Box1Start) + new Vector2(InvPos.X, InvPos.Y) + BoxRight);
-            InvBoxes.Add((Box1Start) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2));
-            InvBoxes.Add((Box1Start) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3));
-            InvBoxes.Add((Box1Start) + BoxDown +  new Vector2(InvPos.X, InvPos.Y));
-            InvBoxes.Add((Box1Start) + BoxDown + new Vector2(InvPos.X, InvPos.Y) + BoxRight);
-            InvBoxes.Add((Box1Start) + BoxDown + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2));
-            InvBoxes.Add((Box1Start) + BoxDown + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3));
-            InvBoxes.Add((Box1Start) + (BoxDown * 2) + new Vector2(InvPos.X, InvPos.Y));
-            InvBoxes.Add((Box1Start) + (BoxDown * 2) + new Vector2(InvPos.X, InvPos.Y) + BoxRight);
-            InvBoxes.Add((Box1Start) + (BoxDown * 2) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2));
-            InvBoxes.Add((Box1Start) + (BoxDown * 2) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3));
-            InvBoxes.Add((Box1Start) + (BoxDown * 3) + new Vector2(InvPos.X, InvPos.Y));
-            InvBoxes.Add((Box1Start) + (BoxDown * 3) + new Vector2(InvPos.X, InvPos.Y) + BoxRight);
-            InvBoxes.Add((Box1Start) + (BoxDown * 3) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2));
-            InvBoxes.Add((Box1Start) + (BoxDown * 3) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3));
-            InvBoxes.Add((Box1Start) + (BoxDown * 4) + new Vector2(InvPos.X, InvPos.Y));
-            InvBoxes.Add((Box1Start) + (BoxDown * 4) + new Vector2(InvPos.X, InvPos.Y) + BoxRight);
-            InvBoxes.Add((Box1Start) + (BoxDown * 4) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2));
-            InvBoxes.Add((Box1Start) + (BoxDown * 4) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3));
+            //Row 1
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y), 45, 30));
+
+            //Row 2
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y + BoxDown.Y), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y + BoxDown.Y), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + BoxDown.Y), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + BoxDown.Y), 45, 30));
+
+            //Row 3
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 2)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 2)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 2)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 2)), 45, 30));
+
+            //Row 4
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 3)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 3)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 3)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 3)), 45, 30));
+
+            //Row 5
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30));
+            InvBoxes.Add(new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30));
+
             #endregion
+        }
+
+        public int Count()
+        {
+            int returnValue = 0;
+            foreach (Item item in Items)
+            {
+                if (item != null)
+                {
+                    returnValue += 1;
+                }
+            }
+            return returnValue;
         }
 
         public void Update(Vector2 InvPos)
         {
+            oms = ms;
+            ms = Mouse.GetState();
+
+            //set hover
+            for (int intlc = 0; intlc < Items.Count; intlc++)
+            {
+                if (Items[intlc] != null)
+                {
+                    if ((ms.X - Items[intlc].location.X) < 50 && (ms.X - Items[intlc].location.X) > 0 && (ms.Y - Items[intlc].location.Y) < 30 && (ms.Y - Items[intlc].location.Y) > 0)
+                    {
+                        Items[intlc].invhover = true;
+                    }
+                    else
+                    {
+                        Items[intlc].invhover = false;
+                    }
+                }
+            }
+
+                for (int intlc = 0; intlc < Items.Count; intlc++)
+                {
+                    if (Items[intlc] != null)
+                    {
+                        if (Items[intlc].invhover)
+                        {
+                            if (ms.LeftButton == ButtonState.Pressed && oms.LeftButton == ButtonState.Released)
+                            {
+                                ClampedItem = Items[intlc];
+                                Items[intlc] = null;
+                                GlobalVariables.TheGame.blnClamp = true;
+                            }
+                        }
+                    }
+                }
+
+
+            Bounds = new Rectangle((int)InvPos.X, (int)InvPos.Y, GlobalVariables.TheGame.InvText.Width - 155, GlobalVariables.TheGame.InvText.Height - 240);
 
             #region SetBoxes
-            InvBoxes[0] = (Box1Start) + new Vector2(InvPos.X, InvPos.Y);
-            InvBoxes[1] =(Box1Start) + new Vector2(InvPos.X, InvPos.Y) + BoxRight;
-            InvBoxes[2] =(Box1Start) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2);
-            InvBoxes[3] =(Box1Start) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3);
-            InvBoxes[4] =(Box1Start) + BoxDown + new Vector2(InvPos.X, InvPos.Y);
-            InvBoxes[5] =(Box1Start) + BoxDown + new Vector2(InvPos.X, InvPos.Y) + BoxRight;
-            InvBoxes[6] =(Box1Start) + BoxDown + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2);
-            InvBoxes[7] =(Box1Start) + BoxDown + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3);
-            InvBoxes[8] =(Box1Start) + (BoxDown * 2) + new Vector2(InvPos.X, InvPos.Y);
-            InvBoxes[9] =(Box1Start) + (BoxDown * 2) + new Vector2(InvPos.X, InvPos.Y) + BoxRight;
-            InvBoxes[10] =(Box1Start) + (BoxDown * 2) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2);
-            InvBoxes[11] =(Box1Start) + (BoxDown * 2) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3);
-            InvBoxes[12] =(Box1Start) + (BoxDown * 3) + new Vector2(InvPos.X, InvPos.Y);
-            InvBoxes[13] =(Box1Start) + (BoxDown * 3) + new Vector2(InvPos.X, InvPos.Y) + BoxRight;
-            InvBoxes[14] =(Box1Start) + (BoxDown * 3) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2);
-            InvBoxes[15] =(Box1Start) + (BoxDown * 3) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3);
-            InvBoxes[16] =(Box1Start) + (BoxDown * 4) + new Vector2(InvPos.X, InvPos.Y);
-            InvBoxes[17] =(Box1Start) + (BoxDown * 4) + new Vector2(InvPos.X, InvPos.Y) + BoxRight;
-            InvBoxes[18] =(Box1Start) + (BoxDown * 4) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 2);
-            InvBoxes[19] =(Box1Start) + (BoxDown * 4) + new Vector2(InvPos.X, InvPos.Y) + (BoxRight * 3);
+            //Row 1
+            InvBoxes[0] = new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y), 45, 30);
+            InvBoxes[1] = new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y), 45, 30);
+            InvBoxes[2] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y), 45, 30);
+            InvBoxes[3] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y), 45, 30);
+
+            //Row 2
+            InvBoxes[4] = new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y + BoxDown.Y), 45, 30);
+            InvBoxes[5] = new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y + BoxDown.Y), 45, 30);
+            InvBoxes[6] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + BoxDown.Y), 45, 30);
+            InvBoxes[7] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + BoxDown.Y), 45, 30);
+
+            //Row 3
+            InvBoxes[8] = new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 2)), 45, 30);
+            InvBoxes[9] = new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 2)), 45, 30);
+            InvBoxes[10] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 2)), 45, 30);
+            InvBoxes[11] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 2)), 45, 30);
+
+            //Row 4
+            InvBoxes[12] = new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 3)), 45, 30);
+            InvBoxes[13] = new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 3)), 45, 30);
+            InvBoxes[14] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 3)), 45, 30);
+            InvBoxes[15] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 3)), 45, 30);
+
+            //Row 5
+            InvBoxes[16] = new Rectangle((int)(Box1Start.X + InvPos.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30);
+            InvBoxes[17] = new Rectangle((int)(Box1Start.X + InvPos.X + BoxRight.X), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30);
+            InvBoxes[18] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30);
+            InvBoxes[19] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30);
             #endregion
+        }
+
+        public void Add(Item item)
+        {
+            for (int intlc = 0; intlc < Items.Count; intlc++)
+            {
+                if (Items[intlc] == null)
+                {
+                    Items[intlc] = item;
+                    break;
+                }
+            }
+        }
+
+        public void ItemDropped(Vector2 pos, Item item)
+        {
+            for (int intlc = 0; intlc < InvBoxes.Count; intlc++)
+            {
+                if (InvBoxes[intlc].Intersects(new Rectangle((int)pos.X, (int)pos.Y, 1, 1)))
+                {
+                    if (Items[intlc] != null)
+                    {
+                        ClampedItem = Items[intlc];
+                    }
+                    else
+                    {
+                        //Set bln in Game to stop drawing item at cursor
+                        ClampedItem = null;
+                        GlobalVariables.TheGame.blnClamp = false;
+                    }
+                    Items[intlc] = item;
+                    break;
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -97,275 +207,255 @@ namespace TextureAtlas
             {
                 for (int i = 0; i < Items.Count; i++)
                 {
-                    if (Items[i].quality == 1)
+                    if (Items[i] != null)
                     {
-                        color = Color.White;
-                    }
-                    if (Items[i].quality == 2)
-                    {
-                        color = Color.AliceBlue;
-                    }
-                    if (Items[i].quality == 3)
-                    {
-                        color = Color.DeepSkyBlue;
-                    }
-                    if (Items[i].quality == 4)
-                    {
-                        color = Color.Orange;
-                    }
-                    if (Items[i].quality == 5)
-                    {
-                        color = Color.Purple;
-                    }
-                    if (Items[i].quality == 6)
-                    {
-                        color = Color.Brown;
-                    }
+                        if (Items[i].quality == 1)
+                        {
+                            color = Color.White;
+                        }
+                        if (Items[i].quality == 2)
+                        {
+                            color = Color.AliceBlue;
+                        }
+                        if (Items[i].quality == 3)
+                        {
+                            color = Color.DeepSkyBlue;
+                        }
+                        if (Items[i].quality == 4)
+                        {
+                            color = Color.Orange;
+                        }
+                        if (Items[i].quality == 5)
+                        {
+                            color = Color.Purple;
+                        }
+                        if (Items[i].quality == 6)
+                        {
+                            color = Color.Brown;
+                        }
 
-                    if (i == 0)
-                    {
-                        if (Items[i].quality > 4)
+                        if (i == 0)
                         {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[0].X,(int)InvBoxes[0].Y,45,30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[0].X, (int)InvBoxes[0].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[0].X,InvBoxes[0].Y);
-                    }
-                    if (i == 1)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[1].X, (int)InvBoxes[1].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[1].X, (int)InvBoxes[1].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[1].X, InvBoxes[1].Y);
-                    }
-                    if (i == 2)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[2].X, (int)InvBoxes[2].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[2].X, (int)InvBoxes[2].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[2].X, InvBoxes[2].Y);
-                    }
-                    if (i == 3)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[3].X, (int)InvBoxes[3].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[3].X, (int)InvBoxes[3].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[3].X, InvBoxes[3].Y);
-                    }
-
-                    //Row 2
-                    if (i == 4)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[4].X, (int)InvBoxes[4].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[4].X, (int)InvBoxes[4].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[4].X, InvBoxes[4].Y);
-                    }
-                    if (i == 5)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[5].X, (int)InvBoxes[5].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[5].X, (int)InvBoxes[5].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[5].X, InvBoxes[5].Y);
-                    }
-                    if (i == 6)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[6].X, (int)InvBoxes[6].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[6].X, (int)InvBoxes[6].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[6].X, InvBoxes[6].Y);
-                    }
-                    if (i == 7)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[7].X, (int)InvBoxes[7].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[7].X, (int)InvBoxes[7].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[7].X, InvBoxes[7].Y);
-                    }
-
-                    //Row 3
-                    if (i == 8)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[8].X, (int)InvBoxes[8].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[8].X, (int)InvBoxes[8].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[8].X, InvBoxes[8].Y);
-                    }
-                    if (i == 9)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[9].X, (int)InvBoxes[9].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[9].X, (int)InvBoxes[9].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[9].X, InvBoxes[9].Y);
-                    }
-                    if (i == 10)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[10].X, (int)InvBoxes[10].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[10].X, (int)InvBoxes[10].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[10].X, InvBoxes[10].Y);
-                    }
-                    if (i == 11)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[11].X, (int)InvBoxes[11].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[11].X, (int)InvBoxes[11].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[11].X, InvBoxes[11].Y);
-                    }
-
-                    //Row 4
-                    if (i == 12)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[12].X, (int)InvBoxes[12].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[12].X, (int)InvBoxes[12].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[12].X, InvBoxes[12].Y);
-                    }
-                    if (i == 13)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[13].X, (int)InvBoxes[13].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[13].X, (int)InvBoxes[13].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[13].X, InvBoxes[13].Y);
-                    }
-                    if (i == 14)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[14].X, (int)InvBoxes[14].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[14].X, (int)InvBoxes[14].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[14].X, InvBoxes[14].Y);
-                    }
-                    if (i == 15)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[15].X, (int)InvBoxes[15].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[15].X, (int)InvBoxes[15].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[15].X, InvBoxes[15].Y);
-                    }
-
-                    //Row 5
-                    if (i == 16)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[16].X, (int)InvBoxes[16].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[16].X, (int)InvBoxes[16].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[16].X, InvBoxes[16].Y);
-                    }
-                    if (i == 17)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[17].X, (int)InvBoxes[17].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[17].X, (int)InvBoxes[17].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[17].X, InvBoxes[17].Y);
-                    }
-                    if (i == 18)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[18].X, (int)InvBoxes[18].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[18].X, (int)InvBoxes[18].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[18].X, InvBoxes[18].Y);
-                    }
-                    if (i == 19)
-                    {
-                        if (Items[i].quality > 4)
-                        {
-                            spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle((int)InvBoxes[19].X, (int)InvBoxes[19].Y, 45, 30), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
-                        }
-                        spriteBatch.Draw(Items[i].ItemTexture, new Rectangle((int)InvBoxes[19].X, (int)InvBoxes[19].Y, 45, 30), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
-                        Items[i].location = new Vector2(InvBoxes[19].X, InvBoxes[19].Y);
-                    }
-
-                    if (Items[i].invhover)
-                    {
-
-                        if (ms.LeftButton == ButtonState.Pressed && oms.LeftButton == ButtonState.Released)
-                        {
-                            if (ClampItem != null)
+                            if (Items[i].quality > 4)
                             {
-                                blnIsClamp = true;
-                                Items.Remove(Items[i]);
-                                ClampedItem = Items[i];
-                                ClampItem(this, EventArgs.Empty);
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[0].X, InvBoxes[0].Y, InvBoxes[0].Width, InvBoxes[0].Height - (InvBoxes[0].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[0].X, InvBoxes[0].Y, InvBoxes[0].Width, InvBoxes[0].Height - (InvBoxes[0].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[0].X, InvBoxes[0].Y);
+                        }
+                        if (i == 1)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[1].X, InvBoxes[1].Y, InvBoxes[1].Width, InvBoxes[1].Height - (InvBoxes[1].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[1].X, InvBoxes[1].Y, InvBoxes[1].Width, InvBoxes[1].Height - (InvBoxes[1].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[1].X, InvBoxes[1].Y);
+                        }
+                        if (i == 2)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[2].X, InvBoxes[2].Y, InvBoxes[2].Width, InvBoxes[2].Height - (InvBoxes[2].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[2].X, InvBoxes[2].Y, InvBoxes[2].Width, InvBoxes[2].Height - (InvBoxes[2].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[2].X, InvBoxes[2].Y);
+                        }
+                        if (i == 3)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[3].X, InvBoxes[3].Y, InvBoxes[3].Width, InvBoxes[3].Height - (InvBoxes[3].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[3].X, InvBoxes[3].Y, InvBoxes[3].Width, InvBoxes[3].Height - (InvBoxes[3].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[3].X, InvBoxes[3].Y);
                         }
 
-                        if (blnIsClamp)
+                        //Row 2
+                        if (i == 4)
                         {
-                            return;
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[4].X, InvBoxes[4].Y, InvBoxes[4].Width, InvBoxes[4].Height - (InvBoxes[4].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[4].X, InvBoxes[4].Y, InvBoxes[4].Width, InvBoxes[4].Height - (InvBoxes[4].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[4].X, InvBoxes[4].Y);
+                        }
+                        if (i == 5)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[5].X, InvBoxes[5].Y, InvBoxes[5].Width, InvBoxes[5].Height - (InvBoxes[5].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[5].X, InvBoxes[5].Y, InvBoxes[5].Width, InvBoxes[5].Height - (InvBoxes[5].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[5].X, InvBoxes[5].Y);
+                        }
+                        if (i == 6)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[6].X, InvBoxes[6].Y, InvBoxes[6].Width, InvBoxes[6].Height - (InvBoxes[6].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[6].X, InvBoxes[6].Y, InvBoxes[6].Width, InvBoxes[6].Height - (InvBoxes[6].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[6].X, InvBoxes[6].Y);
+                        }
+                        if (i == 7)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[7].X, InvBoxes[7].Y, InvBoxes[7].Width, InvBoxes[7].Height - (InvBoxes[7].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[7].X, InvBoxes[7].Y, InvBoxes[7].Width, InvBoxes[7].Height - (InvBoxes[7].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[7].X, InvBoxes[7].Y);
                         }
 
-                        //Draw Shaded backgorund
-                        
-                        GlobalVariables.WaitToDraw(0, Items[i].location, new Rectangle(0, 0, Items[i].TextureBack.Width, 70 + (int)(22 * Items[i].affixes)), Color.Black,null,Items[i].TextureBack);
-
-                        GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + 30)), new Rectangle(0, 0, 0, 0), Items[i].RarityColor, Items[i].Font1, null, Items[i].ItemName);
-                        //spriteBatch.DrawString(Items[i].Font1, Items[i].ItemName, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + 30)), Items[i].RarityColor);
-
-                        //Initialize Scalar Value
-                        ScalarText = 20;
-
-                        //Draw Item aFfixes
-                        for (int intlc = 0; intlc < Items[i].AffixList.Count; intlc++)
+                        //Row 3
+                        if (i == 8)
                         {
-                            if (intlc < 4)
+                            if (Items[i].quality > 4)
                             {
-                                //spriteBatch.DrawString(Items[i].Font1, Items[i].AffixList[intlc].Desc, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.White);
-                                GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.White, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
-                                ScalarText += 20;
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[8].X, InvBoxes[8].Y, InvBoxes[8].Width, InvBoxes[8].Height - (InvBoxes[8].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (intlc == 4)
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[8].X, InvBoxes[8].Y, InvBoxes[8].Width, InvBoxes[8].Height - (InvBoxes[8].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[8].X, InvBoxes[8].Y);
+                        }
+                        if (i == 9)
+                        {
+                            if (Items[i].quality > 4)
                             {
-                                //spriteBatch.DrawString(Items[i].Font1, Items[i].AffixList[intlc].Desc, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Orange);
-                                GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Orange, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
-                                ScalarText += 20;
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[9].X, InvBoxes[9].Y, InvBoxes[9].Width, InvBoxes[9].Height - (InvBoxes[9].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (intlc == 5)
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[9].X, InvBoxes[9].Y, InvBoxes[9].Width, InvBoxes[9].Height - (InvBoxes[9].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[9].X, InvBoxes[9].Y);
+                        }
+                        if (i == 10)
+                        {
+                            if (Items[i].quality > 4)
                             {
-                                //spriteBatch.DrawString(Items[i].Font1, Items[i].AffixList[intlc].Desc, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Purple);
-                                GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Purple, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
-                                ScalarText += 20;
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[10].X, InvBoxes[10].Y, InvBoxes[10].Width, InvBoxes[10].Height - (InvBoxes[10].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (intlc > 5)
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[10].X, InvBoxes[10].Y, InvBoxes[10].Width, InvBoxes[10].Height - (InvBoxes[10].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[10].X, InvBoxes[10].Y);
+                        }
+                        if (i == 11)
+                        {
+                            if (Items[i].quality > 4)
                             {
-                                //spriteBatch.DrawString(Items[i].Font1, Items[i].AffixList[intlc].Desc, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), Color.Brown);
-                                GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Brown, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
-                                ScalarText += 20;
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[11].X, InvBoxes[11].Y, InvBoxes[11].Width, InvBoxes[11].Height - (InvBoxes[11].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[11].X, InvBoxes[11].Y, InvBoxes[11].Width, InvBoxes[11].Height - (InvBoxes[11].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[11].X, InvBoxes[11].Y);
+                        }
+
+                        //Row 4
+                        if (i == 12)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[12].X, InvBoxes[12].Y, InvBoxes[12].Width, InvBoxes[12].Height - (InvBoxes[12].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[12].X, InvBoxes[12].Y, InvBoxes[12].Width, InvBoxes[12].Height - (InvBoxes[12].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[12].X, InvBoxes[12].Y);
+                        }
+                        if (i == 13)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[13].X, InvBoxes[13].Y, InvBoxes[13].Width, InvBoxes[13].Height - (InvBoxes[13].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[13].X, InvBoxes[13].Y, InvBoxes[13].Width, InvBoxes[13].Height - (InvBoxes[13].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[13].X, InvBoxes[13].Y);
+                        }
+                        if (i == 14)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[14].X, InvBoxes[14].Y, InvBoxes[14].Width, InvBoxes[14].Height - (InvBoxes[14].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[14].X, InvBoxes[14].Y, InvBoxes[14].Width, InvBoxes[14].Height - (InvBoxes[14].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[14].X, InvBoxes[14].Y);
+                        }
+                        if (i == 15)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[15].X, InvBoxes[15].Y, InvBoxes[15].Width, InvBoxes[15].Height - (InvBoxes[15].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[15].X, InvBoxes[15].Y, InvBoxes[15].Width, InvBoxes[15].Height - (InvBoxes[15].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[15].X, InvBoxes[15].Y);
+                        }
+
+                        //Row 5
+                        if (i == 16)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[16].X, InvBoxes[16].Y, InvBoxes[16].Width, InvBoxes[16].Height - (InvBoxes[16].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[16].X, InvBoxes[16].Y, InvBoxes[16].Width, InvBoxes[16].Height - (InvBoxes[16].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[16].X, InvBoxes[16].Y);
+                        }
+                        if (i == 17)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[17].X, InvBoxes[17].Y, InvBoxes[17].Width, InvBoxes[17].Height - (InvBoxes[17].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[17].X, InvBoxes[17].Y, InvBoxes[17].Width, InvBoxes[17].Height - (InvBoxes[17].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[17].X, InvBoxes[17].Y);
+                        }
+                        if (i == 18)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[18].X, InvBoxes[18].Y, InvBoxes[18].Width, InvBoxes[18].Height - (InvBoxes[18].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[18].X, InvBoxes[18].Y, InvBoxes[18].Width, InvBoxes[18].Height - (InvBoxes[18].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[18].X, InvBoxes[18].Y);
+                        }
+                        if (i == 19)
+                        {
+                            if (Items[i].quality > 4)
+                            {
+                                spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[19].X, InvBoxes[19].Y, InvBoxes[19].Width, InvBoxes[19].Height - (InvBoxes[19].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
+                            }
+                            spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[19].X, InvBoxes[19].Y, InvBoxes[19].Width, InvBoxes[19].Height - (InvBoxes[19].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                            Items[i].location = new Vector2(InvBoxes[19].X, InvBoxes[19].Y);
+                        }
+
+                        if (Items[i].invhover)
+                        {
+
+                            GlobalVariables.WaitToDraw(0, Items[i].location, new Rectangle(0, 0, Items[i].TextureBack.Width, 70 + (int)(22 * Items[i].affixes)), Color.Black, null, Items[i].TextureBack);
+
+                            GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + 30)), new Rectangle(0, 0, 0, 0), Items[i].RarityColor, Items[i].Font1, null, Items[i].ItemName);
+
+                            //Initialize Scalar Value
+                            ScalarText = 20;
+
+                            //Draw Item aFfixes
+                            for (int intlc = 0; intlc < Items[i].AffixList.Count; intlc++)
+                            {
+                                if (intlc < 4)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.White, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
+                                    ScalarText += 20;
+                                }
+                                if (intlc == 4)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Orange, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
+                                    ScalarText += 20;
+                                }
+                                if (intlc == 5)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Purple, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
+                                    ScalarText += 20;
+                                }
+                                if (intlc > 5)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Brown, Items[i].Font1, null, Items[i].AffixList[intlc].Desc);
+                                    ScalarText += 20;
+                                }
                             }
                         }
                     }
