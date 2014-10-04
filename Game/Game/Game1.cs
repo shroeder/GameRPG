@@ -1392,11 +1392,16 @@ namespace TextureAtlas
                 }
             }
 
-            if (blnClamp)
+            //Pick up Item Drop Item
+            if (rect.Intersects(inventory.Bounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
             {
-                if (rect.Intersects(inventory.Bounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+                if (blnClamp)
                 {
-                    inventory.ItemDropped(new Vector2(mouseState.X, mouseState.Y), inventory.ClampedItem);
+                        inventory.ItemDropped(new Vector2(mouseState.X, mouseState.Y), inventory.ClampedItem);
+                }
+                else
+                {
+                    inventory.GrabItem();
                 }
             }
 

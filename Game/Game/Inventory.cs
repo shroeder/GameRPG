@@ -94,6 +94,22 @@ namespace TextureAtlas
             return returnValue;
         }
 
+        public void GrabItem()
+        {
+            for (int intlc = 0; intlc < Items.Count; intlc++)
+            {
+                if (Items[intlc] != null)
+                {
+                    if (Items[intlc].invhover)
+                    {
+                            ClampedItem = Items[intlc];
+                            Items[intlc] = null;
+                            GlobalVariables.TheGame.blnClamp = true;
+                    }
+                }
+            }
+        }
+
         public void Update(Vector2 InvPos)
         {
             oms = ms;
@@ -114,23 +130,6 @@ namespace TextureAtlas
                     }
                 }
             }
-
-                for (int intlc = 0; intlc < Items.Count; intlc++)
-                {
-                    if (Items[intlc] != null)
-                    {
-                        if (Items[intlc].invhover)
-                        {
-                            if (ms.LeftButton == ButtonState.Pressed && oms.LeftButton == ButtonState.Released)
-                            {
-                                ClampedItem = Items[intlc];
-                                Items[intlc] = null;
-                                GlobalVariables.TheGame.blnClamp = true;
-                            }
-                        }
-                    }
-                }
-
 
             Bounds = new Rectangle((int)InvPos.X, (int)InvPos.Y, GlobalVariables.TheGame.InvText.Width - 155, GlobalVariables.TheGame.InvText.Height - 240);
 
