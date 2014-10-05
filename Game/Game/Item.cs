@@ -19,6 +19,7 @@ namespace TextureAtlas
 
         public int quality;
         public int affixes;
+        public int ItemType;
 
         public Boolean hover = false;
         public Boolean invhover = false;
@@ -41,18 +42,40 @@ namespace TextureAtlas
         public Texture2D ItemTexture;
         public Texture2D LegendaryBg;
 
+        public string ItemTextureName;
+
         public Color RarityColor;
 
         #endregion
 
-        public Item(Vector2 Location, Texture2D tex, int ItemType, int ItemLevel, int SubType = 0)
+        public enum itemSlot 
         {
+            Helmet,
+            OneHanded,
+            TwoHanded,
+            Gloves,
+            Shoulders,
+            Boots,
+            Chest,
+            Back,
+            Ring,
+            Belt,
+            Nothing
+        }
+
+        public itemSlot ItemSlot;
+
+        public Item(Vector2 Location, Texture2D tex, int itemtype, int ItemLevel, itemSlot itmslot, string ItmtxtName, int SubType = 0)
+        {
+            ItemSlot = itmslot;
             LegBeam = GlobalVariables.LegendaryBeam;
             LegendaryBg = GlobalVariables.LegendaryBG;
             TextureBack = GlobalVariables.TextureBack;
             worldloc = Location;
             location = Location;
             ItemTexture = tex;
+            ItemType = itemtype;
+            ItemTextureName = ItmtxtName;
             Bounds = new Rectangle((int)location.X, (int)location.Y, tex.Width, tex.Height);
             Font1 = GlobalVariables.Font10;
             quality = GlobalVariables.RollVsRarity();
@@ -82,6 +105,10 @@ namespace TextureAtlas
                     break;
                 case 6:
                     ItemName = GlobalVariables.GetUniqueByTypes(ItemType,SubType);
+                    if (ItemType == 1 && SubType == 1)
+                    {
+                        ItemTextureName = "HeroSS2H1U";
+                    }
                     affixes = 10;
                     break;
             }
@@ -164,6 +191,15 @@ namespace TextureAtlas
             {
                         if (hover)
                         {
+                            if (GlobalVariables.TheGame.blnEquip)
+                            {
+                                if (!GlobalVariables.TheGame.equipment.Bounds.Intersects(Bounds))
+                                {
+                                    spriteBatch.End();
+                                    return;
+                                }
+                            }
+
                             spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X, (location.Y - 20)), Color.Black);
 
                             //Draw Shaded backgorund

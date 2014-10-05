@@ -79,8 +79,12 @@ namespace TextureAtlas
 
         public static List<DrawItem> ItemsToBeDrawn = new List<DrawItem>();
 
-        public static List<Item> Inventory { get; set; }
+        public static Equipment Equipment { get; set; }
+        public static Inventory Inventory { get; set; }
 
+        public static Texture2D RotateClock { get; set; }
+        public static Texture2D RotateCounter { get; set; }
+        public static Texture2D TestSquare { get; set; }
         public static Texture2D CheckMark { get; set; }
         public static Texture2D LegendaryBG { get; set; }
         public static Texture2D LegendaryBeam { get; set; }
@@ -210,6 +214,8 @@ namespace TextureAtlas
         [Serializable]
         public struct GameData
         {
+            public Inventory Inventory { get; set; }
+            public Equipment Equipment { get; set; }
             public string WeaponName { get; set; }
             public int MeleeRange { get; set; }
             public int WeaponType { get; set; }
@@ -267,7 +273,8 @@ namespace TextureAtlas
         {
             GameData data = new GameData();
 
-            data.WeaponName = CharacterWeaponName;
+            data.Inventory = Inventory;
+            data.Equipment = Equipment;
             data.MeleeRange = CharacterMeleeRange;
             data.WeaponType = CharacterWeaponType;
             data.Difficulty = GameDifficulty;
@@ -360,6 +367,8 @@ namespace TextureAtlas
             stream.Close();
             container.Dispose();
 
+            Equipment = data.Equipment;
+            Inventory = data.Inventory;
             CharacterWeaponName = data.WeaponName;
             CharacterMeleeRange = data.MeleeRange;
             CharacterWeaponType = data.WeaponType;

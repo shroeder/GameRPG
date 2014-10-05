@@ -61,9 +61,9 @@ namespace TextureAtlas
         private bool blnDrawDebuggerClicked = false;
         private bool isDrag = false;
         private bool DoesDrop = false;
-        private bool blnEquip = false;
+        public bool blnEquip = false;
         private bool blnDSP = false;
-        private bool blnOpen = false;
+        public bool blnOpen = false;
         private bool blnPaused = false;
         private bool blnIsConfirming = false;
         private bool debugScreenDrawBgClickedBound = false;
@@ -107,7 +107,7 @@ namespace TextureAtlas
         private PauseMenu pauseMenu = new PauseMenu();
         private PauseMenu ResolutionConfirm = new PauseMenu();
         private MessageDisplay MSG = new MessageDisplay();
-        private Equipment equipment;
+        public Equipment equipment;
         public Inventory inventory;
         public AnimatedSprite animatedSprite;
         public Item theItem;
@@ -136,10 +136,10 @@ namespace TextureAtlas
         private float MouseOffSetx = 0f;
         private float MouseOffSety = 0f;
 
-        private Texture2D CharWeapon;
+        public Texture2D CharWeapon;
         private Texture2D EnemyTexture;
         private Texture2D texture;
-        private Texture2D HeroTxt;
+        public Texture2D HeroTxt;
         private Texture2D MenuBtn;
         private Texture2D CharScrn;
         private Texture2D Grass1;
@@ -308,33 +308,61 @@ namespace TextureAtlas
             GlobalVariables.TheGame = this;
             //TODO set logic to read inventory from save file
             //until inventory is set up and stable, index the value
+            //same with equip
 
-            GlobalVariables.Inventory = new List<Item>();
-            inventory = new Inventory(GlobalVariables.Inventory, new Vector2(150, 150));
+
+            if (GlobalVariables.Inventory != null)
+            {
+                inventory = GlobalVariables.Inventory;
+            }
+            else
+            {
+                inventory = new Inventory(new List<Item>(), new Vector2(150,150));
+            }
+
+            if (GlobalVariables.Equipment != null)
+            {
+                equipment = GlobalVariables.Equipment;
+            }
+            else
+            {
+                equipment = new Equipment(GlobalVariables.Equipment);
+            }
 
         }
 
         protected override void LoadContent()
         {
             //Indexed to test sword, need to create equipment menu where we then update this value
-            GlobalVariables.CharacterWeaponType = 1;
-            if (GlobalVariables.CharacterWeaponType == 1)
+
+            if (equipment == null)
             {
-                GlobalVariables.CharacterWeaponName = "Two-Handed Sword";
-                if (GlobalVariables.CharacterWeaponName == "Two-Handed Sword")
+                HeroTxt = Content.Load<Texture2D>("HeroSS2H");
+            }
+            else
+            {
+                if (equipment.LeftWeapon.ItemSlot == Item.itemSlot.TwoHanded || equipment.RightWeapon.ItemSlot == Item.itemSlot.TwoHanded)
                 {
-                    CharWeapon = Content.Load<Texture2D>("HeroSS2H1");
+                    HeroTxt = Content.Load<Texture2D>("HeroSS2H");
+                    CharWeapon = Content.Load<Texture2D>(equipment.LeftWeapon.ItemTextureName);
+                }
+                else
+                {
+                    //no Unarmed attack set yet
+                    HeroTxt = Content.Load<Texture2D>("HeroSS2H");
                 }
             }
+
             this.IsMouseVisible = true;
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            GlobalVariables.RotateClock = Content.Load<Texture2D>("RotateClock");
+            GlobalVariables.RotateCounter = Content.Load<Texture2D>("RotateCounter");
             GlobalVariables.LegendaryBG = Content.Load<Texture2D>("LegendaryBG");
             MenuBtn = Content.Load<Texture2D>("MenuBtn");
             Font1 = Content.Load<SpriteFont>("HpFont");
             imgPause = Content.Load<Texture2D>("PauseBG");
             fontMSG = Content.Load<SpriteFont>("MessageDisplay");
             texture = Content.Load<Texture2D>("Char");
-            HeroTxt = Content.Load<Texture2D>("HeroSS2H");
             hpbarFull = Content.Load<Texture2D>("hpbarFull");
             hpbar75 = Content.Load<Texture2D>("hpbar75");
             hpbarHalf = Content.Load<Texture2D>("hpbarHalf");
@@ -342,6 +370,7 @@ namespace TextureAtlas
             hpbar40 = Content.Load<Texture2D>("hpbar40");
             sword = Content.Load<Texture2D>("sword1");
             Font2 = Content.Load<SpriteFont>("EnemyName");
+            GlobalVariables.TestSquare = Content.Load<Texture2D>("testSquare");
             GlobalVariables.Font10 = Content.Load<SpriteFont>("Font10");
             GlobalVariables.Font16 = Content.Load<SpriteFont>("Font16");
             GlobalVariables.Font24 = Content.Load<SpriteFont>("Font24");
@@ -468,7 +497,6 @@ namespace TextureAtlas
             if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == false || NState.IsKeyDown(Keys.E) && !kState.IsKeyDown(Keys.E) && blnEquip == false)
             {
                 blnEquip = true;
-                equipment = new Equipment(EquipItem);
             }
 
             else if (mouseState.X > 75 && mouseState.X < 145 && mouseState.Y < 15 && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && blnEquip == true || NState.IsKeyDown(Keys.E) && !kState.IsKeyDown(Keys.E) && blnEquip == true)
@@ -1226,7 +1254,13 @@ namespace TextureAtlas
 
                             //assigned to values to fix compile time errs
                             int SubType = 0;
+                            int ItemLevel = Enemies[l].Level + RNG.Next(1,3) - RNG.Next(1,3);
+                            if (ItemLevel < 1){
+                                ItemLevel = 1;
+                            }
                             Texture2D DroppedItem = sword;
+                            string txtName = "";
+                            Item.itemSlot itmSlot = Item.itemSlot.Nothing;
 
                             ContentManager contentManager = new ContentManager(Content.ServiceProvider, Content.RootDirectory);
                             switch (ItemType)
@@ -1242,6 +1276,7 @@ namespace TextureAtlas
                                         //Two-Handed Sword
                                         case 1:
 
+                                            itmSlot = Item.itemSlot.TwoHanded;
                                             int TypeOfTwoHander = GlobalVariables.RollVsTwoHanderType();
 
                                             switch (TypeOfTwoHander)
@@ -1250,6 +1285,7 @@ namespace TextureAtlas
                                                 case 1:
 
                                                     DroppedItem = contentManager.Load<Texture2D>("Two-HandedSword");
+                                                    txtName = "HeroSS2H1";
                                                     break;
                                             }
 
@@ -1259,7 +1295,8 @@ namespace TextureAtlas
                                     break;
 
                             }
-                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, SubType, Enemies[l].Level));
+                            //Indexed to sword
+                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, txtName, SubType));
                         }
                         DoesDrop = false;
                         Enemies.Remove(Enemies[l]);
@@ -1375,6 +1412,17 @@ namespace TextureAtlas
                 {
                     blnIgnore = true;
                 }
+                else if (blnEquip)
+                {
+                    if (rect.Intersects(equipment.Bounds) && mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        blnIgnore = true;
+                    }
+                    else
+                    {
+                        blnIgnore = false;
+                    }
+                }
                 else
                 {
                     blnIgnore = false;
@@ -1385,6 +1433,17 @@ namespace TextureAtlas
                 if (blnClamp && mouseState.LeftButton == ButtonState.Pressed || mouseState.X < 150 && mouseState.Y < 50 && mouseState.LeftButton == ButtonState.Pressed)
                 {
                     blnIgnore = true;
+                }
+                else if (blnEquip)
+                {
+                    if (rect.Intersects(equipment.Bounds) && mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        blnIgnore = true;
+                    }
+                    else
+                    {
+                        blnIgnore = false;
+                    }
                 }
                 else
                 {
@@ -1403,9 +1462,262 @@ namespace TextureAtlas
                 {
                     inventory.GrabItem();
                 }
+            }else if (rect.Intersects(equipment.HelmBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released){
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Helmet)
+                    {
+                        inventory.ClampedItem.location.X = equipment.HelmBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.HelmBounds.Y;
+                        equipment.Helmet = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.Helmet != null)
+                    {
+                        inventory.ClampedItem = equipment.Helmet;
+                        equipment.Helmet = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.ChestBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Chest)
+                    {
+                        inventory.ClampedItem.location.X = equipment.ChestBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.ChestBounds.Y;
+                        equipment.Chest = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.Chest != null)
+                    {
+                        inventory.ClampedItem = equipment.Chest;
+                        equipment.Chest = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.RWeapbounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.OneHanded || inventory.ClampedItem.ItemSlot == Item.itemSlot.TwoHanded)
+                    {
+                        inventory.ClampedItem.location.X = equipment.RWeapbounds.X;
+                        inventory.ClampedItem.location.Y = equipment.RWeapbounds.Y;
+                        equipment.RightWeapon = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.RightWeapon != null)
+                    {
+                        inventory.ClampedItem = equipment.RightWeapon;
+                        equipment.RightWeapon = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.LWeapBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.OneHanded || inventory.ClampedItem.ItemSlot == Item.itemSlot.TwoHanded)
+                    {
+                        inventory.ClampedItem.location.X = equipment.LWeapBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.LWeapBounds.Y;
+                        equipment.LeftWeapon = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.LeftWeapon != null)
+                    {
+                        inventory.ClampedItem = equipment.LeftWeapon;
+                        equipment.LeftWeapon = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.GlovesBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Gloves)
+                    {
+                        inventory.ClampedItem.location.X = equipment.GlovesBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.GlovesBounds.Y;
+                        equipment.Gloves = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.Gloves != null)
+                    {
+                        inventory.ClampedItem = equipment.Gloves;
+                        equipment.Gloves = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.ShouldersBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Shoulders)
+                    {
+                        inventory.ClampedItem.location.X = equipment.ShouldersBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.ShouldersBounds.Y;
+                        equipment.Shoulders = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.Shoulders != null)
+                    {
+                        inventory.ClampedItem = equipment.Shoulders;
+                        equipment.Shoulders = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.BackBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Back)
+                    {
+                        inventory.ClampedItem.location.X = equipment.BackBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.BackBounds.Y;
+                        equipment.Back = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.Back != null)
+                    {
+                        inventory.ClampedItem = equipment.Back;
+                        equipment.Back = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.BootsBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Boots)
+                    {
+                        inventory.ClampedItem.location.X = equipment.BootsBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.BootsBounds.Y;
+                        equipment.Boots = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.Boots != null)
+                    {
+                        inventory.ClampedItem = equipment.Boots;
+                        equipment.Boots = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.RightRingBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Ring)
+                    {
+                        inventory.ClampedItem.location.X = equipment.RightRingBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.RightRingBounds.Y;
+                        equipment.RightRing = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.RightRing != null)
+                    {
+                        inventory.ClampedItem = equipment.RightRing;
+                        equipment.RightRing = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.LeftRingBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Ring)
+                    {
+                        inventory.ClampedItem.location.X = equipment.LeftRingBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.LeftRingBounds.Y;
+                        equipment.LeftRing = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.Chest != null)
+                    {
+                        inventory.ClampedItem = equipment.LeftRing;
+                        equipment.LeftRing = null;
+                        blnClamp = true;
+                    }
+                }
+            }
+            else if (rect.Intersects(equipment.BeltBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
+                if (blnClamp)
+                {
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Belt)
+                    {
+                        inventory.ClampedItem.location.X = equipment.BeltBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.BeltBounds.Y;
+                        equipment.Belt = inventory.ClampedItem;
+                        inventory.ClampedItem = null;
+                        blnClamp = false;
+                    }
+                }
+                else
+                {
+                    if (equipment.Belt != null)
+                    {
+                        inventory.ClampedItem = equipment.Belt;
+                        equipment.Belt = null;
+                        blnClamp = true;
+                    }
+                }
             }
 
             inventory.Update(InvPos);
+            equipment.Update();
+            GlobalVariables.Equipment = equipment;
 
             if (!isDrag && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released && PathFinding)
             {
@@ -1842,6 +2154,8 @@ namespace TextureAtlas
 
         public void ExitGame(object sender, EventArgs eventArgs)
         {
+            GlobalVariables.SaveGameData();
+            GlobalVariables.SaveUserSettings();
             this.Exit();
         }
 

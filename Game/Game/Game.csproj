@@ -87,6 +87,7 @@
     <Compile Include="DrawItem.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="GlobalVariables.cs" />
+    <Compile Include="HeroDisplay.cs" />
     <Compile Include="Inventory.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Enemy.cs" />
