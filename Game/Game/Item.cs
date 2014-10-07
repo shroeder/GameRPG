@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Starbound.RealmFactoryCore;
 using System.Timers;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace TextureAtlas
 {
@@ -33,6 +35,7 @@ namespace TextureAtlas
 
         public List<Affix> AffixList = new List<Affix>();
 
+        [XmlIgnore]
         public SpriteFont Font1;
 
         public Random RNG = new Random();
@@ -65,7 +68,7 @@ namespace TextureAtlas
 
         public itemSlot ItemSlot;
 
-        public Item(Vector2 Location, Texture2D tex, int itemtype, int ItemLevel, itemSlot itmslot, string ItmtxtName, int SubType = 0)
+        public Item(Vector2 Location, Texture2D tex, int itemtype, int ItemLevel, itemSlot itmslot, int SubType = 0)
         {
             ItemSlot = itmslot;
             LegBeam = GlobalVariables.LegendaryBeam;
@@ -75,10 +78,14 @@ namespace TextureAtlas
             location = Location;
             ItemTexture = tex;
             ItemType = itemtype;
-            ItemTextureName = ItmtxtName;
             Bounds = new Rectangle((int)location.X, (int)location.Y, tex.Width, tex.Height);
             Font1 = GlobalVariables.Font10;
             quality = GlobalVariables.RollVsRarity();
+            if (quality > 5 ){
+                ItemTextureName = GlobalVariables.GetTexture(itemtype,SubType, true);
+            }else{
+                ItemTextureName = GlobalVariables.GetTexture(itemtype,SubType, false);
+            }
             ItemName = "";
 
             switch (quality)
@@ -105,10 +112,6 @@ namespace TextureAtlas
                     break;
                 case 6:
                     ItemName = GlobalVariables.GetUniqueByTypes(ItemType,SubType);
-                    if (ItemType == 1 && SubType == 1)
-                    {
-                        ItemTextureName = "HeroSS2H1U";
-                    }
                     affixes = 10;
                     break;
             }

@@ -10,12 +10,15 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Starbound.RealmFactoryCore;
 using System.Timers;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace TextureAtlas
 {
     public class Equipment
     {   
         //Variable
+        [XmlIgnore]
         public SpriteFont font1;
         public List<Item> Items = new List<Item>();
         public Texture2D CharBG;
@@ -79,6 +82,7 @@ namespace TextureAtlas
 
         public void Update()
         {
+
             ms = Mouse.GetState();
 
             Hero.Update();

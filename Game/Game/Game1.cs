@@ -1259,7 +1259,6 @@ namespace TextureAtlas
                                 ItemLevel = 1;
                             }
                             Texture2D DroppedItem = sword;
-                            string txtName = "";
                             Item.itemSlot itmSlot = Item.itemSlot.Nothing;
 
                             ContentManager contentManager = new ContentManager(Content.ServiceProvider, Content.RootDirectory);
@@ -1285,7 +1284,6 @@ namespace TextureAtlas
                                                 case 1:
 
                                                     DroppedItem = contentManager.Load<Texture2D>("Two-HandedSword");
-                                                    txtName = "HeroSS2H1";
                                                     break;
                                             }
 
@@ -1296,7 +1294,7 @@ namespace TextureAtlas
 
                             }
                             //Indexed to sword
-                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, txtName, SubType));
+                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, SubType));
                         }
                         DoesDrop = false;
                         Enemies.Remove(Enemies[l]);
@@ -1516,6 +1514,7 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.X = equipment.RWeapbounds.X;
                         inventory.ClampedItem.location.Y = equipment.RWeapbounds.Y;
                         equipment.RightWeapon = inventory.ClampedItem;
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem);
                         inventory.ClampedItem = null;
                         blnClamp = false;
                     }
@@ -1525,6 +1524,7 @@ namespace TextureAtlas
                     if (equipment.RightWeapon != null)
                     {
                         inventory.ClampedItem = equipment.RightWeapon;
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem);
                         equipment.RightWeapon = null;
                         blnClamp = true;
                     }
@@ -1538,6 +1538,7 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.LWeapBounds.X;
                         inventory.ClampedItem.location.Y = equipment.LWeapBounds.Y;
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem);
                         equipment.LeftWeapon = inventory.ClampedItem;
                         inventory.ClampedItem = null;
                         blnClamp = false;
@@ -1548,6 +1549,7 @@ namespace TextureAtlas
                     if (equipment.LeftWeapon != null)
                     {
                         inventory.ClampedItem = equipment.LeftWeapon;
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem);
                         equipment.LeftWeapon = null;
                         blnClamp = true;
                     }

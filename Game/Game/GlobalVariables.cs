@@ -79,6 +79,7 @@ namespace TextureAtlas
 
         public static List<DrawItem> ItemsToBeDrawn = new List<DrawItem>();
 
+        public static Test afx { get; set; }
         public static Equipment Equipment { get; set; }
         public static Inventory Inventory { get; set; }
 
@@ -214,8 +215,9 @@ namespace TextureAtlas
         [Serializable]
         public struct GameData
         {
-            public Inventory Inventory { get; set; }
-            public Equipment Equipment { get; set; }
+            public Test afx { get; set; }
+            //public Inventory Inventory { get; set; }
+            //public Equipment Equipment { get; set; }
             public string WeaponName { get; set; }
             public int MeleeRange { get; set; }
             public int WeaponType { get; set; }
@@ -273,8 +275,11 @@ namespace TextureAtlas
         {
             GameData data = new GameData();
 
-            data.Inventory = Inventory;
-            data.Equipment = Equipment;
+            afx = new Test();
+            data.afx = afx;
+
+            //data.Inventory = Inventory;
+            //data.Equipment = Equipment;
             data.MeleeRange = CharacterMeleeRange;
             data.WeaponType = CharacterWeaponType;
             data.Difficulty = GameDifficulty;
@@ -367,8 +372,9 @@ namespace TextureAtlas
             stream.Close();
             container.Dispose();
 
-            Equipment = data.Equipment;
-            Inventory = data.Inventory;
+            afx = data.afx;
+            //Equipment = data.Equipment;
+            //Inventory = data.Inventory;
             CharacterWeaponName = data.WeaponName;
             CharacterMeleeRange = data.MeleeRange;
             CharacterWeaponType = data.WeaponType;
@@ -1066,6 +1072,40 @@ namespace TextureAtlas
         {
             //Roll Logic Here, For Testing we will Return 5
             return 5;
+        }
+
+        public static void WeaponEquiped(Item item)
+        {
+            //Set the texture
+            GlobalVariables.TheGame.CharWeapon = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+            TheGame.equipment.Hero.txtRightWeapon = TheGame.CharWeapon;
+        }
+
+        public static string GetTexture(int type, int subType, bool isUnique)
+        {
+            string itemName = "";
+            switch (type)
+            {
+                //Two Handed Sword
+                case 1:
+                    switch (subType)
+                    {
+                        //Starter Sword
+                        case 1:
+
+                            if (isUnique)
+                            {
+                                itemName = "HeroSS2H1U";
+                            }
+                            else
+                            {
+                                itemName = "HeroSS2H1";
+                            }
+                            break;
+                    }
+                    break;
+            }
+            return itemName;
         }
 
         public static void UpdateChar(Pos pos, AnimatedSprite Character, Game1 Game, Vector2 Velocity, Vector2 VelocityUp, Dir dir = Dir.Nothing)

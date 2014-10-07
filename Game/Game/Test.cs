@@ -15,15 +15,10 @@ using System.Xml.Serialization;
 
 namespace TextureAtlas
 {
-    public class DrawItem
+    
+    public class Test
     {
-        public string theText { get; set; }
-        public int CaseOfDraw { get; set; }
-        public Texture2D theTexture { get; set; }
-        public SpriteFont theFont { get; set; }
-        public Vector2 theLocation { get; set; }
-        public Rectangle theRectangle { get; set; }
-        public Color theColor { get; set; }
-
+        
+        //public Item ClampedItem;
     }
 }
