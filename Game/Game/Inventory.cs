@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Starbound.RealmFactoryCore;
 using System.Timers;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace TextureAtlas
 {
@@ -30,8 +32,16 @@ namespace TextureAtlas
         public Item ClampedItem;
         #endregion
 
+        public Inventory() : this(new List<Item>(),new Vector2(0,0)) { }
+
         public Inventory(List<Item> ListItems, Vector2 InvPos)
         {
+
+            if (GlobalVariables.TheGame == null)
+            {
+                Items = null;
+                return;
+            }
 
             Bounds = new Rectangle((int)InvPos.X, (int)InvPos.Y, GlobalVariables.TheGame.InvText.Width - 155, GlobalVariables.TheGame.InvText.Height - 240);
 
@@ -164,6 +174,8 @@ namespace TextureAtlas
             InvBoxes[18] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 2)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30);
             InvBoxes[19] = new Rectangle((int)(Box1Start.X + InvPos.X + (BoxRight.X * 3)), (int)(Box1Start.Y + InvPos.Y + (BoxDown.Y * 4)), 45, 30);
             #endregion
+
+            GlobalVariables.Inventory = this;
         }
 
         public void Add(Item item)
@@ -226,11 +238,11 @@ namespace TextureAtlas
                         }
                         if (Items[i].quality == 5)
                         {
-                            color = Color.Purple;
+                            color = Color.NavajoWhite;
                         }
                         if (Items[i].quality == 6)
                         {
-                            color = Color.Brown;
+                            color = Color.White;
                         }
 
                         if (i == 0)

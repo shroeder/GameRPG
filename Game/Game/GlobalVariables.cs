@@ -79,7 +79,7 @@ namespace TextureAtlas
 
         public static List<DrawItem> ItemsToBeDrawn = new List<DrawItem>();
 
-        public static Test afx { get; set; }
+        public static HeroDisplay TheHero { get; set; }
         public static Equipment Equipment { get; set; }
         public static Inventory Inventory { get; set; }
 
@@ -215,9 +215,8 @@ namespace TextureAtlas
         [Serializable]
         public struct GameData
         {
-            public Test afx { get; set; }
-            //public Inventory Inventory { get; set; }
-            //public Equipment Equipment { get; set; }
+            public Inventory theInventory { get; set; }
+            public Equipment theEquipment { get; set; }
             public string WeaponName { get; set; }
             public int MeleeRange { get; set; }
             public int WeaponType { get; set; }
@@ -274,12 +273,8 @@ namespace TextureAtlas
         public static void SaveGameData()
         {
             GameData data = new GameData();
-
-            afx = new Test();
-            data.afx = afx;
-
-            //data.Inventory = Inventory;
-            //data.Equipment = Equipment;
+            data.theInventory = Inventory;
+            data.theEquipment = Equipment;
             data.MeleeRange = CharacterMeleeRange;
             data.WeaponType = CharacterWeaponType;
             data.Difficulty = GameDifficulty;
@@ -339,10 +334,7 @@ namespace TextureAtlas
             result.AsyncWaitHandle.Close();
             string filename = "game.sav";
 
-            if (container.FileExists(filename))
-            {
-                container.DeleteFile(filename);
-            }
+            container.DeleteFile(filename);
 
             Stream stream = container.CreateFile(filename);
             XmlSerializer serializer = new XmlSerializer(typeof(GameData));
@@ -353,6 +345,11 @@ namespace TextureAtlas
 
         public static void LoadGameData()
         {
+            ShowEnemyBars = true;
+            ShowEnemyDamage = true;
+            ShowEnemyNames = true;
+            ShowItemNames = true;
+
             IAsyncResult result1 = StorageDevice.BeginShowSelector(PlayerIndex.One, null, null);
             StorageDevice device = StorageDevice.EndShowSelector(result1);
 
@@ -368,13 +365,13 @@ namespace TextureAtlas
             }
             Stream stream = container.OpenFile(filename, FileMode.Open);
             XmlSerializer serializer = new XmlSerializer(typeof(GameData));
+
             GameData data = (GameData)serializer.Deserialize(stream);
+
             stream.Close();
             container.Dispose();
-
-            afx = data.afx;
-            //Equipment = data.Equipment;
-            //Inventory = data.Inventory;
+            Equipment = data.theEquipment;
+            Inventory = data.theInventory;
             CharacterWeaponName = data.WeaponName;
             CharacterMeleeRange = data.MeleeRange;
             CharacterWeaponType = data.WeaponType;
@@ -1100,6 +1097,33 @@ namespace TextureAtlas
                             else
                             {
                                 itemName = "HeroSS2H1";
+                            }
+                            break;
+                    }
+                    break;
+            }
+            return itemName;
+        }
+
+        public static string GetItemName(int type, int subType, bool isUnique)
+        {
+            string itemName = "";
+            switch (type)
+            {
+                //Two Handed Sword
+                case 1:
+                    switch (subType)
+                    {
+                        //Starter Sword
+                        case 1:
+
+                            if (isUnique)
+                            {
+                                itemName = "Two-HandedSwordU";
+                            }
+                            else
+                            {
+                                itemName = "Two-HandedSword";
                             }
                             break;
                     }

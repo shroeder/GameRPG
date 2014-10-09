@@ -306,10 +306,19 @@ namespace TextureAtlas
             Components.Add(new GamerServicesComponent(this));
             base.Initialize();
             GlobalVariables.TheGame = this;
-            //TODO set logic to read inventory from save file
-            //until inventory is set up and stable, index the value
-            //same with equip
 
+            if (GlobalVariables.Equipment == null)
+            {
+                GlobalVariables.TheHero = new HeroDisplay();
+            }
+            else if (GlobalVariables.Equipment.Hero == null)
+            {
+                GlobalVariables.TheHero = new HeroDisplay();
+            }
+            else
+            {
+                GlobalVariables.TheHero = GlobalVariables.Equipment.Hero;
+            }
 
             if (GlobalVariables.Inventory != null)
             {
@@ -318,21 +327,538 @@ namespace TextureAtlas
             else
             {
                 inventory = new Inventory(new List<Item>(), new Vector2(150,150));
+                GlobalVariables.Inventory = inventory;
             }
 
             if (GlobalVariables.Equipment != null)
             {
-                equipment = GlobalVariables.Equipment;
+                equipment = new Equipment(GlobalVariables.Equipment.Helmet, GlobalVariables.Equipment.Shoulders, GlobalVariables.Equipment.Chest, GlobalVariables.Equipment.Back, GlobalVariables.Equipment.RightWeapon, GlobalVariables.Equipment.LeftWeapon, GlobalVariables.Equipment.Gloves, GlobalVariables.Equipment.Boots, GlobalVariables.Equipment.Belt, GlobalVariables.Equipment.LeftRing, GlobalVariables.Equipment.RightRing, GlobalVariables.TheHero);
+                
             }
             else
             {
-                equipment = new Equipment(GlobalVariables.Equipment);
+                equipment = new Equipment(null, null, null, null, null, null, null, null, null,null,null, GlobalVariables.TheHero, true);
+                GlobalVariables.Equipment = equipment;
+            }
+
+            if (equipment.Helmet != null)
+            {
+                Item tempItem = equipment.Helmet;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Helmet.DroppedTextureName);
+                equipment.Helmet = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Helmet.affixes = tempItem.affixes;
+                equipment.Helmet.AffixList = tempItem.AffixList;
+                equipment.Helmet.ItemName = tempItem.ItemName;
+                equipment.Helmet.quality = tempItem.quality;
+                equipment.Helmet.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.Helmet.quality == 1)
+                {
+                    equipment.Helmet.RarityColor = Color.White;
+                    equipment.Helmet.ItemColor = Color.White;
+                }
+                if (equipment.Helmet.quality == 2)
+                {
+                    equipment.Helmet.RarityColor = Color.AliceBlue;
+                    equipment.Helmet.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.Helmet.quality == 3)
+                {
+                    equipment.Helmet.RarityColor = Color.DeepSkyBlue;
+                    equipment.Helmet.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.Helmet.quality == 4)
+                {
+                    equipment.Helmet.RarityColor = Color.Orange;
+                    equipment.Helmet.ItemColor = Color.Orange;
+                }
+                if (equipment.Helmet.quality == 5)
+                {
+                    equipment.Helmet.RarityColor = Color.Purple;
+                    equipment.Helmet.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.Helmet.quality == 6)
+                {
+                    equipment.Helmet.RarityColor = Color.Brown;
+                    equipment.Helmet.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.Shoulders != null)
+            {
+                Item tempItem = equipment.Shoulders;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Shoulders.DroppedTextureName);
+                equipment.Shoulders = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Shoulders.affixes = tempItem.affixes;
+                equipment.Shoulders.AffixList = tempItem.AffixList;
+                equipment.Shoulders.ItemName = tempItem.ItemName;
+                equipment.Shoulders.quality = tempItem.quality;
+                equipment.Shoulders.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.Shoulders.quality == 1)
+                {
+                    equipment.Shoulders.RarityColor = Color.White;
+                    equipment.Shoulders.ItemColor = Color.White;
+                }
+                if (equipment.Shoulders.quality == 2)
+                {
+                    equipment.Shoulders.RarityColor = Color.AliceBlue;
+                    equipment.Shoulders.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.Shoulders.quality == 3)
+                {
+                    equipment.Shoulders.RarityColor = Color.DeepSkyBlue;
+                    equipment.Shoulders.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.Shoulders.quality == 4)
+                {
+                    equipment.Shoulders.RarityColor = Color.Orange;
+                    equipment.Shoulders.ItemColor = Color.Orange;
+                }
+                if (equipment.Shoulders.quality == 5)
+                {
+                    equipment.Shoulders.RarityColor = Color.Purple;
+                    equipment.Shoulders.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.Shoulders.quality == 6)
+                {
+                    equipment.Shoulders.RarityColor = Color.Brown;
+                    equipment.Shoulders.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.Chest != null)
+            {
+                Item tempItem = equipment.Chest;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Chest.DroppedTextureName);
+                equipment.Chest = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Chest.affixes = tempItem.affixes;
+                equipment.Chest.AffixList = tempItem.AffixList;
+                equipment.Chest.ItemName = tempItem.ItemName;
+                equipment.Chest.quality = tempItem.quality;
+                equipment.Chest.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.Chest.quality == 1)
+                {
+                    equipment.Chest.RarityColor = Color.White;
+                    equipment.Chest.ItemColor = Color.White;
+                }
+                if (equipment.Chest.quality == 2)
+                {
+                    equipment.Chest.RarityColor = Color.AliceBlue;
+                    equipment.Chest.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.Chest.quality == 3)
+                {
+                    equipment.Chest.RarityColor = Color.DeepSkyBlue;
+                    equipment.Chest.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.Chest.quality == 4)
+                {
+                    equipment.Chest.RarityColor = Color.Orange;
+                    equipment.Chest.ItemColor = Color.Orange;
+                }
+                if (equipment.Chest.quality == 5)
+                {
+                    equipment.Chest.RarityColor = Color.Purple;
+                    equipment.Chest.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.Chest.quality == 6)
+                {
+                    equipment.Chest.RarityColor = Color.Brown;
+                    equipment.Chest.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.Back != null)
+            {
+                Item tempItem = equipment.Back;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Back.DroppedTextureName);
+                equipment.Back = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Back.affixes = tempItem.affixes;
+                equipment.Back.AffixList = tempItem.AffixList;
+                equipment.Back.ItemName = tempItem.ItemName;
+                equipment.Back.quality = tempItem.quality;
+                equipment.Back.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.Back.quality == 1)
+                {
+                    equipment.Back.RarityColor = Color.White;
+                    equipment.Back.ItemColor = Color.White;
+                }
+                if (equipment.Back.quality == 2)
+                {
+                    equipment.Back.RarityColor = Color.AliceBlue;
+                    equipment.Back.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.Back.quality == 3)
+                {
+                    equipment.Back.RarityColor = Color.DeepSkyBlue;
+                    equipment.Back.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.Back.quality == 4)
+                {
+                    equipment.Back.RarityColor = Color.Orange;
+                    equipment.Back.ItemColor = Color.Orange;
+                }
+                if (equipment.Back.quality == 5)
+                {
+                    equipment.Back.RarityColor = Color.Purple;
+                    equipment.Back.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.Back.quality == 6)
+                {
+                    equipment.Back.RarityColor = Color.Brown;
+                    equipment.Back.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.RightWeapon != null)
+            {
+                Item tempItem = equipment.RightWeapon;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.RightWeapon.DroppedTextureName);
+                equipment.RightWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.RightWeapon.affixes = tempItem.affixes;
+                equipment.RightWeapon.AffixList = tempItem.AffixList;
+                equipment.RightWeapon.ItemName = tempItem.ItemName;
+                equipment.RightWeapon.quality = tempItem.quality;
+                equipment.RightWeapon.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.RightWeapon.quality == 1)
+                {
+                    equipment.RightWeapon.RarityColor = Color.White;
+                    equipment.RightWeapon.ItemColor = Color.White;
+                }
+                if (equipment.RightWeapon.quality == 2)
+                {
+                    equipment.RightWeapon.RarityColor = Color.AliceBlue;
+                    equipment.RightWeapon.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.RightWeapon.quality == 3)
+                {
+                    equipment.RightWeapon.RarityColor = Color.DeepSkyBlue;
+                    equipment.RightWeapon.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.RightWeapon.quality == 4)
+                {
+                    equipment.RightWeapon.RarityColor = Color.Orange;
+                    equipment.RightWeapon.ItemColor = Color.Orange;
+                }
+                if (equipment.RightWeapon.quality == 5)
+                {
+                    equipment.RightWeapon.RarityColor = Color.Purple;
+                    equipment.RightWeapon.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.RightWeapon.quality == 6)
+                {
+                    equipment.RightWeapon.RarityColor = Color.Brown;
+                    equipment.RightWeapon.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.LeftWeapon != null)
+            {
+                Item tempItem = equipment.LeftWeapon;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.LeftWeapon.DroppedTextureName);
+                equipment.LeftWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.LeftWeapon.affixes = tempItem.affixes;
+                equipment.LeftWeapon.AffixList = tempItem.AffixList;
+                equipment.LeftWeapon.ItemName = tempItem.ItemName;
+                equipment.LeftWeapon.quality = tempItem.quality;
+                equipment.LeftWeapon.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.LeftWeapon.quality == 1)
+                {
+                    equipment.LeftWeapon.RarityColor = Color.White;
+                    equipment.LeftWeapon.ItemColor = Color.White;
+                }
+                if (equipment.LeftWeapon.quality == 2)
+                {
+                    equipment.LeftWeapon.RarityColor = Color.AliceBlue;
+                    equipment.LeftWeapon.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.LeftWeapon.quality == 3)
+                {
+                    equipment.LeftWeapon.RarityColor = Color.DeepSkyBlue;
+                    equipment.LeftWeapon.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.LeftWeapon.quality == 4)
+                {
+                    equipment.LeftWeapon.RarityColor = Color.Orange;
+                    equipment.LeftWeapon.ItemColor = Color.Orange;
+                }
+                if (equipment.LeftWeapon.quality == 5)
+                {
+                    equipment.LeftWeapon.RarityColor = Color.Purple;
+                    equipment.LeftWeapon.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.LeftWeapon.quality == 6)
+                {
+                    equipment.LeftWeapon.RarityColor = Color.Brown;
+                    equipment.LeftWeapon.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.Gloves != null)
+            {
+                Item tempItem = equipment.Gloves;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Gloves.DroppedTextureName);
+                equipment.Gloves = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Gloves.affixes = tempItem.affixes;
+                equipment.Gloves.AffixList = tempItem.AffixList;
+                equipment.Gloves.ItemName = tempItem.ItemName;
+                equipment.Gloves.quality = tempItem.quality;
+                equipment.Gloves.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.Gloves.quality == 1)
+                {
+                    equipment.Gloves.RarityColor = Color.White;
+                    equipment.Gloves.ItemColor = Color.White;
+                }
+                if (equipment.Gloves.quality == 2)
+                {
+                    equipment.Gloves.RarityColor = Color.AliceBlue;
+                    equipment.Gloves.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.Gloves.quality == 3)
+                {
+                    equipment.Gloves.RarityColor = Color.DeepSkyBlue;
+                    equipment.Gloves.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.Gloves.quality == 4)
+                {
+                    equipment.Gloves.RarityColor = Color.Orange;
+                    equipment.Gloves.ItemColor = Color.Orange;
+                }
+                if (equipment.Gloves.quality == 5)
+                {
+                    equipment.Gloves.RarityColor = Color.Purple;
+                    equipment.Gloves.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.Gloves.quality == 6)
+                {
+                    equipment.Gloves.RarityColor = Color.Brown;
+                    equipment.Gloves.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.Boots != null)
+            {
+                Item tempItem = equipment.Boots;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Boots.DroppedTextureName);
+                equipment.Boots = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Boots.affixes = tempItem.affixes;
+                equipment.Boots.AffixList = tempItem.AffixList;
+                equipment.Boots.ItemName = tempItem.ItemName;
+                equipment.Boots.quality = tempItem.quality;
+                equipment.Boots.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.Boots.quality == 1)
+                {
+                    equipment.Boots.RarityColor = Color.White;
+                    equipment.Boots.ItemColor = Color.White;
+                }
+                if (equipment.Boots.quality == 2)
+                {
+                    equipment.Boots.RarityColor = Color.AliceBlue;
+                    equipment.Boots.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.Boots.quality == 3)
+                {
+                    equipment.Boots.RarityColor = Color.DeepSkyBlue;
+                    equipment.Boots.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.Boots.quality == 4)
+                {
+                    equipment.Boots.RarityColor = Color.Orange;
+                    equipment.Boots.ItemColor = Color.Orange;
+                }
+                if (equipment.Boots.quality == 5)
+                {
+                    equipment.Boots.RarityColor = Color.Purple;
+                    equipment.Boots.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.Boots.quality == 6)
+                {
+                    equipment.Boots.RarityColor = Color.Brown;
+                    equipment.Boots.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.Belt != null)
+            {
+                Item tempItem = equipment.Belt;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Belt.DroppedTextureName);
+                equipment.Belt = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Belt.affixes = tempItem.affixes;
+                equipment.Belt.AffixList = tempItem.AffixList;
+                equipment.Belt.ItemName = tempItem.ItemName;
+                equipment.Belt.quality = tempItem.quality;
+                equipment.Belt.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.Belt.quality == 1)
+                {
+                    equipment.Belt.RarityColor = Color.White;
+                    equipment.Belt.ItemColor = Color.White;
+                }
+                if (equipment.Belt.quality == 2)
+                {
+                    equipment.Belt.RarityColor = Color.AliceBlue;
+                    equipment.Belt.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.Belt.quality == 3)
+                {
+                    equipment.Belt.RarityColor = Color.DeepSkyBlue;
+                    equipment.Belt.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.Belt.quality == 4)
+                {
+                    equipment.Belt.RarityColor = Color.Orange;
+                    equipment.Belt.ItemColor = Color.Orange;
+                }
+                if (equipment.Belt.quality == 5)
+                {
+                    equipment.Belt.RarityColor = Color.Purple;
+                    equipment.Belt.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.Belt.quality == 6)
+                {
+                    equipment.Belt.RarityColor = Color.Brown;
+                    equipment.Belt.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.LeftRing != null)
+            {
+                Item tempItem = equipment.LeftRing;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.LeftRing.DroppedTextureName);
+                equipment.LeftRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.LeftRing.affixes = tempItem.affixes;
+                equipment.LeftRing.AffixList = tempItem.AffixList;
+                equipment.LeftRing.ItemName = tempItem.ItemName;
+                equipment.LeftRing.quality = tempItem.quality;
+                equipment.LeftRing.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.LeftRing.quality == 1)
+                {
+                    equipment.LeftRing.RarityColor = Color.White;
+                    equipment.LeftRing.ItemColor = Color.White;
+                }
+                if (equipment.LeftRing.quality == 2)
+                {
+                    equipment.LeftRing.RarityColor = Color.AliceBlue;
+                    equipment.LeftRing.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.LeftRing.quality == 3)
+                {
+                    equipment.LeftRing.RarityColor = Color.DeepSkyBlue;
+                    equipment.LeftRing.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.LeftRing.quality == 4)
+                {
+                    equipment.LeftRing.RarityColor = Color.Orange;
+                    equipment.LeftRing.ItemColor = Color.Orange;
+                }
+                if (equipment.LeftRing.quality == 5)
+                {
+                    equipment.LeftRing.RarityColor = Color.Purple;
+                    equipment.LeftRing.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.LeftRing.quality == 6)
+                {
+                    equipment.LeftRing.RarityColor = Color.Brown;
+                    equipment.LeftRing.ItemColor = Color.White;
+                }
+            }
+
+            if (equipment.RightRing != null)
+            {
+                Item tempItem = equipment.RightRing;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.RightRing.DroppedTextureName);
+                equipment.RightRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.RightRing.affixes = tempItem.affixes;
+                equipment.RightRing.AffixList = tempItem.AffixList;
+                equipment.RightRing.ItemName = tempItem.ItemName;
+                equipment.RightRing.quality = tempItem.quality;
+                equipment.RightRing.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.RightRing.quality == 1)
+                {
+                    equipment.RightRing.RarityColor = Color.White;
+                    equipment.RightRing.ItemColor = Color.White;
+                }
+                if (equipment.RightRing.quality == 2)
+                {
+                    equipment.RightRing.RarityColor = Color.AliceBlue;
+                    equipment.RightRing.ItemColor = Color.AliceBlue;
+                }
+                if (equipment.RightRing.quality == 3)
+                {
+                    equipment.RightRing.RarityColor = Color.DeepSkyBlue;
+                    equipment.RightRing.ItemColor = Color.DeepSkyBlue;
+                }
+                if (equipment.RightRing.quality == 4)
+                {
+                    equipment.RightRing.RarityColor = Color.Orange;
+                    equipment.RightRing.ItemColor = Color.Orange;
+                }
+                if (equipment.RightRing.quality == 5)
+                {
+                    equipment.RightRing.RarityColor = Color.Purple;
+                    equipment.RightRing.ItemColor = Color.NavajoWhite;
+                }
+                if (equipment.RightRing.quality == 6)
+                {
+                    equipment.RightRing.RarityColor = Color.Brown;
+                    equipment.RightRing.ItemColor = Color.White;
+                }
+            }
+
+            if (inventory != null)
+            {
+                if (inventory.Items.Count() > 0)
+                {
+                    for (int intlc = 0; intlc < inventory.Items.Count(); intlc++)
+                    {
+                        if (inventory.Items[intlc] != null)
+                        {
+                            Item tempItem = inventory.Items[intlc];
+                            tempItem.ItemTexture = Content.Load<Texture2D>(inventory.Items[intlc].DroppedTextureName);
+                            inventory.Items[intlc] = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                            inventory.Items[intlc].affixes = tempItem.affixes;
+                            inventory.Items[intlc].AffixList = tempItem.AffixList;
+                            inventory.Items[intlc].ItemName = tempItem.ItemName;
+                            inventory.Items[intlc].quality = tempItem.quality;
+                            inventory.Items[intlc].ItemTextureName = tempItem.ItemTextureName;
+                            if (inventory.Items[intlc].quality == 1)
+                            {
+                                inventory.Items[intlc].RarityColor = Color.White;
+                                inventory.Items[intlc].ItemColor = Color.White;
+                            }
+                            if (inventory.Items[intlc].quality == 2)
+                            {
+                                inventory.Items[intlc].RarityColor = Color.AliceBlue;
+                                inventory.Items[intlc].ItemColor = Color.AliceBlue;
+                            }
+                            if (inventory.Items[intlc].quality == 3)
+                            {
+                                inventory.Items[intlc].RarityColor = Color.DeepSkyBlue;
+                                inventory.Items[intlc].ItemColor = Color.DeepSkyBlue;
+                            }
+                            if (inventory.Items[intlc].quality == 4)
+                            {
+                                inventory.Items[intlc].RarityColor = Color.Orange;
+                                inventory.Items[intlc].ItemColor = Color.Orange;
+                            }
+                            if (inventory.Items[intlc].quality == 5)
+                            {
+                                inventory.Items[intlc].RarityColor = Color.Purple;
+                                inventory.Items[intlc].ItemColor = Color.NavajoWhite;
+                            }
+                            if (inventory.Items[intlc].quality == 6)
+                            {
+                                inventory.Items[intlc].RarityColor = Color.Brown;
+                                inventory.Items[intlc].ItemColor = Color.White;
+                            }
+                        }
+                    }
+                }
             }
 
         }
 
         protected override void LoadContent()
         {
+
             //Indexed to test sword, need to create equipment menu where we then update this value
 
             if (equipment == null)
@@ -1255,6 +1781,7 @@ namespace TextureAtlas
                             //assigned to values to fix compile time errs
                             int SubType = 0;
                             int ItemLevel = Enemies[l].Level + RNG.Next(1,3) - RNG.Next(1,3);
+                            string itemTextureName = "";
                             if (ItemLevel < 1){
                                 ItemLevel = 1;
                             }
@@ -1284,6 +1811,7 @@ namespace TextureAtlas
                                                 case 1:
 
                                                     DroppedItem = contentManager.Load<Texture2D>("Two-HandedSword");
+                                                    itemTextureName = "Two-HandedSword";
                                                     break;
                                             }
 
@@ -1294,7 +1822,7 @@ namespace TextureAtlas
 
                             }
                             //Indexed to sword
-                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, SubType));
+                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, SubType));
                         }
                         DoesDrop = false;
                         Enemies.Remove(Enemies[l]);
@@ -1922,8 +2450,9 @@ namespace TextureAtlas
 
             spriteBatch.Draw(buttonbg, new Rectangle(7, 1, 58, 12), Color.Black);
             spriteBatch.Draw(buttonbg, new Rectangle(75, 1, 70, 12), Color.Black);
-            spriteBatch.DrawString(Font2, "Inventory", new Vector2(10, -2), Color.Beige);
-            spriteBatch.DrawString(Font2, "Equipment", new Vector2(80, -2), Color.Beige);
+            spriteBatch.DrawString(GlobalVariables.Font10, "Inventory", new Vector2(10, -2), Color.Beige);
+            spriteBatch.DrawString(GlobalVariables.Font10, "Equipment", new Vector2(80, -2), Color.Beige);
+
             spriteBatch.End();
 
             if (blnLogTime && DrawTimes_Other.Count < DebugCycles && DebugTimer1 != null)
@@ -1945,13 +2474,12 @@ namespace TextureAtlas
                         break;
                     case 1:
                         //String
-                        spriteBatch.DrawString(draw.theFont, draw.theText, draw.theLocation, draw.theColor);
+                        spriteBatch.DrawString(GlobalVariables.Font10, draw.theText, draw.theLocation, draw.theColor);
                         break;
                 }
             }
             GlobalVariables.ItemsToBeDrawn = new List<DrawItem>();
             spriteBatch.End();
-
             if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles)
             {
                 DebugTimer1 = new Stopwatch();

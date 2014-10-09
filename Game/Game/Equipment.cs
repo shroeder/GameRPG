@@ -20,10 +20,10 @@ namespace TextureAtlas
         //Variable
         [XmlIgnore]
         public SpriteFont font1;
-        public List<Item> Items = new List<Item>();
+        //public List<Item> Items = new List<Item>();
         public Texture2D CharBG;
 
-        public Rectangle Bounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .3), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .1), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .6), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6));
+        public Rectangle Bounds;
 
         public Rectangle HelmBounds;
         public Rectangle BootsBounds;
@@ -52,32 +52,101 @@ namespace TextureAtlas
         public Item Belt;
         public Item LeftRing;
         public Item RightRing;
-
+        public HeroDisplay Hero;
         public MouseState ms;
 
-        public HeroDisplay Hero;
 
-        public Equipment(Equipment equip)
+        public Equipment() : this(null,null,null,null,null,null,null,null,null,null,null,null,true) { }
+
+        public Equipment(Item helmet, Item shoulders, Item chest, Item back, Item rightweapon, Item leftweapon, Item gloves, Item boots, Item belt, Item leftring, Item rightring, HeroDisplay theHero, bool isNull = false)
         {
-            if (equip != null)
-            {
-                Helmet = equip.Helmet;
-                Shoulders = equip.Shoulders;
-                Chest = equip.Chest;
-                Back = equip.Chest;
-                RightWeapon = equip.RightWeapon;
-                LeftWeapon = equip.LeftWeapon;
-                Gloves = equip.Gloves;
-                Boots = equip.Boots;
-                Belt = equip.Belt;
-                LeftRing = equip.LeftRing;
-                RightRing = equip.RightRing;
-            }
-            Hero = new HeroDisplay(this);
+            Hero = theHero;
+            Hero.txtRightWeapon = GlobalVariables.TheGame.CharWeapon;
+            Hero.txtHero = GlobalVariables.TheGame.HeroTxt;
+            Hero.Width = Convert.ToInt32(Hero.txtHero.Width / Hero.Columns);
+            Hero.Height = Convert.ToInt32(Hero.txtHero.Height / Hero.Rows);
+
+            Hero.RotateCounterBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .5), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .57), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .03), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .03));
+            Hero.RotateClockBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .4), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .57), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .03), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .03));
+
             Hero.Direction = 0;
-            Hero.DrawLocation = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .395), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .14), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3675));
             Hero.RotateClock += RotateClock;
             Hero.RotateCounter += RotateCounter;
+
+            if (GlobalVariables.TheGame == null)
+            {
+                return;
+            }
+
+            if (helmet != null)
+            {
+                Helmet = helmet;
+            }
+            if (shoulders != null)
+            {
+                Shoulders = shoulders;
+            }
+            if (chest != null){
+                Chest = chest;
+            }
+            if (back != null){
+                Back = back;
+            }
+            if (rightweapon != null){
+                RightWeapon = rightweapon;
+            }
+            if (leftweapon != null){
+                LeftWeapon = leftweapon;
+            }
+            if (gloves != null){
+                Gloves = gloves;
+            }
+            if (boots != null){
+                Boots = boots;
+            }
+            if (belt != null){
+                Belt = belt;
+            }
+            if (leftring != null){
+                LeftRing = leftring;
+            }
+            if (rightring != null){
+                RightRing = rightring;
+            }
+
+            if (GlobalVariables.gfx != null)
+            {
+
+                Hero.DrawLocation = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .395), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .14), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3675));
+
+                Bounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .3), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .1), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .6), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6));
+
+                int width = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .0628);
+                int height = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .0971);
+
+                HelmBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), width, height);
+                ChestBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3525), width, height);
+                RWeapbounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .455), width, height);
+                GlovesBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .5565), width, height);
+
+                ShouldersBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), width, height);
+                BackBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3525), width, height);
+                LWeapBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .455), width, height);
+                BootsBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .5565), width, height);
+
+                int beltwidth = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .0954);
+                int beltheight = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .032);
+
+                BeltBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .4175), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), beltwidth, beltheight);
+
+                int ringwidth = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .02);
+                int ringheight = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .032);
+
+                LeftRingBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .3945), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), ringwidth, ringheight);
+                RightRingBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .515), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), ringwidth, ringheight);
+
+            }
+
         }
 
         public void Update()
@@ -85,31 +154,7 @@ namespace TextureAtlas
 
             ms = Mouse.GetState();
 
-            Hero.Update();
-
-            int width = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .0628);
-            int height = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .0971);
-
-            HelmBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), width,height);
-            ChestBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3525), width, height);
-            RWeapbounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .455), width, height);
-            GlovesBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .5565), width, height);
-
-            ShouldersBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), width, height);
-            BackBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3525), width, height);
-            LWeapBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .455), width, height);
-            BootsBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .5565), width, height);
-
-            int beltwidth = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .0954);
-            int beltheight = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .032);
-
-            BeltBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .4175), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), beltwidth, beltheight);
-
-            int ringwidth = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .02);
-            int ringheight = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .032);
-
-            LeftRingBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .3945), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), ringwidth, ringheight);
-            RightRingBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .515), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), ringwidth, ringheight);
+                Hero.Update();
 
             Rectangle rect = new Rectangle(ms.X,ms.Y,1,1);
 
@@ -285,7 +330,7 @@ namespace TextureAtlas
 
             if (Helmet != null)
             {
-                spriteBatach.Draw(Helmet.ItemTexture, HelmBounds, Helmet.RarityColor);
+                spriteBatach.Draw(Helmet.ItemTexture, HelmBounds, Helmet.ItemColor);
                 if (Helmet.hover)
                 {
                     DrawHover(spriteBatach, Helmet);
@@ -294,7 +339,7 @@ namespace TextureAtlas
 
             if (Chest != null)
             {
-                spriteBatach.Draw(Chest.ItemTexture, ChestBounds, Chest.RarityColor);
+                spriteBatach.Draw(Chest.ItemTexture, ChestBounds, Chest.ItemColor);
                 if (Chest.hover)
                 {
                     DrawHover(spriteBatach, Chest);
@@ -303,7 +348,7 @@ namespace TextureAtlas
 
             if (RightWeapon != null)
             {
-                spriteBatach.Draw(RightWeapon.ItemTexture, RWeapbounds,RightWeapon.RarityColor);
+                spriteBatach.Draw(RightWeapon.ItemTexture, RWeapbounds,RightWeapon.ItemColor);
                 if (RightWeapon.hover)
                 {
                     DrawHover(spriteBatach, RightWeapon);
@@ -312,7 +357,7 @@ namespace TextureAtlas
 
             if (Gloves != null)
             {
-                spriteBatach.Draw(Gloves.ItemTexture, GlovesBounds, Gloves.RarityColor);
+                spriteBatach.Draw(Gloves.ItemTexture, GlovesBounds, Gloves.ItemColor);
                 if (Gloves.hover)
                 {
                     DrawHover(spriteBatach, Gloves);
@@ -321,7 +366,7 @@ namespace TextureAtlas
 
             if (Shoulders != null)
             {
-                spriteBatach.Draw(Shoulders.ItemTexture, ShouldersBounds, Shoulders.RarityColor);
+                spriteBatach.Draw(Shoulders.ItemTexture, ShouldersBounds, Shoulders.ItemColor);
                 if (Shoulders.hover)
                 {
                     DrawHover(spriteBatach, Shoulders);
@@ -330,7 +375,7 @@ namespace TextureAtlas
 
             if (Back != null)
             {
-                spriteBatach.Draw(Back.ItemTexture, BackBounds, Back.RarityColor);
+                spriteBatach.Draw(Back.ItemTexture, BackBounds, Back.ItemColor);
                 if (Back.hover)
                 {
                     DrawHover(spriteBatach, Back);
@@ -339,7 +384,7 @@ namespace TextureAtlas
 
             if (LeftWeapon != null)
             {
-                spriteBatach.Draw(LeftWeapon.ItemTexture, LWeapBounds, LeftWeapon.RarityColor);
+                spriteBatach.Draw(LeftWeapon.ItemTexture, LWeapBounds, LeftWeapon.ItemColor);
                 if (LeftWeapon.hover)
                 {
                     DrawHover(spriteBatach, LeftWeapon);
@@ -348,7 +393,7 @@ namespace TextureAtlas
 
             if (Boots != null)
             {
-                spriteBatach.Draw(Boots.ItemTexture, BootsBounds, Boots.RarityColor);
+                spriteBatach.Draw(Boots.ItemTexture, BootsBounds, Boots.ItemColor);
                 if (Boots.hover)
                 {
                     DrawHover(spriteBatach, Boots);
@@ -357,7 +402,7 @@ namespace TextureAtlas
 
             if (Belt != null)
             {
-                spriteBatach.Draw(Belt.ItemTexture, BeltBounds, Belt.RarityColor);
+                spriteBatach.Draw(Belt.ItemTexture, BeltBounds, Belt.ItemColor);
                 if (Belt.hover)
                 {
                     DrawHover(spriteBatach, Belt);
@@ -366,7 +411,7 @@ namespace TextureAtlas
 
             if (LeftRing != null)
             {
-                spriteBatach.Draw(LeftRing.ItemTexture, LeftRingBounds, LeftRing.RarityColor);
+                spriteBatach.Draw(LeftRing.ItemTexture, LeftRingBounds, LeftRing.ItemColor);
                 if (LeftRing.hover)
                 {
                     DrawHover(spriteBatach, LeftRing);
@@ -375,14 +420,13 @@ namespace TextureAtlas
 
             if (RightRing != null)
             {
-                spriteBatach.Draw(RightRing.ItemTexture, RightRingBounds, RightRing.RarityColor);
+                spriteBatach.Draw(RightRing.ItemTexture, RightRingBounds, RightRing.ItemColor);
                 if (RightRing.hover)
                 {
                     DrawHover(spriteBatach, RightRing);
                 }
             }
-
-            Hero.Draw(spriteBatach);
+                Hero.Draw(spriteBatach);
 
         }
 

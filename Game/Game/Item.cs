@@ -29,6 +29,8 @@ namespace TextureAtlas
         public Vector2 worldloc;
         public Vector2 location;
 
+        public string DroppedTextureName;
+
         public Rectangle Bounds;
 
         public string ItemName;
@@ -44,10 +46,13 @@ namespace TextureAtlas
         public Texture2D TextureBack;
         public Texture2D ItemTexture;
         public Texture2D LegendaryBg;
+        public int ItemLevel;
+        public int SubType;
 
         public string ItemTextureName;
 
         public Color RarityColor;
+        public Color ItemColor;
 
         #endregion
 
@@ -68,8 +73,12 @@ namespace TextureAtlas
 
         public itemSlot ItemSlot;
 
-        public Item(Vector2 Location, Texture2D tex, int itemtype, int ItemLevel, itemSlot itmslot, int SubType = 0)
+        public Item() : this(new Vector2(0, 0), null, 1, 1, itemSlot.Nothing, "", 1) { }
+
+        public Item(Vector2 Location, Texture2D tex, int itemtype, int itmlvl, itemSlot itmslot, string drptxtname , int subType = 0, bool indexed = false)
         {
+            ItemLevel = itmlvl;
+            DroppedTextureName = drptxtname;
             ItemSlot = itmslot;
             LegBeam = GlobalVariables.LegendaryBeam;
             LegendaryBg = GlobalVariables.LegendaryBG;
@@ -78,46 +87,61 @@ namespace TextureAtlas
             location = Location;
             ItemTexture = tex;
             ItemType = itemtype;
+            SubType = subType;
+            if (tex == null)
+            {
+                return;
+            }
             Bounds = new Rectangle((int)location.X, (int)location.Y, tex.Width, tex.Height);
             Font1 = GlobalVariables.Font10;
-            quality = GlobalVariables.RollVsRarity();
-            if (quality > 5 ){
-                ItemTextureName = GlobalVariables.GetTexture(itemtype,SubType, true);
-            }else{
-                ItemTextureName = GlobalVariables.GetTexture(itemtype,SubType, false);
-            }
+
             ItemName = "";
 
-            switch (quality)
+            if (!indexed)
             {
-                case 1:
-                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
-                    affixes = 2;
-                    break;
-                case 2:
-                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
-                    affixes = 3;
-                    break;
-                case 3:
-                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
-                    affixes = 4;
-                    break;
-                case 4:
-                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
-                    affixes = 5;
-                    break;
-                case 5:
-                    ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
-                    affixes = 6;
-                    break;
-                case 6:
-                    ItemName = GlobalVariables.GetUniqueByTypes(ItemType,SubType);
-                    affixes = 10;
-                    break;
-            }
+                quality = GlobalVariables.RollVsRarity();
+                if (quality > 5)
+                {
+                    ItemTextureName = GlobalVariables.GetTexture(itemtype, SubType, true);
+                    DroppedTextureName = GlobalVariables.GetItemName(itemtype, SubType, true);
+                    ItemTexture = GlobalVariables.TheGame.Content.Load<Texture2D>(DroppedTextureName);
+                }
+                else
+                {
+                    ItemTextureName = GlobalVariables.GetTexture(itemtype, SubType, false);
+                    DroppedTextureName = GlobalVariables.GetItemName(itemtype, SubType, false);
+                }
 
-            AffixList = GlobalVariables.RollVsAffix(affixes, ItemType, ItemLevel, SubType);
-            
+                switch (quality)
+                {
+                    case 1:
+                        ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                        affixes = 2;
+                        break;
+                    case 2:
+                        ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                        affixes = 3;
+                        break;
+                    case 3:
+                        ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                        affixes = 4;
+                        break;
+                    case 4:
+                        ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                        affixes = 5;
+                        break;
+                    case 5:
+                        ItemName = GlobalVariables.GetItemByType(ItemType, SubType);
+                        affixes = 6;
+                        break;
+                    case 6:
+                        ItemName = GlobalVariables.GetUniqueByTypes(ItemType, SubType);
+                        affixes = 10;
+                        break;
+                }
+
+                AffixList = GlobalVariables.RollVsAffix(affixes, ItemType, ItemLevel, SubType);
+            }
         }
 
         public void CharMovedRight(GameTime gameTime, Vector2 velocity)
@@ -151,7 +175,7 @@ namespace TextureAtlas
 
             if (Clamp)
             {
-                spriteBatch.Draw(ItemTexture, new Rectangle((int)location.X,(int)location.Y,ItemTexture.Width,ItemTexture.Height), RarityColor);
+                spriteBatch.Draw(ItemTexture, new Rectangle((int)location.X,(int)location.Y,ItemTexture.Width,ItemTexture.Height), ItemColor);
                 spriteBatch.End();
                 return;
             }
@@ -160,33 +184,39 @@ namespace TextureAtlas
             {
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.White);
                 RarityColor = Color.White;
+                ItemColor = Color.White;
             }
             if (quality == 2)
             {
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.AliceBlue);
                 RarityColor = Color.AliceBlue;
+                ItemColor = Color.AliceBlue;
             }
             if (quality == 3)
             {
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.DeepSkyBlue);
                 RarityColor = Color.DeepSkyBlue;
+                ItemColor = Color.DeepSkyBlue;
             }
             if (quality == 4)
             {
                 spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.Orange);
                 RarityColor = Color.Orange;
+                ItemColor = Color.Orange;
             }
             if (quality == 5)
             {
                 spriteBatch.Draw(LegendaryBg, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.White);
-                spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.Purple);
+                spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.NavajoWhite);
                 RarityColor = Color.Purple;
+                ItemColor = Color.NavajoWhite;
             }
             if (quality == 6)
             {
                 spriteBatch.Draw(LegendaryBg, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.White);
-                spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.Brown);
+                spriteBatch.Draw(ItemTexture, new Rectangle(Convert.ToInt32(location.X), Convert.ToInt32(location.Y), ItemTexture.Width, ItemTexture.Height), Color.White);
                 RarityColor = Color.Brown;
+                ItemColor = Color.White;
             }
             
 

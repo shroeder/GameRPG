@@ -10,15 +10,13 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Starbound.RealmFactoryCore;
 using System.Timers;
-using System.IO;
-using System.Xml.Serialization;
 
 namespace TextureAtlas
 {
-    
-    public class Test
+    public class Affix
     {
-        
-        //public Item ClampedItem;
+        public int Value { get; set; }
+        public string Desc { get; set; }
+        public string Stat { get; set; }
     }
 }
