@@ -60,18 +60,26 @@ namespace TextureAtlas
 
         public Equipment(Item helmet, Item shoulders, Item chest, Item back, Item rightweapon, Item leftweapon, Item gloves, Item boots, Item belt, Item leftring, Item rightring, HeroDisplay theHero, bool isNull = false)
         {
-            Hero = theHero;
-            Hero.txtRightWeapon = GlobalVariables.TheGame.CharWeapon;
-            Hero.txtHero = GlobalVariables.TheGame.HeroTxt;
-            Hero.Width = Convert.ToInt32(Hero.txtHero.Width / Hero.Columns);
-            Hero.Height = Convert.ToInt32(Hero.txtHero.Height / Hero.Rows);
+            if (isNull)
+            {
 
-            Hero.RotateCounterBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .5), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .57), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .03), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .03));
-            Hero.RotateClockBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .4), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .57), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .03), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .03));
+            }
+            else
+            {
+                Hero = theHero;
+                Hero.txtRightWeapon = GlobalVariables.TheGame.CharWeapon;
+                Hero.txtHero = GlobalVariables.TheGame.HeroTxt;
+                Hero.Width = Convert.ToInt32(Hero.txtHero.Width / Hero.Columns);
+                Hero.Height = Convert.ToInt32(Hero.txtHero.Height / Hero.Rows);
 
-            Hero.Direction = 0;
-            Hero.RotateClock += RotateClock;
-            Hero.RotateCounter += RotateCounter;
+                Hero.RotateCounterBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .5), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .57), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .03), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .03));
+                Hero.RotateClockBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .4), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .57), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .03), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .03));
+
+                Hero.Direction = 0;
+                Hero.RotateClock += RotateClock;
+                Hero.RotateCounter += RotateCounter;
+            }
+            
 
             if (GlobalVariables.TheGame == null)
             {
@@ -116,8 +124,10 @@ namespace TextureAtlas
 
             if (GlobalVariables.gfx != null)
             {
-
-                Hero.DrawLocation = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .395), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .14), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3675));
+                if (Hero != null)
+                {
+                    Hero.DrawLocation = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .395), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .14), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3675));
+                }
 
                 Bounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .3), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .1), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .6), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6));
 
@@ -154,7 +164,10 @@ namespace TextureAtlas
 
             ms = Mouse.GetState();
 
+            if (Hero != null)
+            {
                 Hero.Update();
+            }
 
             Rectangle rect = new Rectangle(ms.X,ms.Y,1,1);
 
@@ -285,13 +298,51 @@ namespace TextureAtlas
 
         public void DrawHover(SpriteBatch spriteBatch, Item item)
         {
-            //Draw Shaded backgorund
-            GlobalVariables.WaitToDraw(0, item.location, new Rectangle(0, 0, item.TextureBack.Width, 70 + (int)(22 * item.affixes)), Color.Black, null, item.TextureBack);
-
-            GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + 30)), new Rectangle(0, 0, 0, 0), item.RarityColor, item.Font1, null, item.ItemName);
 
             //Initialize Scalar Value
             int ScalarText = 20;
+
+            int widestString = 0;
+            foreach (Affix afx in item.AffixList)
+            {
+                double textWidth1 = item.Font1.MeasureString(afx.Desc).X;
+                if (textWidth1 > widestString)
+                {
+                    widestString = (int)textWidth1;
+                }
+            }
+
+            //Store location
+            Vector2 loc = item.location;
+
+            List<string> ItemDesc = new List<string>();
+
+            if (item.ItemType == 1)
+            {
+                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .9), item.Font1);
+            }
+            else if (item.ItemType == 2)
+            {
+                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .4), item.Font1);
+            }
+
+            //check to render on screen
+            item.location = GlobalVariables.newLocation(item.location, widestString + 40, 70 + (int)(22 * item.affixes) + (int)(22 * ItemDesc.Count));
+
+            //Draw Shaded backgorund
+            GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 80), (item.location.Y)), new Rectangle(0, 0, widestString + 40 + (int)(item.ItemTexture.Width * .75), 70 + (int)(22 * item.affixes) + (int)(22 * ItemDesc.Count)), Color.Black, null, GlobalVariables.TestSquare);
+
+            GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + 30)), new Rectangle(0, 0, 0, 0), item.RarityColor, item.Font1, null, item.ItemName);
+
+            //Draw small item in top right
+            if (item.ItemType == 1)
+            {
+                GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 175 + (widestString - item.ItemTexture.Width)), item.location.Y + 25), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
+            }
+            else if (item.ItemType == 2)
+            {
+                GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 115 + (widestString - item.ItemTexture.Width)), item.location.Y + 25), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
+            }
 
 
             //Draw Item aFfixes
@@ -318,6 +369,14 @@ namespace TextureAtlas
                     ScalarText += 20;
                 }
             }
+            foreach (string str in ItemDesc)
+            {
+                GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Gray, item.Font1, null, str);
+
+                ScalarText += 20;
+            }
+
+            item.location = loc;
         }
 
         public void draw(SpriteBatch spriteBatach, Texture2D EquipSheet, SpriteFont font)

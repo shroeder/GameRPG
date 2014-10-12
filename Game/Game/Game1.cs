@@ -337,7 +337,7 @@ namespace TextureAtlas
             }
             else
             {
-                equipment = new Equipment(null, null, null, null, null, null, null, null, null,null,null, GlobalVariables.TheHero, true);
+                equipment = new Equipment(null, null, null, null, null, null, null, null, null,null,null, GlobalVariables.TheHero, false);
                 GlobalVariables.Equipment = equipment;
             }
 
@@ -346,7 +346,9 @@ namespace TextureAtlas
                 Item tempItem = equipment.Helmet;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Helmet.DroppedTextureName);
                 equipment.Helmet = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtHelm = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Helmet.affixes = tempItem.affixes;
+                equipment.Helmet.ItemDescription = tempItem.ItemDescription;
                 equipment.Helmet.AffixList = tempItem.AffixList;
                 equipment.Helmet.ItemName = tempItem.ItemName;
                 equipment.Helmet.quality = tempItem.quality;
@@ -388,8 +390,10 @@ namespace TextureAtlas
                 Item tempItem = equipment.Shoulders;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Shoulders.DroppedTextureName);
                 equipment.Shoulders = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtShoulders = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Shoulders.affixes = tempItem.affixes;
                 equipment.Shoulders.AffixList = tempItem.AffixList;
+                equipment.Shoulders.ItemDescription = tempItem.ItemDescription;
                 equipment.Shoulders.ItemName = tempItem.ItemName;
                 equipment.Shoulders.quality = tempItem.quality;
                 equipment.Shoulders.ItemTextureName = tempItem.ItemTextureName;
@@ -430,7 +434,9 @@ namespace TextureAtlas
                 Item tempItem = equipment.Chest;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Chest.DroppedTextureName);
                 equipment.Chest = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtChest = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Chest.affixes = tempItem.affixes;
+                equipment.Chest.ItemDescription = tempItem.ItemDescription;
                 equipment.Chest.AffixList = tempItem.AffixList;
                 equipment.Chest.ItemName = tempItem.ItemName;
                 equipment.Chest.quality = tempItem.quality;
@@ -472,7 +478,9 @@ namespace TextureAtlas
                 Item tempItem = equipment.Back;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Back.DroppedTextureName);
                 equipment.Back = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtBack = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Back.affixes = tempItem.affixes;
+                equipment.Back.ItemDescription = tempItem.ItemDescription;
                 equipment.Back.AffixList = tempItem.AffixList;
                 equipment.Back.ItemName = tempItem.ItemName;
                 equipment.Back.quality = tempItem.quality;
@@ -514,7 +522,9 @@ namespace TextureAtlas
                 Item tempItem = equipment.RightWeapon;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.RightWeapon.DroppedTextureName);
                 equipment.RightWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtRightWeapon = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.RightWeapon.affixes = tempItem.affixes;
+                equipment.RightWeapon.ItemDescription = tempItem.ItemDescription;
                 equipment.RightWeapon.AffixList = tempItem.AffixList;
                 equipment.RightWeapon.ItemName = tempItem.ItemName;
                 equipment.RightWeapon.quality = tempItem.quality;
@@ -556,9 +566,11 @@ namespace TextureAtlas
                 Item tempItem = equipment.LeftWeapon;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.LeftWeapon.DroppedTextureName);
                 equipment.LeftWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtLeftWeapon = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.LeftWeapon.affixes = tempItem.affixes;
                 equipment.LeftWeapon.AffixList = tempItem.AffixList;
                 equipment.LeftWeapon.ItemName = tempItem.ItemName;
+                equipment.RightWeapon.ItemDescription = tempItem.ItemDescription;
                 equipment.LeftWeapon.quality = tempItem.quality;
                 equipment.LeftWeapon.ItemTextureName = tempItem.ItemTextureName;
                 if (equipment.LeftWeapon.quality == 1)
@@ -598,7 +610,9 @@ namespace TextureAtlas
                 Item tempItem = equipment.Gloves;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Gloves.DroppedTextureName);
                 equipment.Gloves = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtGloves = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Gloves.affixes = tempItem.affixes;
+                equipment.Gloves.ItemDescription = tempItem.ItemDescription;
                 equipment.Gloves.AffixList = tempItem.AffixList;
                 equipment.Gloves.ItemName = tempItem.ItemName;
                 equipment.Gloves.quality = tempItem.quality;
@@ -640,7 +654,9 @@ namespace TextureAtlas
                 Item tempItem = equipment.Boots;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Boots.DroppedTextureName);
                 equipment.Boots = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtBoots = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Boots.affixes = tempItem.affixes;
+                equipment.Boots.ItemDescription = tempItem.ItemDescription;
                 equipment.Boots.AffixList = tempItem.AffixList;
                 equipment.Boots.ItemName = tempItem.ItemName;
                 equipment.Boots.quality = tempItem.quality;
@@ -682,6 +698,8 @@ namespace TextureAtlas
                 Item tempItem = equipment.Belt;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Belt.DroppedTextureName);
                 equipment.Belt = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtBelt = Content.Load<Texture2D>(tempItem.ItemTextureName);
+                equipment.Belt.ItemDescription = tempItem.ItemDescription;
                 equipment.Belt.affixes = tempItem.affixes;
                 equipment.Belt.AffixList = tempItem.AffixList;
                 equipment.Belt.ItemName = tempItem.ItemName;
@@ -724,7 +742,9 @@ namespace TextureAtlas
                 Item tempItem = equipment.LeftRing;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.LeftRing.DroppedTextureName);
                 equipment.LeftRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtLeftRing = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.LeftRing.affixes = tempItem.affixes;
+                equipment.LeftRing.ItemDescription = tempItem.ItemDescription;
                 equipment.LeftRing.AffixList = tempItem.AffixList;
                 equipment.LeftRing.ItemName = tempItem.ItemName;
                 equipment.LeftRing.quality = tempItem.quality;
@@ -766,7 +786,9 @@ namespace TextureAtlas
                 Item tempItem = equipment.RightRing;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.RightRing.DroppedTextureName);
                 equipment.RightRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Hero.txtRightRing = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.RightRing.affixes = tempItem.affixes;
+                equipment.RightRing.ItemDescription = tempItem.ItemDescription;
                 equipment.RightRing.AffixList = tempItem.AffixList;
                 equipment.RightRing.ItemName = tempItem.ItemName;
                 equipment.RightRing.quality = tempItem.quality;
@@ -815,6 +837,7 @@ namespace TextureAtlas
                             tempItem.ItemTexture = Content.Load<Texture2D>(inventory.Items[intlc].DroppedTextureName);
                             inventory.Items[intlc] = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
                             inventory.Items[intlc].affixes = tempItem.affixes;
+                            inventory.Items[intlc].ItemDescription = tempItem.ItemDescription;
                             inventory.Items[intlc].AffixList = tempItem.AffixList;
                             inventory.Items[intlc].ItemName = tempItem.ItemName;
                             inventory.Items[intlc].quality = tempItem.quality;
@@ -1816,6 +1839,24 @@ namespace TextureAtlas
                                             }
 
                                             break;
+                                    }
+
+                                    break;
+
+                                //Boots
+                                case 2:
+
+                                    itmSlot = Item.itemSlot.Boots;
+                                    SubType = GlobalVariables.RollVsBootType();
+
+                                    switch (SubType){
+
+                                        case 1:
+
+                                            DroppedItem = contentManager.Load<Texture2D>("Leatherboots");
+                                            itemTextureName = "Leatherboots";
+                                            break;
+
                                     }
 
                                     break;
