@@ -29,7 +29,7 @@ namespace TextureAtlas
         public Rectangle BootsBounds;
         public Rectangle BeltBounds;
         public Rectangle ChestBounds;
-        public Rectangle BackBounds;
+        public Rectangle PantsBounds;
         public Rectangle GlovesBounds;
         public Rectangle RWeapbounds;
         public Rectangle LWeapBounds;
@@ -44,7 +44,7 @@ namespace TextureAtlas
         public Item Helmet;
         public Item Shoulders;
         public Item Chest;
-        public Item Back;
+        public Item Pants;
         public Item RightWeapon;
         public Item LeftWeapon;
         public Item Gloves;
@@ -58,7 +58,7 @@ namespace TextureAtlas
 
         public Equipment() : this(null,null,null,null,null,null,null,null,null,null,null,null,true) { }
 
-        public Equipment(Item helmet, Item shoulders, Item chest, Item back, Item rightweapon, Item leftweapon, Item gloves, Item boots, Item belt, Item leftring, Item rightring, HeroDisplay theHero, bool isNull = false)
+        public Equipment(Item helmet, Item shoulders, Item chest, Item pants, Item rightweapon, Item leftweapon, Item gloves, Item boots, Item belt, Item leftring, Item rightring, HeroDisplay theHero, bool isNull = false)
         {
             if (isNull)
             {
@@ -97,8 +97,8 @@ namespace TextureAtlas
             if (chest != null){
                 Chest = chest;
             }
-            if (back != null){
-                Back = back;
+            if (pants != null){
+                Pants = pants;
             }
             if (rightweapon != null){
                 RightWeapon = rightweapon;
@@ -140,7 +140,7 @@ namespace TextureAtlas
                 GlovesBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .5565), width, height);
 
                 ShouldersBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), width, height);
-                BackBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3525), width, height);
+                PantsBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3525), width, height);
                 LWeapBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .455), width, height);
                 BootsBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .5565), width, height);
 
@@ -228,15 +228,15 @@ namespace TextureAtlas
                     Shoulders.hover = false;
                 }
             }
-            if (Back != null)
+            if (Pants != null)
             {
-                if (rect.Intersects(BackBounds))
+                if (rect.Intersects(PantsBounds))
                 {
-                    Back.hover = true;
+                    Pants.hover = true;
                 }
                 else
                 {
-                    Back.hover = false;
+                    Pants.hover = false;
                 }
             }
             if (LeftWeapon != null)
@@ -319,9 +319,13 @@ namespace TextureAtlas
 
             if (item.ItemType == 1)
             {
-                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .9), item.Font1);
+                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .8), item.Font1);
             }
             else if (item.ItemType == 2)
+            {
+                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .4), item.Font1);
+            }
+            else if (item.ItemType == 3)
             {
                 ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .4), item.Font1);
             }
@@ -342,6 +346,10 @@ namespace TextureAtlas
             else if (item.ItemType == 2)
             {
                 GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 115 + (widestString - item.ItemTexture.Width)), item.location.Y + 25), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
+            }
+            else if (item.ItemType == 3)
+            {
+                GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 140 + (widestString - item.ItemTexture.Width)), item.location.Y + 5), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
             }
 
 
@@ -389,7 +397,8 @@ namespace TextureAtlas
 
             if (Helmet != null)
             {
-                spriteBatach.Draw(Helmet.ItemTexture, HelmBounds, Helmet.ItemColor);
+                Rectangle newRect = new Rectangle(HelmBounds.X + (HelmBounds.X / 4), HelmBounds.Y, HelmBounds.Width / 2, HelmBounds.Height);
+                spriteBatach.Draw(Helmet.ItemTexture, newRect, Helmet.ItemColor);
                 if (Helmet.hover)
                 {
                     DrawHover(spriteBatach, Helmet);
@@ -398,7 +407,8 @@ namespace TextureAtlas
 
             if (Chest != null)
             {
-                spriteBatach.Draw(Chest.ItemTexture, ChestBounds, Chest.ItemColor);
+                Rectangle newRect = new Rectangle(ChestBounds.X + (ChestBounds.X / 4), ChestBounds.Y, ChestBounds.Width / 2, ChestBounds.Height);
+                spriteBatach.Draw(Chest.ItemTexture, newRect, Chest.ItemColor);
                 if (Chest.hover)
                 {
                     DrawHover(spriteBatach, Chest);
@@ -407,7 +417,8 @@ namespace TextureAtlas
 
             if (RightWeapon != null)
             {
-                spriteBatach.Draw(RightWeapon.ItemTexture, RWeapbounds,RightWeapon.ItemColor);
+                Rectangle newRect = new Rectangle(RWeapbounds.X, RWeapbounds.Y + (RWeapbounds.Height / 4), RWeapbounds.Width, RWeapbounds.Height / 2);
+                spriteBatach.Draw(RightWeapon.ItemTexture, newRect, RightWeapon.ItemColor);
                 if (RightWeapon.hover)
                 {
                     DrawHover(spriteBatach, RightWeapon);
@@ -432,18 +443,19 @@ namespace TextureAtlas
                 }
             }
 
-            if (Back != null)
+            if (Pants != null)
             {
-                spriteBatach.Draw(Back.ItemTexture, BackBounds, Back.ItemColor);
-                if (Back.hover)
+                spriteBatach.Draw(Pants.ItemTexture, PantsBounds, Pants.ItemColor);
+                if (Pants.hover)
                 {
-                    DrawHover(spriteBatach, Back);
+                    DrawHover(spriteBatach, Pants);
                 }
             }
 
             if (LeftWeapon != null)
             {
-                spriteBatach.Draw(LeftWeapon.ItemTexture, LWeapBounds, LeftWeapon.ItemColor);
+                Rectangle newRect = new Rectangle(LWeapBounds.X, LWeapBounds.Y + (LWeapBounds.Height / 4), LWeapBounds.Width, LWeapBounds.Height / 2);
+                spriteBatach.Draw(LeftWeapon.ItemTexture, newRect, LeftWeapon.ItemColor);
                 if (LeftWeapon.hover)
                 {
                     DrawHover(spriteBatach, LeftWeapon);
@@ -452,7 +464,8 @@ namespace TextureAtlas
 
             if (Boots != null)
             {
-                spriteBatach.Draw(Boots.ItemTexture, BootsBounds, Boots.ItemColor);
+                Rectangle newRect = new Rectangle(BootsBounds.X + (BootsBounds.Width / 4), BootsBounds.Y + (BootsBounds.Height / 4), BootsBounds.Width / 2, BootsBounds.Height / 2);
+                spriteBatach.Draw(Boots.ItemTexture, newRect, Boots.ItemColor);
                 if (Boots.hover)
                 {
                     DrawHover(spriteBatach, Boots);

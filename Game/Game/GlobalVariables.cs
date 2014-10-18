@@ -768,6 +768,18 @@ namespace TextureAtlas
                     }
 
                     break;
+
+                case 3:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Jagged Joggers";
+                            break;
+                    }
+
+                    break;
+
             }
 
             return ItemName;
@@ -828,6 +840,17 @@ namespace TextureAtlas
                     }
 
                     break;
+
+                case 3:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Leather Pants";
+                            break;
+                    }
+
+                    break;
             }
 
             return ItemName;
@@ -872,6 +895,19 @@ namespace TextureAtlas
                             }
 
                             break;
+                        //Pants
+                        case 3:
+
+                            switch (SubType)
+                            {
+                                //Leather PAnts
+                                case 1:
+
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36 };
+                                    break;
+                            }
+
+                            break;
                     }
                 }
 
@@ -883,6 +919,45 @@ namespace TextureAtlas
 
             return returnAffixs;
 
+        }
+
+        public static int GetBaseStat(int type, int subtype)
+        {
+            int returnValue = 0;
+            switch (type)
+            {
+                    //Weapon
+                case 1:
+                    switch (subtype)
+                    {
+                        case 1:
+                            //Two-Handed Sword
+                            returnValue = 40;
+                            break;
+                    }
+                    break;
+                case 2:
+                    //Boots
+                    switch (subtype)
+                    {
+                        case 1:
+                            //leather boots
+                            returnValue = 20;
+                            break;  
+                    }
+                    break;
+                case 3:
+                    //pants
+                    switch (subtype)
+                    {
+                        case 1:
+                            //leather pants
+                            returnValue = 40;
+                            break;
+                    }
+                    break;
+            }
+            return returnValue;
         }
 
         public static Affix RollAffix(List<int> AffixRange, int ItemLvl)
@@ -1078,92 +1153,53 @@ namespace TextureAtlas
                     returnAffix.Desc = "Armour Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 21:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(20,40);
+                    returnAffix.Value += rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
                     returnAffix.Stat = "EVA";
                     returnAffix.Desc = "Evasion Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 22:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10,35);
                     returnAffix.Stat = "MF";
                     returnAffix.Desc = "Magic Find Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 23:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10,35);
                     returnAffix.Stat = "MQ";
                     returnAffix.Desc = "Magic Quantity Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 24:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(3,15);
                     returnAffix.Stat = "MR";
                     returnAffix.Desc = "Melee Range Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 25:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10,25);
                     returnAffix.Stat = "EXP";
                     returnAffix.Desc = "Experience Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 26:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10,50);
                     returnAffix.Stat = "FPDMG";
                     returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 27:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(3,10);
                     returnAffix.Stat = "PDMG";
                     returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 28:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10,50);
                     returnAffix.Stat = "FMPDMG";
                     returnAffix.Desc = "Melee Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 29:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(3,10);
                     returnAffix.Stat = "MPDMG";
                     returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 30:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .5));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10,50);
                     returnAffix.Stat = "FRPDMG";
                     returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
@@ -1269,12 +1305,20 @@ namespace TextureAtlas
         public static int RollVsItemType()
         {
             Random rng = new Random();
-            int type = rng.Next(1, 3);
+            int type = rng.Next(1, 4);
             return type;
         }
 
         public static int RollVsWeaponType()
         {
+            Random rng = new Random();
+            int type = rng.Next(1, 1);
+            return type;
+        }
+
+        public static int RollVsPantType()
+        {
+            //1 is leather pants
             Random rng = new Random();
             int type = rng.Next(1, 1);
             return type;
@@ -1301,11 +1345,34 @@ namespace TextureAtlas
             return 5;
         }
 
-        public static void WeaponEquiped(Item item)
+        public static void WeaponEquiped(Item item, int leftright)
         {
+            //1 == left, 2 == right
             //Set the texture
-            GlobalVariables.TheGame.CharWeapon = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
-            TheGame.equipment.Hero.txtRightWeapon = TheGame.CharWeapon;
+            switch (leftright)
+            {
+                case 1:
+                    GlobalVariables.TheGame.CharWeapon = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+                    TheGame.equipment.Hero.txtLeftWeapon = TheGame.CharWeapon;
+                    break;
+                case 2:
+                    GlobalVariables.TheGame.CharWeapon = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+                    TheGame.equipment.Hero.txtRightWeapon = TheGame.CharWeapon;
+                    break;
+            }
+            
+        }
+
+        public static void BootsEquipped(Item item)
+        {
+            GlobalVariables.TheGame.CharBoots = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+            TheGame.equipment.Hero.txtBoots = TheGame.CharBoots;
+        }
+
+        public static void PantsEquipped(Item item)
+        {
+            GlobalVariables.TheGame.CharPants = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+            TheGame.equipment.Hero.txtPants = TheGame.CharPants;
         }
 
         public static string GetItemDescription(int type, int subType, bool isUnique)
@@ -1344,6 +1411,23 @@ namespace TextureAtlas
                             else
                             {
                                 itemDesc = "Average leather boots, they look a bit ragged.";
+                            }
+                            break;
+                    }
+                    break;
+                //Pants
+                case 3:
+                    switch (subType)
+                    {
+                        //Leather Pants
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemDesc = "Used by the ancient monks of Tal'Knesh and known for their cutting edge design, these pants are made to tear and rend flesh.";
+                            }
+                            else
+                            {
+                                itemDesc = "Leather Pants, Offering low protection.";
                             }
                             break;
                     }
@@ -1388,7 +1472,6 @@ namespace TextureAtlas
                                     wordLength += 1;
                                     if (lastWord[wordLength - 1].ToString() == " ")
                                     {
-                                        //wordLength -= 1;
                                         lastWord = "";
                                         break;
                                     }
@@ -1491,6 +1574,23 @@ namespace TextureAtlas
                             break;
                     }
                     break;
+                //Pants
+                case 3:
+                    switch (subType)
+                    {
+                        //Leather Pants
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "HeroSS2HPantsU";
+                            }
+                            else
+                            {
+                                itemName = "HeroSS2HPants";
+                            }
+                            break;
+                    }
+                    break;
             }
             return itemName;
         }
@@ -1531,6 +1631,23 @@ namespace TextureAtlas
                             else
                             {
                                 itemName = "Leatherboots";
+                            }
+                            break;
+                    }
+                    break;
+                //Pants
+                case 3:
+                    switch (subType)
+                    {
+                        //Leather Pants
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "LeatherPantsU";
+                            }
+                            else
+                            {
+                                itemName = "LeatherPants";
                             }
                             break;
                     }

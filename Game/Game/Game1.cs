@@ -46,7 +46,7 @@ namespace TextureAtlas
         public Vector2 position = new Vector2(150, 150);
         public Vector2 velocity = new Vector2(300, 0);
         public Vector2 velocityup = new Vector2(0, 300);
-        private Vector2 InvPos = new Vector2(150,150);
+        private Vector2 InvPos = new Vector2(150, 150);
         private Vector2 OldPos = new Vector2(0, 0);
 
         public bool blnClamp = false;
@@ -137,6 +137,8 @@ namespace TextureAtlas
         private float MouseOffSety = 0f;
 
         public Texture2D CharWeapon;
+        public Texture2D CharBoots;
+        public Texture2D CharPants;
         private Texture2D EnemyTexture;
         private Texture2D texture;
         public Texture2D HeroTxt;
@@ -326,18 +328,18 @@ namespace TextureAtlas
             }
             else
             {
-                inventory = new Inventory(new List<Item>(), new Vector2(150,150));
+                inventory = new Inventory(new List<Item>(), new Vector2(150, 150));
                 GlobalVariables.Inventory = inventory;
             }
 
             if (GlobalVariables.Equipment != null)
             {
-                equipment = new Equipment(GlobalVariables.Equipment.Helmet, GlobalVariables.Equipment.Shoulders, GlobalVariables.Equipment.Chest, GlobalVariables.Equipment.Back, GlobalVariables.Equipment.RightWeapon, GlobalVariables.Equipment.LeftWeapon, GlobalVariables.Equipment.Gloves, GlobalVariables.Equipment.Boots, GlobalVariables.Equipment.Belt, GlobalVariables.Equipment.LeftRing, GlobalVariables.Equipment.RightRing, GlobalVariables.TheHero);
-                
+                equipment = new Equipment(GlobalVariables.Equipment.Helmet, GlobalVariables.Equipment.Shoulders, GlobalVariables.Equipment.Chest, GlobalVariables.Equipment.Pants, GlobalVariables.Equipment.RightWeapon, GlobalVariables.Equipment.LeftWeapon, GlobalVariables.Equipment.Gloves, GlobalVariables.Equipment.Boots, GlobalVariables.Equipment.Belt, GlobalVariables.Equipment.LeftRing, GlobalVariables.Equipment.RightRing, GlobalVariables.TheHero);
+
             }
             else
             {
-                equipment = new Equipment(null, null, null, null, null, null, null, null, null,null,null, GlobalVariables.TheHero, false);
+                equipment = new Equipment(null, null, null, null, null, null, null, null, null, null, null, GlobalVariables.TheHero, false);
                 GlobalVariables.Equipment = equipment;
             }
 
@@ -345,7 +347,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.Helmet;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Helmet.DroppedTextureName);
-                equipment.Helmet = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Helmet = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtHelm = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Helmet.affixes = tempItem.affixes;
                 equipment.Helmet.ItemDescription = tempItem.ItemDescription;
@@ -389,7 +391,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.Shoulders;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Shoulders.DroppedTextureName);
-                equipment.Shoulders = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Shoulders = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtShoulders = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Shoulders.affixes = tempItem.affixes;
                 equipment.Shoulders.AffixList = tempItem.AffixList;
@@ -433,7 +435,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.Chest;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Chest.DroppedTextureName);
-                equipment.Chest = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Chest = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtChest = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Chest.affixes = tempItem.affixes;
                 equipment.Chest.ItemDescription = tempItem.ItemDescription;
@@ -473,47 +475,47 @@ namespace TextureAtlas
                 }
             }
 
-            if (equipment.Back != null)
+            if (equipment.Pants != null)
             {
-                Item tempItem = equipment.Back;
-                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Back.DroppedTextureName);
-                equipment.Back = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
-                equipment.Hero.txtBack = Content.Load<Texture2D>(tempItem.ItemTextureName);
-                equipment.Back.affixes = tempItem.affixes;
-                equipment.Back.ItemDescription = tempItem.ItemDescription;
-                equipment.Back.AffixList = tempItem.AffixList;
-                equipment.Back.ItemName = tempItem.ItemName;
-                equipment.Back.quality = tempItem.quality;
-                equipment.Back.ItemTextureName = tempItem.ItemTextureName;
-                if (equipment.Back.quality == 1)
+                Item tempItem = equipment.Pants;
+                tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Pants.DroppedTextureName);
+                equipment.Pants = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
+                equipment.Hero.txtPants = Content.Load<Texture2D>(tempItem.ItemTextureName);
+                equipment.Pants.affixes = tempItem.affixes;
+                equipment.Pants.ItemDescription = tempItem.ItemDescription;
+                equipment.Pants.AffixList = tempItem.AffixList;
+                equipment.Pants.ItemName = tempItem.ItemName;
+                equipment.Pants.quality = tempItem.quality;
+                equipment.Pants.ItemTextureName = tempItem.ItemTextureName;
+                if (equipment.Pants.quality == 1)
                 {
-                    equipment.Back.RarityColor = Color.White;
-                    equipment.Back.ItemColor = Color.White;
+                    equipment.Pants.RarityColor = Color.White;
+                    equipment.Pants.ItemColor = Color.White;
                 }
-                if (equipment.Back.quality == 2)
+                if (equipment.Pants.quality == 2)
                 {
-                    equipment.Back.RarityColor = Color.AliceBlue;
-                    equipment.Back.ItemColor = Color.AliceBlue;
+                    equipment.Pants.RarityColor = Color.AliceBlue;
+                    equipment.Pants.ItemColor = Color.AliceBlue;
                 }
-                if (equipment.Back.quality == 3)
+                if (equipment.Pants.quality == 3)
                 {
-                    equipment.Back.RarityColor = Color.DeepSkyBlue;
-                    equipment.Back.ItemColor = Color.DeepSkyBlue;
+                    equipment.Pants.RarityColor = Color.DeepSkyBlue;
+                    equipment.Pants.ItemColor = Color.DeepSkyBlue;
                 }
-                if (equipment.Back.quality == 4)
+                if (equipment.Pants.quality == 4)
                 {
-                    equipment.Back.RarityColor = Color.Orange;
-                    equipment.Back.ItemColor = Color.Orange;
+                    equipment.Pants.RarityColor = Color.Orange;
+                    equipment.Pants.ItemColor = Color.Orange;
                 }
-                if (equipment.Back.quality == 5)
+                if (equipment.Pants.quality == 5)
                 {
-                    equipment.Back.RarityColor = Color.Purple;
-                    equipment.Back.ItemColor = Color.NavajoWhite;
+                    equipment.Pants.RarityColor = Color.Purple;
+                    equipment.Pants.ItemColor = Color.NavajoWhite;
                 }
-                if (equipment.Back.quality == 6)
+                if (equipment.Pants.quality == 6)
                 {
-                    equipment.Back.RarityColor = Color.Brown;
-                    equipment.Back.ItemColor = Color.White;
+                    equipment.Pants.RarityColor = Color.Brown;
+                    equipment.Pants.ItemColor = Color.White;
                 }
             }
 
@@ -521,7 +523,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.RightWeapon;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.RightWeapon.DroppedTextureName);
-                equipment.RightWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.RightWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtRightWeapon = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.RightWeapon.affixes = tempItem.affixes;
                 equipment.RightWeapon.ItemDescription = tempItem.ItemDescription;
@@ -565,12 +567,12 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.LeftWeapon;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.LeftWeapon.DroppedTextureName);
-                equipment.LeftWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.LeftWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtLeftWeapon = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.LeftWeapon.affixes = tempItem.affixes;
                 equipment.LeftWeapon.AffixList = tempItem.AffixList;
                 equipment.LeftWeapon.ItemName = tempItem.ItemName;
-                equipment.RightWeapon.ItemDescription = tempItem.ItemDescription;
+                equipment.LeftWeapon.ItemDescription = tempItem.ItemDescription;
                 equipment.LeftWeapon.quality = tempItem.quality;
                 equipment.LeftWeapon.ItemTextureName = tempItem.ItemTextureName;
                 if (equipment.LeftWeapon.quality == 1)
@@ -609,7 +611,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.Gloves;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Gloves.DroppedTextureName);
-                equipment.Gloves = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Gloves = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtGloves = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Gloves.affixes = tempItem.affixes;
                 equipment.Gloves.ItemDescription = tempItem.ItemDescription;
@@ -653,7 +655,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.Boots;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Boots.DroppedTextureName);
-                equipment.Boots = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Boots = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtBoots = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Boots.affixes = tempItem.affixes;
                 equipment.Boots.ItemDescription = tempItem.ItemDescription;
@@ -697,7 +699,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.Belt;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Belt.DroppedTextureName);
-                equipment.Belt = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.Belt = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtBelt = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Belt.ItemDescription = tempItem.ItemDescription;
                 equipment.Belt.affixes = tempItem.affixes;
@@ -741,7 +743,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.LeftRing;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.LeftRing.DroppedTextureName);
-                equipment.LeftRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.LeftRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtLeftRing = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.LeftRing.affixes = tempItem.affixes;
                 equipment.LeftRing.ItemDescription = tempItem.ItemDescription;
@@ -785,7 +787,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.RightRing;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.RightRing.DroppedTextureName);
-                equipment.RightRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                equipment.RightRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtRightRing = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.RightRing.affixes = tempItem.affixes;
                 equipment.RightRing.ItemDescription = tempItem.ItemDescription;
@@ -835,7 +837,7 @@ namespace TextureAtlas
                         {
                             Item tempItem = inventory.Items[intlc];
                             tempItem.ItemTexture = Content.Load<Texture2D>(inventory.Items[intlc].DroppedTextureName);
-                            inventory.Items[intlc] = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.SubType, true);
+                            inventory.Items[intlc] = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                             inventory.Items[intlc].affixes = tempItem.affixes;
                             inventory.Items[intlc].ItemDescription = tempItem.ItemDescription;
                             inventory.Items[intlc].AffixList = tempItem.AffixList;
@@ -1803,11 +1805,14 @@ namespace TextureAtlas
 
                             //assigned to values to fix compile time errs
                             int SubType = 0;
-                            int ItemLevel = Enemies[l].Level + RNG.Next(1,3) - RNG.Next(1,3);
+                            int ItemLevel = Enemies[l].Level + RNG.Next(1, 3) - RNG.Next(1, 3);
                             string itemTextureName = "";
-                            if (ItemLevel < 1){
+                            if (ItemLevel < 1)
+                            {
                                 ItemLevel = 1;
                             }
+                            string basestatname = "";
+                            int basestat = 0;
                             Texture2D DroppedItem = sword;
                             Item.itemSlot itmSlot = Item.itemSlot.Nothing;
 
@@ -1835,6 +1840,8 @@ namespace TextureAtlas
 
                                                     DroppedItem = contentManager.Load<Texture2D>("Two-HandedSword");
                                                     itemTextureName = "Two-HandedSword";
+                                                    basestatname = "Physical Damage";
+                                                    basestat = GlobalVariables.GetBaseStat(ItemType, SubType);
                                                     break;
                                             }
 
@@ -1849,21 +1856,44 @@ namespace TextureAtlas
                                     itmSlot = Item.itemSlot.Boots;
                                     SubType = GlobalVariables.RollVsBootType();
 
-                                    switch (SubType){
+                                    switch (SubType)
+                                    {
 
                                         case 1:
 
                                             DroppedItem = contentManager.Load<Texture2D>("Leatherboots");
                                             itemTextureName = "Leatherboots";
+                                            basestatname = "Evasion";
+                                            basestat = GlobalVariables.GetBaseStat(ItemType, SubType);
                                             break;
 
                                     }
 
                                     break;
 
+                                //Pants
+                                case 3:
+
+                                    itmSlot = Item.itemSlot.Pants;
+                                    SubType = GlobalVariables.RollVsPantType();
+
+                                    switch (SubType)
+                                    {
+
+                                        case 1:
+
+                                            DroppedItem = contentManager.Load<Texture2D>("LeatherPants");
+                                            itemTextureName = "LeatherPants";
+                                            basestatname = "Evasion";
+                                            basestat = GlobalVariables.GetBaseStat(ItemType, SubType);
+                                            break;
+                                    }
+
+                                    break;
+
                             }
                             //Indexed to sword
-                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, SubType));
+                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, basestat, basestatname, SubType));
                         }
                         DoesDrop = false;
                         Enemies.Remove(Enemies[l]);
@@ -1995,7 +2025,7 @@ namespace TextureAtlas
                     blnIgnore = false;
                 }
             }
-            else 
+            else
             {
                 if (blnClamp && mouseState.LeftButton == ButtonState.Pressed || mouseState.X < 150 && mouseState.Y < 50 && mouseState.LeftButton == ButtonState.Pressed)
                 {
@@ -2023,22 +2053,32 @@ namespace TextureAtlas
             {
                 if (blnClamp)
                 {
-                        inventory.ItemDropped(new Vector2(mouseState.X, mouseState.Y), inventory.ClampedItem);
+                    inventory.ItemDropped(new Vector2(mouseState.X, mouseState.Y), inventory.ClampedItem);
                 }
                 else
                 {
                     inventory.GrabItem();
                 }
-            }else if (rect.Intersects(equipment.HelmBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released){
+            }
+            else if (rect.Intersects(equipment.HelmBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            {
                 if (blnClamp)
                 {
                     if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Helmet)
                     {
                         inventory.ClampedItem.location.X = equipment.HelmBounds.X;
                         inventory.ClampedItem.location.Y = equipment.HelmBounds.Y;
+                        Item tempitem = equipment.Helmet;
                         equipment.Helmet = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2059,9 +2099,17 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.ChestBounds.X;
                         inventory.ClampedItem.location.Y = equipment.ChestBounds.Y;
+                        Item tempitem = equipment.Chest;
                         equipment.Chest = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2082,10 +2130,18 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.RWeapbounds.X;
                         inventory.ClampedItem.location.Y = equipment.RWeapbounds.Y;
+                        Item tempitem = equipment.RightWeapon;
                         equipment.RightWeapon = inventory.ClampedItem;
-                        GlobalVariables.WeaponEquiped(inventory.ClampedItem);
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem, 2);
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2093,7 +2149,7 @@ namespace TextureAtlas
                     if (equipment.RightWeapon != null)
                     {
                         inventory.ClampedItem = equipment.RightWeapon;
-                        GlobalVariables.WeaponEquiped(inventory.ClampedItem);
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem, 2);
                         equipment.RightWeapon = null;
                         blnClamp = true;
                     }
@@ -2107,10 +2163,18 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.LWeapBounds.X;
                         inventory.ClampedItem.location.Y = equipment.LWeapBounds.Y;
-                        GlobalVariables.WeaponEquiped(inventory.ClampedItem);
+                        Item tempitem = equipment.LeftWeapon;
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem, 1);
                         equipment.LeftWeapon = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2118,7 +2182,7 @@ namespace TextureAtlas
                     if (equipment.LeftWeapon != null)
                     {
                         inventory.ClampedItem = equipment.LeftWeapon;
-                        GlobalVariables.WeaponEquiped(inventory.ClampedItem);
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem, 1);
                         equipment.LeftWeapon = null;
                         blnClamp = true;
                     }
@@ -2132,9 +2196,17 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.GlovesBounds.X;
                         inventory.ClampedItem.location.Y = equipment.GlovesBounds.Y;
+                        Item tempitem = equipment.Gloves;
                         equipment.Gloves = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2155,9 +2227,17 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.ShouldersBounds.X;
                         inventory.ClampedItem.location.Y = equipment.ShouldersBounds.Y;
+                        Item tempitem = equipment.Shoulders;
                         equipment.Shoulders = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2170,25 +2250,34 @@ namespace TextureAtlas
                     }
                 }
             }
-            else if (rect.Intersects(equipment.BackBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
+            else if (rect.Intersects(equipment.PantsBounds) && mouseState.LeftButton == ButtonState.Pressed && MoldState.LeftButton == ButtonState.Released)
             {
                 if (blnClamp)
                 {
-                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Back)
+                    if (inventory.ClampedItem.ItemSlot == Item.itemSlot.Pants)
                     {
-                        inventory.ClampedItem.location.X = equipment.BackBounds.X;
-                        inventory.ClampedItem.location.Y = equipment.BackBounds.Y;
-                        equipment.Back = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        inventory.ClampedItem.location.X = equipment.PantsBounds.X;
+                        inventory.ClampedItem.location.Y = equipment.PantsBounds.Y;
+                        Item tempitem = equipment.Pants;
+                        equipment.Pants = inventory.ClampedItem;
+                        GlobalVariables.PantsEquipped(inventory.ClampedItem);
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
                 {
-                    if (equipment.Back != null)
+                    if (equipment.Pants != null)
                     {
-                        inventory.ClampedItem = equipment.Back;
-                        equipment.Back = null;
+                        inventory.ClampedItem = equipment.Pants;
+                        equipment.Pants = null;
                         blnClamp = true;
                     }
                 }
@@ -2201,9 +2290,18 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.BootsBounds.X;
                         inventory.ClampedItem.location.Y = equipment.BootsBounds.Y;
+                        Item tempitem = equipment.Boots;
                         equipment.Boots = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        GlobalVariables.BootsEquipped(inventory.ClampedItem);
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2211,6 +2309,7 @@ namespace TextureAtlas
                     if (equipment.Boots != null)
                     {
                         inventory.ClampedItem = equipment.Boots;
+                        GlobalVariables.BootsEquipped(inventory.ClampedItem);
                         equipment.Boots = null;
                         blnClamp = true;
                     }
@@ -2224,9 +2323,17 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.RightRingBounds.X;
                         inventory.ClampedItem.location.Y = equipment.RightRingBounds.Y;
+                        Item tempitem = equipment.RightRing;
                         equipment.RightRing = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2247,9 +2354,17 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.LeftRingBounds.X;
                         inventory.ClampedItem.location.Y = equipment.LeftRingBounds.Y;
+                        Item tempitem = equipment.LeftRing;
                         equipment.LeftRing = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else
@@ -2270,9 +2385,17 @@ namespace TextureAtlas
                     {
                         inventory.ClampedItem.location.X = equipment.BeltBounds.X;
                         inventory.ClampedItem.location.Y = equipment.BeltBounds.Y;
+                        Item tempitem = equipment.Belt;
                         equipment.Belt = inventory.ClampedItem;
-                        inventory.ClampedItem = null;
-                        blnClamp = false;
+                        if (tempitem != null)
+                        {
+                            inventory.ClampedItem = tempitem;
+                        }
+                        else
+                        {
+                            inventory.ClampedItem = null;
+                            blnClamp = false;
+                        }
                     }
                 }
                 else

@@ -51,6 +51,9 @@ namespace TextureAtlas
         public int ItemLevel;
         public int SubType;
 
+        public int BaseStat;
+        public string BaseStatName;
+
         public string ItemTextureName;
 
         public Color RarityColor;
@@ -66,8 +69,8 @@ namespace TextureAtlas
             Gloves,
             Shoulders,
             Boots,
+            Pants,
             Chest,
-            Back,
             Ring,
             Belt,
             Nothing
@@ -75,9 +78,9 @@ namespace TextureAtlas
 
         public itemSlot ItemSlot;
 
-        public Item() : this(new Vector2(0, 0), null, 1, 1, itemSlot.Nothing, "", 1) { }
+        public Item() : this(new Vector2(0, 0), null, 1, 1, itemSlot.Nothing, "", 0, "", 1) { }
 
-        public Item(Vector2 Location, Texture2D tex, int itemtype, int itmlvl, itemSlot itmslot, string drptxtname , int subType = 0, bool indexed = false)
+        public Item(Vector2 Location, Texture2D tex, int itemtype, int itmlvl, itemSlot itmslot, string drptxtname, int basestat, string basestatname, int subType = 0, bool indexed = false)
         {
             ItemLevel = itmlvl;
             DroppedTextureName = drptxtname;
@@ -86,6 +89,8 @@ namespace TextureAtlas
             LegendaryBg = GlobalVariables.LegendaryBG;
             TextureBack = GlobalVariables.TextureBack;
             worldloc = Location;
+            BaseStat = basestat;
+            BaseStatName = basestatname;
             location = Location;
             ItemTexture = tex;
             ItemType = itemtype;
@@ -248,6 +253,11 @@ namespace TextureAtlas
                                     int offset = (int)(textWidth * .275);
                                     spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
                                 }
+                                else if (ItemType == 3)
+                                {
+                                    int offset = (int)(textWidth * .15);
+                                    spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
+                                }
                             }
 
                             int widestString = 0;
@@ -267,9 +277,13 @@ namespace TextureAtlas
 
                             if (ItemType == 1)
                             {
-                                ItemDesc = GlobalVariables.GenerateDescList(ItemDescription, widestString + (ItemTexture.Width * .9), Font1);
+                                ItemDesc = GlobalVariables.GenerateDescList(ItemDescription, widestString + (ItemTexture.Width * .8), Font1);
                             }
                             else if (ItemType == 2)
+                            {
+                                ItemDesc = GlobalVariables.GenerateDescList(ItemDescription, widestString + (ItemTexture.Width * .4), Font1);
+                            }
+                            else if (ItemType == 3)
                             {
                                 ItemDesc = GlobalVariables.GenerateDescList(ItemDescription, widestString + (ItemTexture.Width * .4), Font1);
                             }
@@ -288,6 +302,10 @@ namespace TextureAtlas
                             else if (ItemType == 2)
                             {
                                 GlobalVariables.WaitToDraw(0, new Vector2((location.X + 115 + (widestString - ItemTexture.Width)), location.Y + 25), new Rectangle(0, 0, ItemTexture.Width, ItemTexture.Height), ItemColor, null, ItemTexture);
+                            }
+                            else if (ItemType == 3)
+                            {
+                                GlobalVariables.WaitToDraw(0, new Vector2((location.X + 140 + (widestString - ItemTexture.Width)), location.Y + 5), new Rectangle(0, 0, ItemTexture.Width, ItemTexture.Height), ItemColor, null, ItemTexture);
                             }
 
                             GlobalVariables.WaitToDraw(1,  new Vector2((location.X + 100), (location.Y + 30)), new Rectangle(0, 0, 0, 0),RarityColor, Font1, null,ItemName);
@@ -344,6 +362,11 @@ namespace TextureAtlas
                                 else if (ItemType == 2)
                                 {
                                     int offset = (int)(textWidth * .275);
+                                    spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
+                                }
+                                else if (ItemType == 3)
+                                {
+                                    int offset = (int)(textWidth * .15);
                                     spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
                                 }
                             }
