@@ -32,7 +32,7 @@ namespace TextureAtlas
         public Item ClampedItem;
         #endregion
 
-        public Inventory() : this(new List<Item>(),new Vector2(0,0)) { }
+        public Inventory() : this(new List<Item>(), new Vector2(0, 0)) { }
 
         public Inventory(List<Item> ListItems, Vector2 InvPos)
         {
@@ -112,9 +112,9 @@ namespace TextureAtlas
                 {
                     if (Items[intlc].invhover)
                     {
-                            ClampedItem = Items[intlc];
-                            Items[intlc] = null;
-                            GlobalVariables.TheGame.blnClamp = true;
+                        ClampedItem = Items[intlc];
+                        Items[intlc] = null;
+                        GlobalVariables.TheGame.blnClamp = true;
                     }
                 }
             }
@@ -252,12 +252,12 @@ namespace TextureAtlas
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[0].X, InvBoxes[0].Y, InvBoxes[0].Width, InvBoxes[0].Height - (InvBoxes[0].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
                             //Boots
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[0].X + (InvBoxes[0].Width / 4), InvBoxes[0].Y, InvBoxes[0].Width / 2, InvBoxes[0].Height - (InvBoxes[0].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             //Legs
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[0].X - (int)(InvBoxes[0].Width / 20), InvBoxes[0].Y - (int)(InvBoxes[0].Height / 6), InvBoxes[0].Width, InvBoxes[0].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
@@ -275,12 +275,12 @@ namespace TextureAtlas
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[1].X, InvBoxes[1].Y, InvBoxes[1].Width, InvBoxes[1].Height - (InvBoxes[1].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
                             //Boots
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[1].X + (InvBoxes[1].Width / 4), InvBoxes[1].Y, InvBoxes[1].Width / 2, InvBoxes[1].Height - (InvBoxes[1].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
 
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[1].X - (int)(InvBoxes[1].Width / 20), InvBoxes[1].Y - (int)(InvBoxes[1].Height / 6), InvBoxes[1].Width, InvBoxes[1].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
@@ -297,13 +297,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[2].X, InvBoxes[2].Y, InvBoxes[2].Width, InvBoxes[2].Height - (InvBoxes[2].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[2].X + (InvBoxes[1].Width / 4), InvBoxes[2].Y, InvBoxes[2].Width / 2, InvBoxes[2].Height - (InvBoxes[2].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[2].X - (int)(InvBoxes[2].Width / 22), InvBoxes[2].Y - (int)(InvBoxes[2].Height / 6), InvBoxes[2].Width, InvBoxes[2].Height), new Rectangle(2, 2, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[2].X - (int)(InvBoxes[2].Width / 20), InvBoxes[2].Y - (int)(InvBoxes[2].Height / 6), InvBoxes[2].Width, InvBoxes[2].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -317,13 +317,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[3].X, InvBoxes[3].Y, InvBoxes[3].Width, InvBoxes[3].Height - (InvBoxes[3].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[3].X + (InvBoxes[3].Width / 4), InvBoxes[3].Y, InvBoxes[3].Width / 2, InvBoxes[3].Height - (InvBoxes[3].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[3].X - (int)(InvBoxes[3].Width / 23), InvBoxes[3].Y - (int)(InvBoxes[3].Height / 6), InvBoxes[3].Width, InvBoxes[3].Height), new Rectangle(3, 3, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[3].X - (int)(InvBoxes[3].Width / 20), InvBoxes[3].Y - (int)(InvBoxes[3].Height / 6), InvBoxes[3].Width, InvBoxes[3].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -339,13 +339,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[4].X, InvBoxes[4].Y, InvBoxes[4].Width, InvBoxes[4].Height - (InvBoxes[4].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[4].X + (InvBoxes[4].Width / 4), InvBoxes[4].Y, InvBoxes[4].Width / 2, InvBoxes[4].Height - (InvBoxes[4].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[4].X - (int)(InvBoxes[4].Width / 24), InvBoxes[4].Y - (int)(InvBoxes[4].Height / 6), InvBoxes[4].Width, InvBoxes[4].Height), new Rectangle(4, 4, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[4].X - (int)(InvBoxes[4].Width / 20), InvBoxes[4].Y - (int)(InvBoxes[4].Height / 6), InvBoxes[4].Width, InvBoxes[4].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -359,13 +359,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[5].X, InvBoxes[5].Y, InvBoxes[5].Width, InvBoxes[5].Height - (InvBoxes[5].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[5].X + (InvBoxes[5].Width / 4), InvBoxes[5].Y, InvBoxes[5].Width / 2, InvBoxes[5].Height - (InvBoxes[5].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[5].X - (int)(InvBoxes[5].Width / 25), InvBoxes[5].Y - (int)(InvBoxes[5].Height / 6), InvBoxes[5].Width, InvBoxes[5].Height), new Rectangle(5, 5, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[5].X - (int)(InvBoxes[5].Width / 20), InvBoxes[5].Y - (int)(InvBoxes[5].Height / 6), InvBoxes[5].Width, InvBoxes[5].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -379,13 +379,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[6].X, InvBoxes[6].Y, InvBoxes[6].Width, InvBoxes[6].Height - (InvBoxes[6].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[6].X + (InvBoxes[6].Width / 4), InvBoxes[6].Y, InvBoxes[6].Width / 2, InvBoxes[6].Height - (InvBoxes[6].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[6].X - (int)(InvBoxes[6].Width / 26), InvBoxes[6].Y - (int)(InvBoxes[6].Height / 6), InvBoxes[6].Width, InvBoxes[6].Height), new Rectangle(6, 6, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[6].X - (int)(InvBoxes[6].Width / 20), InvBoxes[6].Y - (int)(InvBoxes[6].Height / 6), InvBoxes[6].Width, InvBoxes[6].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -399,13 +399,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[7].X, InvBoxes[7].Y, InvBoxes[7].Width, InvBoxes[7].Height - (InvBoxes[7].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[7].X + (InvBoxes[7].Width / 4), InvBoxes[7].Y, InvBoxes[7].Width / 2, InvBoxes[7].Height - (InvBoxes[7].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[7].X - (int)(InvBoxes[7].Width / 27), InvBoxes[7].Y - (int)(InvBoxes[7].Height / 6), InvBoxes[7].Width, InvBoxes[7].Height), new Rectangle(7, 7, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[7].X - (int)(InvBoxes[7].Width / 20), InvBoxes[7].Y - (int)(InvBoxes[7].Height / 6), InvBoxes[7].Width, InvBoxes[7].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -421,13 +421,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[8].X, InvBoxes[8].Y, InvBoxes[8].Width, InvBoxes[8].Height - (InvBoxes[8].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[8].X + (InvBoxes[8].Width / 4), InvBoxes[8].Y, InvBoxes[8].Width / 2, InvBoxes[8].Height - (InvBoxes[8].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[8].X - (int)(InvBoxes[8].Width / 28), InvBoxes[8].Y - (int)(InvBoxes[8].Height / 6), InvBoxes[8].Width, InvBoxes[8].Height), new Rectangle(8, 8, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[8].X - (int)(InvBoxes[8].Width / 20), InvBoxes[8].Y - (int)(InvBoxes[8].Height / 6), InvBoxes[8].Width, InvBoxes[8].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -441,13 +441,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[9].X, InvBoxes[9].Y, InvBoxes[9].Width, InvBoxes[9].Height - (InvBoxes[9].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[9].X + (InvBoxes[9].Width / 4), InvBoxes[9].Y, InvBoxes[9].Width / 2, InvBoxes[9].Height - (InvBoxes[9].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[9].X - (int)(InvBoxes[9].Width / 29), InvBoxes[9].Y - (int)(InvBoxes[9].Height / 6), InvBoxes[9].Width, InvBoxes[9].Height), new Rectangle(9, 9, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[9].X - (int)(InvBoxes[9].Width / 20), InvBoxes[9].Y - (int)(InvBoxes[9].Height / 6), InvBoxes[9].Width, InvBoxes[9].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -461,13 +461,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[10].X, InvBoxes[10].Y, InvBoxes[10].Width, InvBoxes[10].Height - (InvBoxes[10].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[10].X + (InvBoxes[10].Width / 4), InvBoxes[10].Y, InvBoxes[10].Width / 2, InvBoxes[10].Height - (InvBoxes[10].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[10].X - (int)(InvBoxes[10].Width / 210), InvBoxes[10].Y - (int)(InvBoxes[10].Height / 6), InvBoxes[10].Width, InvBoxes[10].Height), new Rectangle(10, 10, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[10].X - (int)(InvBoxes[10].Width / 20), InvBoxes[10].Y - (int)(InvBoxes[10].Height / 6), InvBoxes[10].Width, InvBoxes[10].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -481,13 +481,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[11].X, InvBoxes[11].Y, InvBoxes[11].Width, InvBoxes[11].Height - (InvBoxes[11].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[11].X + (InvBoxes[11].Width / 4), InvBoxes[11].Y, InvBoxes[11].Width / 2, InvBoxes[11].Height - (InvBoxes[11].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[11].X - (int)(InvBoxes[11].Width / 211), InvBoxes[11].Y - (int)(InvBoxes[11].Height / 6), InvBoxes[11].Width, InvBoxes[11].Height), new Rectangle(11, 11, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[11].X - (int)(InvBoxes[11].Width / 20), InvBoxes[11].Y - (int)(InvBoxes[11].Height / 6), InvBoxes[11].Width, InvBoxes[11].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -503,13 +503,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[12].X, InvBoxes[12].Y, InvBoxes[12].Width, InvBoxes[12].Height - (InvBoxes[12].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[12].X + (InvBoxes[12].Width / 4), InvBoxes[12].Y, InvBoxes[12].Width / 2, InvBoxes[12].Height - (InvBoxes[12].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[12].X - (int)(InvBoxes[12].Width / 212), InvBoxes[12].Y - (int)(InvBoxes[12].Height / 6), InvBoxes[12].Width, InvBoxes[12].Height), new Rectangle(12, 12, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[12].X - (int)(InvBoxes[12].Width / 20), InvBoxes[12].Y - (int)(InvBoxes[12].Height / 6), InvBoxes[12].Width, InvBoxes[12].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -523,13 +523,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[13].X, InvBoxes[13].Y, InvBoxes[13].Width, InvBoxes[13].Height - (InvBoxes[13].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[13].X + (InvBoxes[13].Width / 4), InvBoxes[13].Y, InvBoxes[13].Width / 2, InvBoxes[13].Height - (InvBoxes[13].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[13].X - (int)(InvBoxes[13].Width / 213), InvBoxes[13].Y - (int)(InvBoxes[13].Height / 6), InvBoxes[13].Width, InvBoxes[13].Height), new Rectangle(13, 13, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[13].X - (int)(InvBoxes[13].Width / 20), InvBoxes[13].Y - (int)(InvBoxes[13].Height / 6), InvBoxes[13].Width, InvBoxes[13].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -543,13 +543,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[14].X, InvBoxes[14].Y, InvBoxes[14].Width, InvBoxes[14].Height - (InvBoxes[14].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[14].X + (InvBoxes[14].Width / 4), InvBoxes[14].Y, InvBoxes[14].Width / 2, InvBoxes[14].Height - (InvBoxes[14].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[14].X - (int)(InvBoxes[14].Width / 214), InvBoxes[14].Y - (int)(InvBoxes[14].Height / 6), InvBoxes[14].Width, InvBoxes[14].Height), new Rectangle(14, 14, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[14].X - (int)(InvBoxes[14].Width / 20), InvBoxes[14].Y - (int)(InvBoxes[14].Height / 6), InvBoxes[14].Width, InvBoxes[14].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -563,13 +563,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[15].X, InvBoxes[15].Y, InvBoxes[15].Width, InvBoxes[15].Height - (InvBoxes[15].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[15].X + (InvBoxes[15].Width / 4), InvBoxes[15].Y, InvBoxes[15].Width / 2, InvBoxes[15].Height - (InvBoxes[15].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[15].X - (int)(InvBoxes[15].Width / 215), InvBoxes[15].Y - (int)(InvBoxes[15].Height / 6), InvBoxes[15].Width, InvBoxes[15].Height), new Rectangle(15, 15, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[15].X - (int)(InvBoxes[15].Width / 20), InvBoxes[15].Y - (int)(InvBoxes[15].Height / 6), InvBoxes[15].Width, InvBoxes[15].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -585,13 +585,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[16].X, InvBoxes[16].Y, InvBoxes[16].Width, InvBoxes[16].Height - (InvBoxes[16].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[16].X + (InvBoxes[16].Width / 4), InvBoxes[16].Y, InvBoxes[16].Width / 2, InvBoxes[16].Height - (InvBoxes[16].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[16].X - (int)(InvBoxes[16].Width / 216), InvBoxes[16].Y - (int)(InvBoxes[16].Height / 6), InvBoxes[16].Width, InvBoxes[16].Height), new Rectangle(16, 16, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[16].X - (int)(InvBoxes[16].Width / 20), InvBoxes[16].Y - (int)(InvBoxes[16].Height / 6), InvBoxes[16].Width, InvBoxes[16].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -605,13 +605,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[17].X, InvBoxes[17].Y, InvBoxes[17].Width, InvBoxes[17].Height - (InvBoxes[17].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[17].X + (InvBoxes[17].Width / 4), InvBoxes[17].Y, InvBoxes[17].Width / 2, InvBoxes[17].Height - (InvBoxes[17].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[17].X - (int)(InvBoxes[17].Width / 217), InvBoxes[17].Y - (int)(InvBoxes[17].Height / 6), InvBoxes[17].Width, InvBoxes[17].Height), new Rectangle(17, 17, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[17].X - (int)(InvBoxes[17].Width / 20), InvBoxes[17].Y - (int)(InvBoxes[17].Height / 6), InvBoxes[17].Width, InvBoxes[17].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -625,13 +625,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[18].X, InvBoxes[18].Y, InvBoxes[18].Width, InvBoxes[18].Height - (InvBoxes[18].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[18].X + (InvBoxes[18].Width / 4), InvBoxes[18].Y, InvBoxes[18].Width / 2, InvBoxes[18].Height - (InvBoxes[18].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[18].X - (int)(InvBoxes[18].Width / 218), InvBoxes[18].Y - (int)(InvBoxes[18].Height / 6), InvBoxes[18].Width, InvBoxes[18].Height), new Rectangle(18, 18, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[18].X - (int)(InvBoxes[18].Width / 20), InvBoxes[18].Y - (int)(InvBoxes[18].Height / 6), InvBoxes[18].Width, InvBoxes[18].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -645,13 +645,13 @@ namespace TextureAtlas
                             {
                                 spriteBatch.Draw(Items[i].LegendaryBg, new Rectangle(InvBoxes[19].X, InvBoxes[19].Y, InvBoxes[19].Width, InvBoxes[19].Height - (InvBoxes[19].Height / 2)), new Rectangle(0, 0, Items[i].LegendaryBg.Width, Items[i].LegendaryBg.Height), Color.White);
                             }
-                            if (Items[i].ItemType == 2)
+                            if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[19].X + (InvBoxes[19].Width / 4), InvBoxes[19].Y, InvBoxes[19].Width / 2, InvBoxes[19].Height - (InvBoxes[19].Height / 2)), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[19].X - (int)(InvBoxes[19].Width / 219), InvBoxes[19].Y - (int)(InvBoxes[19].Height / 6), InvBoxes[19].Width, InvBoxes[19].Height), new Rectangle(19, 19, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
+                                spriteBatch.Draw(Items[i].ItemTexture, new Rectangle(InvBoxes[19].X - (int)(InvBoxes[19].Width / 20), InvBoxes[19].Y - (int)(InvBoxes[19].Height / 6), InvBoxes[19].Width, InvBoxes[19].Height), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), color);
                             }
                             else
                             {
@@ -676,6 +676,42 @@ namespace TextureAtlas
                                 }
                             }
 
+                            float textWidth2;
+
+                            float WeaponBaseDisplay = 0;
+
+                            if (Items[i].ItemSlot == Item.itemSlot.OneHanded || Items[i].ItemSlot == Item.itemSlot.TwoHanded)
+                            {
+                                WeaponBaseDisplay = GlobalVariables.CalculateMeleePhysStat(Items[i].AffixList, Items[i].BaseStat);
+                            }
+
+
+                            if (Items[i].BaseStat != WeaponBaseDisplay)
+                            {
+                                textWidth2 = GlobalVariables.Font16.MeasureString(((int)(WeaponBaseDisplay) - 20).ToString() + " - " + ((int)(WeaponBaseDisplay) + 20).ToString()).X;
+                            }
+                            else
+                            {
+                                textWidth2 = GlobalVariables.Font16.MeasureString((Items[i].BaseStat - 20).ToString() + " - " + (Items[i].BaseStat + 20).ToString()).X;
+                            }
+
+                            if (widestString < textWidth2)
+                            {
+                                widestString = (int)textWidth2;
+                            }
+
+                            float textWidth3 = (float)(0.0);
+
+                            if (Items[i].BaseAttackSpeed > 0)
+                            {
+                                textWidth3 = GlobalVariables.font14.MeasureString("Attack Speed : " + Items[i].BaseAttackSpeed.ToString()).X;
+                            }
+
+                            if (widestString < textWidth3)
+                            {
+                                widestString = (int)textWidth3;
+                            }
+
                             //Store location
                             Vector2 loc = Items[i].location;
 
@@ -685,20 +721,20 @@ namespace TextureAtlas
                             {
                                 ItemDesc = GlobalVariables.GenerateDescList(Items[i].ItemDescription, widestString + (Items[i].ItemTexture.Width * .8), Items[i].Font1);
                             }
-                            else if (Items[i].ItemType == 2)
+                            else if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 ItemDesc = GlobalVariables.GenerateDescList(Items[i].ItemDescription, widestString + (Items[i].ItemTexture.Width * .4), Items[i].Font1);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
-                                ItemDesc = GlobalVariables.GenerateDescList(Items[i].ItemDescription, widestString + (Items[i].ItemTexture.Width * .4), Items[i].Font1);
+                                ItemDesc = GlobalVariables.GenerateDescList(Items[i].ItemDescription, widestString + (Items[i].ItemTexture.Width * .3), Items[i].Font1);
                             }
 
                             //check to render on screen
                             Items[i].location = GlobalVariables.newLocation(Items[i].location, widestString + 40, 70 + (int)(22 * Items[i].affixes) + (int)(22 * ItemDesc.Count));
 
                             //Draw Shaded backgorund
-                            GlobalVariables.WaitToDraw(0, new Vector2((Items[i].location.X + 80), (Items[i].location.Y)), new Rectangle(0, 0, widestString + 40 + (int)(Items[i].ItemTexture.Width * .75), 70 + (int)(22 * Items[i].affixes) + (int)(22 * ItemDesc.Count)), Color.Black, null, GlobalVariables.TestSquare);
+                            GlobalVariables.WaitToDraw(0, new Vector2((Items[i].location.X + 80), (Items[i].location.Y)), new Rectangle(0, 0, widestString + 40 + (int)(Items[i].ItemTexture.Width * .75), 70 + (int)(22 * Items[i].affixes) + (int)(22 * ItemDesc.Count) + 60), Color.Black, null, GlobalVariables.TestSquare);
 
                             GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + 30)), new Rectangle(0, 0, 0, 0), Items[i].RarityColor, Items[i].Font1, null, Items[i].ItemName);
 
@@ -707,14 +743,57 @@ namespace TextureAtlas
                             {
                                 GlobalVariables.WaitToDraw(0, new Vector2((Items[i].location.X + 175 + (widestString - Items[i].ItemTexture.Width)), Items[i].location.Y + 25), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), Items[i].ItemColor, null, Items[i].ItemTexture);
                             }
-                            else if (Items[i].ItemType == 2)
+                            else if (Items[i].ItemType == 2 || Items[i].ItemType == 5 || Items[i].ItemType == 6 || Items[i].ItemType == 7 || Items[i].ItemType == 8)
                             {
                                 GlobalVariables.WaitToDraw(0, new Vector2((Items[i].location.X + 115 + (widestString - Items[i].ItemTexture.Width)), Items[i].location.Y + 25), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), Items[i].ItemColor, null, Items[i].ItemTexture);
                             }
-                            else if (Items[i].ItemType == 3)
+                            else if (Items[i].ItemType == 3 || Items[i].ItemType == 4)
                             {
                                 GlobalVariables.WaitToDraw(0, new Vector2((Items[i].location.X + 140 + (widestString - Items[i].ItemTexture.Width)), Items[i].location.Y + 5), new Rectangle(0, 0, Items[i].ItemTexture.Width, Items[i].ItemTexture.Height), Items[i].ItemColor, null, Items[i].ItemTexture);
                             }
+
+                            //Draw Base Stat
+                            if (Items[i].ItemSlot == Item.itemSlot.OneHanded || Items[i].ItemSlot == Item.itemSlot.TwoHanded)
+                            {
+                                if (Items[i].BaseStat != (int)(WeaponBaseDisplay))
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.DarkSlateBlue, GlobalVariables.Font16, null, Items[i].BaseStatName + " : " + ((int)(WeaponBaseDisplay) - 20).ToString() + " - " + ((int)(WeaponBaseDisplay) + 20).ToString());
+                                }
+                                else
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Gray, GlobalVariables.Font16, null, Items[i].BaseStatName + " : " + (Items[i].BaseStat - 20).ToString() + " - " + (Items[i].BaseStat + 20).ToString());
+                                }
+                                ScalarText += 30;
+                            }
+                            else if (Items[i].ItemSlot == Item.itemSlot.Boots || Items[i].ItemSlot == Item.itemSlot.Pants || Items[i].ItemSlot == Item.itemSlot.Gloves || Items[i].ItemSlot == Item.itemSlot.Chest || Items[i].ItemSlot == Item.itemSlot.Helmet)
+                            {
+                                int newValue = GlobalVariables.CalculateEvasion(Items[i].AffixList, Items[i].BaseStat);
+                                if (newValue != Items[i].BaseStat)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.DarkSlateBlue, GlobalVariables.Font16, null, Items[i].BaseStatName + " : " + newValue.ToString());
+                                }
+                                else
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Gray, GlobalVariables.Font16, null, Items[i].BaseStatName + " : " + Items[i].BaseStat.ToString());
+                                }
+                                ScalarText += 30;
+                            }
+
+                            //Draw Attack Speed if applicable
+                            if (Items[i].ItemSlot == Item.itemSlot.OneHanded || Items[i].ItemSlot == Item.itemSlot.TwoHanded)
+                            {
+                                float newAtkSpd = GlobalVariables.CalculateMeleeAttackSpeed(Items[i].AffixList, (float)Items[i].BaseAttackSpeed);
+                                if ((float)newAtkSpd != (float)Items[i].BaseAttackSpeed)
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.DarkSlateBlue, GlobalVariables.font14, null, "Attack Speed : " + newAtkSpd.ToString());
+                                }
+                                else
+                                {
+                                    GlobalVariables.WaitToDraw(1, new Vector2((Items[i].location.X + 100), (Items[i].location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Gray, GlobalVariables.font14, null, "Attack Speed : " + Items[i].BaseAttackSpeed.ToString());
+                                }
+                                ScalarText += 30;
+                            }
+
 
                             //Draw Item aFfixes
                             for (int intlc = 0; intlc < Items[i].AffixList.Count; intlc++)

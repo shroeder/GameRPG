@@ -312,6 +312,41 @@ namespace TextureAtlas
                 }
             }
 
+            float textWidth2;
+
+            float WeaponBaseDisplay = 0;
+
+            if (item.ItemSlot == Item.itemSlot.OneHanded || item.ItemSlot == Item.itemSlot.TwoHanded)
+            {
+                WeaponBaseDisplay = GlobalVariables.CalculateMeleePhysStat(item.AffixList, item.BaseStat);
+            }
+
+            if (item.BaseStat != WeaponBaseDisplay)
+            {
+                textWidth2 = GlobalVariables.Font16.MeasureString(((int)(WeaponBaseDisplay) - 20).ToString() + " - " + ((int)(WeaponBaseDisplay) + 20).ToString()).X;
+            }
+            else
+            {
+                textWidth2 = GlobalVariables.Font16.MeasureString((item.BaseStat - 20).ToString() + " - " + (item.BaseStat + 20).ToString()).X;
+            }
+
+            if (widestString < textWidth2)
+            {
+                widestString = (int)textWidth2;
+            }
+
+            float textWidth3 = (float)(0.0);
+
+            if (item.BaseAttackSpeed > 0)
+            {
+                textWidth3 = GlobalVariables.font14.MeasureString("Attack Speed : " + item.BaseAttackSpeed.ToString()).X;
+            }
+
+            if (widestString < textWidth3)
+            {
+                widestString = (int)textWidth3;
+            }
+
             //Store location
             Vector2 loc = item.location;
 
@@ -319,22 +354,26 @@ namespace TextureAtlas
 
             if (item.ItemType == 1)
             {
-                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .8), item.Font1);
+                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .75), item.Font1);
             }
-            else if (item.ItemType == 2)
+            else if (item.ItemType == 2 || item.ItemType == 5 || item.ItemType == 6 || item.ItemType == 7 || item.ItemType == 8)
             {
-                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .4), item.Font1);
+                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .35), item.Font1);
             }
             else if (item.ItemType == 3)
             {
-                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .4), item.Font1);
+                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .2), item.Font1);
+            }
+            else if (item.ItemType == 4)
+            {
+                ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .3), item.Font1);
             }
 
             //check to render on screen
             item.location = GlobalVariables.newLocation(item.location, widestString + 40, 70 + (int)(22 * item.affixes) + (int)(22 * ItemDesc.Count));
 
             //Draw Shaded backgorund
-            GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 80), (item.location.Y)), new Rectangle(0, 0, widestString + 40 + (int)(item.ItemTexture.Width * .75), 70 + (int)(22 * item.affixes) + (int)(22 * ItemDesc.Count)), Color.Black, null, GlobalVariables.TestSquare);
+            GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 80), (item.location.Y)), new Rectangle(0, 0, widestString + 40 + (int)(item.ItemTexture.Width * .75), 70 + (int)(22 * item.affixes) + (int)(22 * ItemDesc.Count) + 60), Color.Black, null, GlobalVariables.TestSquare);
 
             GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + 30)), new Rectangle(0, 0, 0, 0), item.RarityColor, item.Font1, null, item.ItemName);
 
@@ -343,13 +382,55 @@ namespace TextureAtlas
             {
                 GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 175 + (widestString - item.ItemTexture.Width)), item.location.Y + 25), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
             }
-            else if (item.ItemType == 2)
+            else if (item.ItemType == 2 || item.ItemType == 5 || item.ItemType == 6 || item.ItemType == 7 || item.ItemType == 8)
             {
                 GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 115 + (widestString - item.ItemTexture.Width)), item.location.Y + 25), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
             }
-            else if (item.ItemType == 3)
+            else if (item.ItemType == 3 || item.ItemType == 4)
             {
                 GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 140 + (widestString - item.ItemTexture.Width)), item.location.Y + 5), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
+            }
+
+            //Draw Base Stat
+            if (item.ItemSlot == Item.itemSlot.OneHanded || item.ItemSlot == Item.itemSlot.TwoHanded)
+            {
+                if (item.BaseStat != (int)(WeaponBaseDisplay))
+                {
+                    GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.DarkSlateBlue, GlobalVariables.Font16, null, item.BaseStatName + " : " + ((int)(WeaponBaseDisplay) - 20).ToString() + " - " + ((int)(WeaponBaseDisplay) + 20).ToString());
+                }
+                else
+                {
+                    GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Gray, GlobalVariables.Font16, null, item.BaseStatName + " : " + (item.BaseStat - 20).ToString() + " - " + (item.BaseStat + 20).ToString());
+                }
+                ScalarText += 30;
+            }
+            else if (item.ItemSlot == Item.itemSlot.Boots || item.ItemSlot == Item.itemSlot.Pants || item.ItemSlot == Item.itemSlot.Gloves || item.ItemSlot == Item.itemSlot.Chest || item.ItemSlot == Item.itemSlot.Helmet)
+            {
+                int newValue = GlobalVariables.CalculateEvasion(item.AffixList, item.BaseStat);
+                if (newValue != item.BaseStat)
+                {
+                    GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.DarkSlateBlue, GlobalVariables.Font16, null, item.BaseStatName + " : " + newValue.ToString());
+                }
+                else
+                {
+                    GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Gray, GlobalVariables.Font16, null, item.BaseStatName + " : " + item.BaseStat.ToString());
+                }
+                ScalarText += 30;
+            }
+
+            //Draw Attack Speed if applicable
+            if (item.ItemSlot == Item.itemSlot.OneHanded || item.ItemSlot == Item.itemSlot.TwoHanded)
+            {
+                float newAtkSpd = GlobalVariables.CalculateMeleeAttackSpeed(item.AffixList, (float)item.BaseAttackSpeed);
+                if ((float)newAtkSpd != (float)item.BaseAttackSpeed)
+                {
+                    GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.DarkSlateBlue, GlobalVariables.font14, null, "Attack Speed : " + newAtkSpd.ToString());
+                }
+                else
+                {
+                    GlobalVariables.WaitToDraw(1, new Vector2((item.location.X + 100), (item.location.Y + ScalarText + 50)), new Rectangle(0, 0, 0, 0), Color.Gray, GlobalVariables.font14, null, "Attack Speed : " + item.BaseAttackSpeed.ToString());
+                }
+                ScalarText += 30;
             }
 
 
@@ -397,7 +478,7 @@ namespace TextureAtlas
 
             if (Helmet != null)
             {
-                Rectangle newRect = new Rectangle(HelmBounds.X + (HelmBounds.X / 4), HelmBounds.Y, HelmBounds.Width / 2, HelmBounds.Height);
+                Rectangle newRect = new Rectangle(HelmBounds.X + (HelmBounds.Width / 4), HelmBounds.Y + (HelmBounds.Height / 4), HelmBounds.Width / 2, HelmBounds.Height / 2);
                 spriteBatach.Draw(Helmet.ItemTexture, newRect, Helmet.ItemColor);
                 if (Helmet.hover)
                 {
@@ -407,7 +488,7 @@ namespace TextureAtlas
 
             if (Chest != null)
             {
-                Rectangle newRect = new Rectangle(ChestBounds.X + (ChestBounds.X / 4), ChestBounds.Y, ChestBounds.Width / 2, ChestBounds.Height);
+                Rectangle newRect = new Rectangle(ChestBounds.X, ChestBounds.Y, ChestBounds.Width, ChestBounds.Height);
                 spriteBatach.Draw(Chest.ItemTexture, newRect, Chest.ItemColor);
                 if (Chest.hover)
                 {
@@ -427,7 +508,8 @@ namespace TextureAtlas
 
             if (Gloves != null)
             {
-                spriteBatach.Draw(Gloves.ItemTexture, GlovesBounds, Gloves.ItemColor);
+                Rectangle newRect = new Rectangle(GlovesBounds.X + (GlovesBounds.Width / 4), GlovesBounds.Y + (GlovesBounds.Height / 4), GlovesBounds.Width / 2, GlovesBounds.Height / 2);
+                spriteBatach.Draw(Gloves.ItemTexture, newRect, Gloves.ItemColor);
                 if (Gloves.hover)
                 {
                     DrawHover(spriteBatach, Gloves);
@@ -474,7 +556,8 @@ namespace TextureAtlas
 
             if (Belt != null)
             {
-                spriteBatach.Draw(Belt.ItemTexture, BeltBounds, Belt.ItemColor);
+                Rectangle newRect = new Rectangle(BeltBounds.X + (BeltBounds.Width / 4), BeltBounds.Y, BeltBounds.Width / 2, BeltBounds.Height );
+                spriteBatach.Draw(Belt.ItemTexture, newRect, Belt.ItemColor);
                 if (Belt.hover)
                 {
                     DrawHover(spriteBatach, Belt);

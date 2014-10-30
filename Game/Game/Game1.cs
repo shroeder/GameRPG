@@ -138,7 +138,11 @@ namespace TextureAtlas
 
         public Texture2D CharWeapon;
         public Texture2D CharBoots;
+        public Texture2D CharChest;
         public Texture2D CharPants;
+        public Texture2D CharBelt;
+        public Texture2D CharHelmet;
+        public Texture2D CharGloves;
         private Texture2D EnemyTexture;
         private Texture2D texture;
         public Texture2D HeroTxt;
@@ -700,7 +704,7 @@ namespace TextureAtlas
                 Item tempItem = equipment.Belt;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Belt.DroppedTextureName);
                 equipment.Belt = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
-                equipment.Hero.txtBelt = Content.Load<Texture2D>(tempItem.ItemTextureName);
+                //equipment.Hero.txtBelt = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Belt.ItemDescription = tempItem.ItemDescription;
                 equipment.Belt.affixes = tempItem.affixes;
                 equipment.Belt.AffixList = tempItem.AffixList;
@@ -744,7 +748,7 @@ namespace TextureAtlas
                 Item tempItem = equipment.LeftRing;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.LeftRing.DroppedTextureName);
                 equipment.LeftRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
-                equipment.Hero.txtLeftRing = Content.Load<Texture2D>(tempItem.ItemTextureName);
+                //equipment.Hero.txtLeftRing = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.LeftRing.affixes = tempItem.affixes;
                 equipment.LeftRing.ItemDescription = tempItem.ItemDescription;
                 equipment.LeftRing.AffixList = tempItem.AffixList;
@@ -788,7 +792,7 @@ namespace TextureAtlas
                 Item tempItem = equipment.RightRing;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.RightRing.DroppedTextureName);
                 equipment.RightRing = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
-                equipment.Hero.txtRightRing = Content.Load<Texture2D>(tempItem.ItemTextureName);
+                //equipment.Hero.txtRightRing = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.RightRing.affixes = tempItem.affixes;
                 equipment.RightRing.ItemDescription = tempItem.ItemDescription;
                 equipment.RightRing.AffixList = tempItem.AffixList;
@@ -923,6 +927,8 @@ namespace TextureAtlas
             Font2 = Content.Load<SpriteFont>("EnemyName");
             GlobalVariables.TestSquare = Content.Load<Texture2D>("testSquare");
             GlobalVariables.Font10 = Content.Load<SpriteFont>("Font10");
+            GlobalVariables.Font12 = Content.Load<SpriteFont>("Font12");
+            GlobalVariables.font14 = Content.Load<SpriteFont>("Font14");
             GlobalVariables.Font16 = Content.Load<SpriteFont>("Font16");
             GlobalVariables.Font24 = Content.Load<SpriteFont>("Font24");
             GlobalVariables.Font20 = Content.Load<SpriteFont>("Font20");
@@ -1813,6 +1819,7 @@ namespace TextureAtlas
                             }
                             string basestatname = "";
                             int basestat = 0;
+                            double baseatkspd = 0.0;
                             Texture2D DroppedItem = sword;
                             Item.itemSlot itmSlot = Item.itemSlot.Nothing;
 
@@ -1839,6 +1846,7 @@ namespace TextureAtlas
                                                 case 1:
 
                                                     DroppedItem = contentManager.Load<Texture2D>("Two-HandedSword");
+                                                    baseatkspd = 1.10;
                                                     itemTextureName = "Two-HandedSword";
                                                     basestatname = "Physical Damage";
                                                     basestat = GlobalVariables.GetBaseStat(ItemType, SubType);
@@ -1891,9 +1899,108 @@ namespace TextureAtlas
 
                                     break;
 
+                                //Chest
+                                case 4:
+
+                                    itmSlot = Item.itemSlot.Chest;
+                                    SubType = GlobalVariables.RollVsChestType();
+
+                                    switch (SubType)
+                                    {
+
+                                        case 1:
+
+                                            DroppedItem = contentManager.Load<Texture2D>("LeatherChest");
+                                            itemTextureName = "LeatherChest";
+                                            basestatname = "Evasion";
+                                            basestat = GlobalVariables.GetBaseStat(ItemType, SubType);
+                                            break;
+                                    }
+
+                                    break;
+
+                                //Gloves
+                                case 5:
+
+                                    itmSlot = Item.itemSlot.Gloves;
+                                    SubType = GlobalVariables.RollVsGlovesType();
+
+                                    switch (SubType)
+                                    {
+
+                                        case 1:
+
+                                            DroppedItem = contentManager.Load<Texture2D>("Leathergloves");
+                                            itemTextureName = "Leathergloves";
+                                            basestatname = "Evasion";
+                                            basestat = GlobalVariables.GetBaseStat(ItemType, SubType);
+                                            break;
+                                    }
+
+                                    break;
+
+                                //Ring
+                                case 6:
+
+                                    itmSlot = Item.itemSlot.Ring;
+                                    SubType = GlobalVariables.RollVsRingType();
+
+                                    switch (SubType)
+                                    {
+
+                                        case 1:
+
+                                            DroppedItem = contentManager.Load<Texture2D>("Ring1");
+                                            itemTextureName = "Ring1";
+                                            basestatname = "";
+                                            basestat = 0;
+                                            break;
+                                    }
+
+                                    break;
+
+                                //Belt
+                                case 7:
+
+                                    itmSlot = Item.itemSlot.Belt;
+                                    SubType = GlobalVariables.RollVsBeltType();
+
+                                    switch (SubType)
+                                    {
+
+                                        case 1:
+
+                                            DroppedItem = contentManager.Load<Texture2D>("Leatherbelt");
+                                            itemTextureName = "Leatherbelt";
+                                            basestatname = "";
+                                            basestat = 0;
+                                            break;
+                                    }
+
+                                    break;
+
+                                //Helmt
+                                case 8:
+
+                                    itmSlot = Item.itemSlot.Helmet;
+                                    SubType = GlobalVariables.RollVsHelmType();
+
+                                    switch (SubType)
+                                    {
+
+                                        case 1:
+
+                                            DroppedItem = contentManager.Load<Texture2D>("LeatherHelmet");
+                                            itemTextureName = "LeatherHelmet";
+                                            basestatname = "Evasion";
+                                            basestat = 25;
+                                            break;
+                                    }
+
+                                    break;
+
                             }
-                            //Indexed to sword
-                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, basestat, basestatname, SubType));
+                                DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, basestat, basestatname, SubType, false, baseatkspd));
                         }
                         DoesDrop = false;
                         Enemies.Remove(Enemies[l]);
@@ -2070,6 +2177,7 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.Y = equipment.HelmBounds.Y;
                         Item tempitem = equipment.Helmet;
                         equipment.Helmet = inventory.ClampedItem;
+                        GlobalVariables.HelmetEquipped(inventory.ClampedItem);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;
@@ -2086,6 +2194,7 @@ namespace TextureAtlas
                     if (equipment.Helmet != null)
                     {
                         inventory.ClampedItem = equipment.Helmet;
+                        equipment.Hero.txtHero = Content.Load<Texture2D>("HeroSS2H");
                         equipment.Helmet = null;
                         blnClamp = true;
                     }
@@ -2101,6 +2210,7 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.Y = equipment.ChestBounds.Y;
                         Item tempitem = equipment.Chest;
                         equipment.Chest = inventory.ClampedItem;
+                        GlobalVariables.ChestEquipped(inventory.ClampedItem);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;
@@ -2198,6 +2308,7 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.Y = equipment.GlovesBounds.Y;
                         Item tempitem = equipment.Gloves;
                         equipment.Gloves = inventory.ClampedItem;
+                        GlobalVariables.GlovesEquipped(inventory.ClampedItem);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;
@@ -2387,6 +2498,7 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.Y = equipment.BeltBounds.Y;
                         Item tempitem = equipment.Belt;
                         equipment.Belt = inventory.ClampedItem;
+                        //GlobalVariables.BeltEquipped(inventory.ClampedItem);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;
@@ -2638,7 +2750,7 @@ namespace TextureAtlas
                         break;
                     case 1:
                         //String
-                        spriteBatch.DrawString(GlobalVariables.Font10, draw.theText, draw.theLocation, draw.theColor);
+                        spriteBatch.DrawString(draw.theFont, draw.theText, draw.theLocation, draw.theColor);
                         break;
                 }
             }

@@ -92,6 +92,8 @@ namespace TextureAtlas
         public static Texture2D TextureBack { get; set; }
 
         public static SpriteFont Font10 { get; set; }
+        public static SpriteFont Font12 { get; set; }
+        public static SpriteFont font14 { get; set; }
         public static SpriteFont Font16 { get; set; }
         public static SpriteFont Font20 { get; set; }
         public static SpriteFont Font24 { get; set; }
@@ -780,6 +782,61 @@ namespace TextureAtlas
 
                     break;
 
+                case 4:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Rustic Regulators";
+                            break;
+                    }
+
+                    break;
+
+                case 5:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Pain and Suffering";
+                            break;
+                    }
+
+                    break;
+
+                case 6:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Sage's Gold Ring";
+                            break;
+                    }
+
+                    break;
+
+                case 7:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "The Slimming Belt";
+                            break;
+                    }
+
+                    break;
+
+                case 8:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Peripheral Vision";
+                            break;
+                    }
+
+                    break;
+
             }
 
             return ItemName;
@@ -851,6 +908,56 @@ namespace TextureAtlas
                     }
 
                     break;
+                case 4:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Leather Chest";
+                            break;
+                    }
+
+                    break;
+                case 5:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Leather Gloves";
+                            break;
+                    }
+
+                    break;
+                case 6:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Gold Ring";
+                            break;
+                    }
+
+                    break;
+                case 7:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Leather Belt";
+                            break;
+                    }
+
+                    break;
+                case 8:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Leather Helmet";
+                            break;
+                    }
+
+                    break;
             }
 
             return ItemName;
@@ -890,7 +997,7 @@ namespace TextureAtlas
                                 //Leather Boots
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41 };
                                     break;
                             }
 
@@ -903,10 +1010,72 @@ namespace TextureAtlas
                                 //Leather PAnts
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
                                     break;
                             }
 
+                            break;
+                        //Chest
+                        case 4:
+
+                            switch (SubType)
+                            {
+                                //Leather Chest
+                                case 1:
+
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    break;
+                            }
+
+                            break;
+                        //Gloves
+                        case 5:
+
+                            switch (SubType)
+                            {
+                                //Leather Gloves
+                                case 1:
+
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    break;
+                            }
+
+                            break;
+                        //Ring
+                        case 6:
+
+                            switch (SubType)
+                            {
+                                //Gold Ring
+                                case 1:
+
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    break;
+                            }
+                            break;
+                        //Belt
+                        case 7:
+
+                            switch (SubType)
+                            {
+                                //Leather Belt
+                                case 1:
+
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    break;
+                            }
+                            break;
+                        //Helmet
+                        case 8:
+
+                            switch (SubType)
+                            {
+                                //Leather Helmet
+                                case 1:
+
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    break;
+                            }
                             break;
                     }
                 }
@@ -926,7 +1095,7 @@ namespace TextureAtlas
             int returnValue = 0;
             switch (type)
             {
-                    //Weapon
+                //Weapon
                 case 1:
                     switch (subtype)
                     {
@@ -943,7 +1112,7 @@ namespace TextureAtlas
                         case 1:
                             //leather boots
                             returnValue = 20;
-                            break;  
+                            break;
                     }
                     break;
                 case 3:
@@ -953,6 +1122,26 @@ namespace TextureAtlas
                         case 1:
                             //leather pants
                             returnValue = 40;
+                            break;
+                    }
+                    break;
+                case 4:
+                    //chest
+                    switch (subtype)
+                    {
+                        case 1:
+                            //leather chest
+                            returnValue = 60;
+                            break;
+                    }
+                    break;
+                case 5:
+                    //gloves
+                    switch (subtype)
+                    {
+                        case 1:
+                            //leather gloves
+                            returnValue = 35;
                             break;
                     }
                     break;
@@ -971,324 +1160,280 @@ namespace TextureAtlas
             //Random Stats
             switch (AffixRange[index])
             {
-                //Base Damage
                 case 1:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 20);
                     returnAffix.Desc = "Strength Increased By : " + returnAffix.Value.ToString();
                     returnAffix.Stat = "STR";
                     break;
                 case 2:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 20);
                     returnAffix.Stat = "AGI";
                     returnAffix.Desc = "Agility Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 3:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 20);
                     returnAffix.Stat = "WIS";
                     returnAffix.Desc = "Wisdom Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 4:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 20);
                     returnAffix.Stat = "DEX";
                     returnAffix.Desc = "Dexterity Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 5:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 20);
                     returnAffix.Stat = "LUC";
                     returnAffix.Desc = "Luck Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 6:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 20);
                     returnAffix.Stat = "INT";
                     returnAffix.Desc = "Intelligence Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 7:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 20);
                     returnAffix.Stat = "VIT";
                     returnAffix.Desc = "Vitality Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 8:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 20);
                     returnAffix.Stat = "CON";
                     returnAffix.Desc = "Constitution Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 9:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 3));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(50, 250);
                     returnAffix.Stat = "ACC";
                     returnAffix.Desc = "Accuracy Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 10:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 4));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(50, 250);
                     returnAffix.Stat = "MACC";
                     returnAffix.Desc = "Melee Accuracy Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 11:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)(ItemLvl * 5));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(50, 250);
                     returnAffix.Stat = "RACC";
                     returnAffix.Desc = "Ranged Accuracy Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 12:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "CC";
                     returnAffix.Desc = "Critical Chance Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 13:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "CD";
                     returnAffix.Desc = "Critical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 14:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "ATKSPD";
                     returnAffix.Desc = "Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 15:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "CDR";
                     returnAffix.Desc = "CoolDowns Reduced By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 16:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * 3), (int)(ItemLvl * 6));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 25);
                     returnAffix.Stat = "HPFLAT";
                     returnAffix.Desc = "Health Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 17:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * 3), (int)(ItemLvl * 6));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 25);
                     returnAffix.Stat = "MPFLAT";
                     returnAffix.Desc = "Mana Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 18:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(5, 20);
                     returnAffix.Stat = "HP";
                     returnAffix.Desc = "Health Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 19:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(5, 20);
                     returnAffix.Stat = "MP";
                     returnAffix.Desc = "Mana Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 20:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 50);
                     returnAffix.Stat = "ARM";
                     returnAffix.Desc = "Armour Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 21:
-                    returnAffix.Value = rng.Next(20,40);
+                    returnAffix.Value = rng.Next(20, 40);
                     returnAffix.Value += rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
                     returnAffix.Stat = "EVA";
                     returnAffix.Desc = "Evasion Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 22:
-                    returnAffix.Value = rng.Next(10,35);
+                    returnAffix.Value = rng.Next(10, 35);
                     returnAffix.Stat = "MF";
                     returnAffix.Desc = "Magic Find Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 23:
-                    returnAffix.Value = rng.Next(10,35);
+                    returnAffix.Value = rng.Next(10, 35);
                     returnAffix.Stat = "MQ";
                     returnAffix.Desc = "Magic Quantity Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 24:
-                    returnAffix.Value = rng.Next(3,15);
+                    returnAffix.Value = rng.Next(3, 15);
                     returnAffix.Stat = "MR";
                     returnAffix.Desc = "Melee Range Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 25:
-                    returnAffix.Value = rng.Next(10,25);
+                    returnAffix.Value = rng.Next(10, 25);
                     returnAffix.Stat = "EXP";
                     returnAffix.Desc = "Experience Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 26:
-                    returnAffix.Value = rng.Next(10,50);
+                    returnAffix.Value = rng.Next(10, 50);
                     returnAffix.Stat = "FPDMG";
                     returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 27:
-                    returnAffix.Value = rng.Next(3,10);
+                    returnAffix.Value = rng.Next(3, 10);
                     returnAffix.Stat = "PDMG";
                     returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 28:
-                    returnAffix.Value = rng.Next(10,50);
+                    returnAffix.Value = rng.Next(10, 50);
                     returnAffix.Stat = "FMPDMG";
                     returnAffix.Desc = "Melee Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 29:
-                    returnAffix.Value = rng.Next(3,10);
+                    returnAffix.Value = rng.Next(3, 10);
                     returnAffix.Stat = "MPDMG";
                     returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 30:
-                    returnAffix.Value = rng.Next(10,50);
+                    returnAffix.Value = rng.Next(10, 50);
                     returnAffix.Stat = "FRPDMG";
                     returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 31:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .05), (int)(ItemLvl * .1));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "RPDMG";
                     returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 32:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .3));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "RATKSPD";
                     returnAffix.Desc = "Ranged Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 33:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .2), (int)(ItemLvl * .3));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "MATKSPD";
                     returnAffix.Desc = "Melee Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 34:
-                    returnAffix.Value = rng.Next((int)(ItemLvl * .1), (int)(ItemLvl * .2));
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "CSPD";
                     returnAffix.Desc = "Cast Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 35:
-                    returnAffix.Value = rng.Next(1, 30);
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 30);
                     returnAffix.Stat = "MVSPD";
                     returnAffix.Desc = "Movement Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 36:
-                    returnAffix.Value = rng.Next(1, 10);
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 15);
                     returnAffix.Stat = "ARPEN";
                     returnAffix.Desc = "Armour Penetration Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 //WeaponSpecific
                 case 37:
                     returnAffix.Value = rng.Next(30, 250);
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
                     returnAffix.Stat = "WPDMG";
                     returnAffix.Desc = "Weapon Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 38:
-                    returnAffix.Value = rng.Next((int)(ItemLvl), (int)ItemLvl * 2);
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
+                    returnAffix.Value = rng.Next(10, 50);
                     returnAffix.Stat = "FWPDMG";
                     returnAffix.Desc = "Weapon Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 39:
                     returnAffix.Value = rng.Next(10, 30);
-                    if (returnAffix.Value == 0)
-                    {
-                        returnAffix.Value = 1;
-                    }
                     returnAffix.Stat = "WATKSPD";
                     returnAffix.Desc = "Weapon Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                //Armor Specific -- EVA
+                case 40:
+                    returnAffix.Value = rng.Next(10, 50);
+                    returnAffix.Stat = "FAREVA";
+                    returnAffix.Desc = "Item Evasion Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 41:
+                    returnAffix.Value = rng.Next(30, 250);
+                    returnAffix.Stat = "AREVA";
+                    returnAffix.Desc = "Item Evasion Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
             }
 
             AffixRange.Remove(AffixRange[index]);
             return returnAffix;
+        }
+
+        public static float CalculateMeleePhysStat(List<Affix> affixes, int BasePhys)
+        {
+            float returnValue = BasePhys;
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "FWPDMG")
+                {
+                    returnValue += afx.Value;
+                    break;
+                }
+            }
+
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "WPDMG")
+                {
+                    returnValue = returnValue * (1 + (float)(afx.Value * .01));
+                }
+            }
+
+            return returnValue;
+        }
+
+        public static float CalculateMeleeAttackSpeed(List<Affix> affixes, float BaseAtkSpd)
+        {
+            float returnValue = BaseAtkSpd;
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "WATKSPD")
+                {
+                    returnValue = returnValue * (1 + (float)(afx.Value * .01));
+                    if (returnValue.ToString().Length > 3)
+                    {
+                        returnValue = (float)(Math.Round(returnValue, 2, MidpointRounding.AwayFromZero));
+                    }
+                }
+            }
+            return returnValue;
+        }
+
+        public static int CalculateEvasion(List<Affix> affixes, int baseEV)
+        {
+            int returnValue = baseEV;
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "FAREVA")
+                {
+                    returnValue += afx.Value;
+                    break;
+                }
+            }
+
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "AREVA")
+                {
+                    returnValue = (int)(returnValue * (1 + (float)(afx.Value * .01)));
+                }
+            }
+            return returnValue;
         }
 
         public static float RollMeleeHitDamage(bool isCrit, int enemyArmour)
@@ -1305,7 +1450,7 @@ namespace TextureAtlas
         public static int RollVsItemType()
         {
             Random rng = new Random();
-            int type = rng.Next(1, 4);
+            int type = rng.Next(1, 9);
             return type;
         }
 
@@ -1319,6 +1464,46 @@ namespace TextureAtlas
         public static int RollVsPantType()
         {
             //1 is leather pants
+            Random rng = new Random();
+            int type = rng.Next(1, 1);
+            return type;
+        }
+
+        public static int RollVsChestType()
+        {
+            //1 is leather chest    
+            Random rng = new Random();
+            int type = rng.Next(1, 1);
+            return type;
+        }
+
+        public static int RollVsGlovesType()
+        {
+            //1 is leather chest    
+            Random rng = new Random();
+            int type = rng.Next(1, 1);
+            return type;
+        }
+
+        public static int RollVsRingType()
+        {
+            //1 is leather chest    
+            Random rng = new Random();
+            int type = rng.Next(1, 1);
+            return type;
+        }
+
+        public static int RollVsBeltType()
+        {
+            //7 Belt   
+            Random rng = new Random();
+            int type = rng.Next(1, 1);
+            return type;
+        }
+
+        public static int RollVsHelmType()
+        {
+            //8 Helm
             Random rng = new Random();
             int type = rng.Next(1, 1);
             return type;
@@ -1360,7 +1545,7 @@ namespace TextureAtlas
                     TheGame.equipment.Hero.txtRightWeapon = TheGame.CharWeapon;
                     break;
             }
-            
+
         }
 
         public static void BootsEquipped(Item item)
@@ -1373,6 +1558,31 @@ namespace TextureAtlas
         {
             GlobalVariables.TheGame.CharPants = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtPants = TheGame.CharPants;
+        }
+
+        //public static void BeltEquipped(Item item)
+        //{
+        //    GlobalVariables.TheGame.CharBelt = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+        //    TheGame.equipment.Hero.txtBelt = TheGame.CharBelt;
+        //}
+
+        public static void HelmetEquipped(Item item)
+        {
+            GlobalVariables.TheGame.CharHelmet = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+            TheGame.equipment.Hero.txtHelm = TheGame.CharHelmet;
+            TheGame.equipment.Hero.txtHero = TheGame.Content.Load<Texture2D>("SpriteSheetHelm");
+        }
+
+        public static void GlovesEquipped(Item item)
+        {
+            GlobalVariables.TheGame.CharGloves = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+            TheGame.equipment.Hero.txtGloves = TheGame.CharGloves;
+        }
+
+        public static void ChestEquipped(Item item)
+        {
+            GlobalVariables.TheGame.CharChest = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+            TheGame.equipment.Hero.txtChest = TheGame.CharChest;
         }
 
         public static string GetItemDescription(int type, int subType, bool isUnique)
@@ -1428,6 +1638,91 @@ namespace TextureAtlas
                             else
                             {
                                 itemDesc = "Leather Pants, Offering low protection.";
+                            }
+                            break;
+                    }
+                    break;
+                //Chest
+                case 4:
+                    switch (subType)
+                    {
+                        //Leather Chest
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemDesc = "This tunic has been lost in history for many years.  The fact that it has now been found is foreboding at best.";
+                            }
+                            else
+                            {
+                                itemDesc = "A ordinary leather chest piece.";
+                            }
+                            break;
+                    }
+                    break;
+                //Gloves
+                case 5:
+                    switch (subType)
+                    {
+                        //Leather Gloves
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemDesc = "Mythic Gloves imbued with Titanic Power.  There is little documentation left of their origin.";
+                            }
+                            else
+                            {
+                                itemDesc = "Simple leather gloves.";
+                            }
+                            break;
+                    }
+                    break;
+                //Ring
+                case 6:
+                    switch (subType)
+                    {
+                        //Gold Ring
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemDesc = "Sages Ring.  Found in the bottom of an old Hermits Dwelling.  Unknown Power Source.";
+                            }
+                            else
+                            {
+                                itemDesc = "An old gold ring.";
+                            }
+                            break;
+                    }
+                    break;
+                //Belt
+                case 7:
+                    switch (subType)
+                    {
+                        //Leather Belt
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemDesc = "Very few of these belts exist, after their use was banished when user's noticed it tightens over time, causing asphyxiation.";
+                            }
+                            else
+                            {
+                                itemDesc = "Typical Leather Belt.  Offers little protection.";
+                            }
+                            break;
+                    }
+                    break;
+                //Helmet
+                case 8:
+                    switch (subType)
+                    {
+                        //Leather Helmet
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemDesc = "A cap that has retained the eye of Rah whom it is said was the most powerful of Mages in the 5th circle of the Blue Magi.";
+                            }
+                            else
+                            {
+                                itemDesc = "A worn leather cap.  Truly ordinary.";
                             }
                             break;
                     }
@@ -1591,6 +1886,60 @@ namespace TextureAtlas
                             break;
                     }
                     break;
+                //Chest
+                case 4:
+                    switch (subType)
+                    {
+                        //Leather Chest
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "HeroSS2HChest1U";
+                            }
+                            else
+                            {
+                                itemName = "HeroSS2HChest1";
+                            }
+                            break;
+                    }
+                    break;
+                //Gloves
+                case 5:
+                    switch (subType)
+                    {
+                        //Leather Gloves
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "HeroSS2HGloves1";
+                            }
+                            else
+                            {
+                                itemName = "HeroSS2HGloves1";
+                            }
+                            break;
+                    }
+                    break;
+
+                    //no case 6 or 7 for ring and belt since we don't draw them on the character
+
+                //Helmet
+                case 8:
+                    switch (subType)
+                    {
+                        //Leather Gloves
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "HeroSS2HLeatherHelmetU";
+                            }
+                            else
+                            {
+                                itemName = "HeroSS2HLeatherHelmet";
+                            }
+                            break;
+                    }
+                    break;
             }
             return itemName;
         }
@@ -1648,6 +1997,91 @@ namespace TextureAtlas
                             else
                             {
                                 itemName = "LeatherPants";
+                            }
+                            break;
+                    }
+                    break;
+                //Chest
+                case 4:
+                    switch (subType)
+                    {
+                        //Leather Pants
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "LeatherChestU";
+                            }
+                            else
+                            {
+                                itemName = "LeatherChest";
+                            }
+                            break;
+                    }
+                    break;
+                //Gloves
+                case 5:
+                    switch (subType)
+                    {
+                        //Leather Pants
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "Leathergloves";
+                            }
+                            else
+                            {
+                                itemName = "Leathergloves";
+                            }
+                            break;
+                    }
+                    break;
+                //Ring
+                case 6:
+                    switch (subType)
+                    {
+                        //Goldring
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "Ring1U";
+                            }
+                            else
+                            {
+                                itemName = "Ring1";
+                            }
+                            break;
+                    }
+                    break;
+                //Belt
+                case 7:
+                    switch (subType)
+                    {
+                        //Leather Belt
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "Leatherbelt";
+                            }
+                            else
+                            {
+                                itemName = "Leatherbelt";
+                            }
+                            break;
+                    }
+                    break;
+                //helmet
+                case 8:
+                    switch (subType)
+                    {
+                        //Leather Helmet
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "LeatherHelmetU";
+                            }
+                            else
+                            {
+                                itemName = "LeatherHelmet";
                             }
                             break;
                     }
