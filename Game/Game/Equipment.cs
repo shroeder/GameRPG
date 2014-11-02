@@ -356,7 +356,7 @@ namespace TextureAtlas
             {
                 ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .75), item.Font1);
             }
-            else if (item.ItemType == 2 || item.ItemType == 5 || item.ItemType == 6 || item.ItemType == 7 || item.ItemType == 8)
+            else if (item.ItemType == 2 || item.ItemType == 5 || item.ItemType == 6 || item.ItemType == 7 || item.ItemType == 8 || item.ItemType == 9)
             {
                 ItemDesc = GlobalVariables.GenerateDescList(item.ItemDescription, widestString + (item.ItemTexture.Width * .35), item.Font1);
             }
@@ -382,7 +382,7 @@ namespace TextureAtlas
             {
                 GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 175 + (widestString - item.ItemTexture.Width)), item.location.Y + 25), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
             }
-            else if (item.ItemType == 2 || item.ItemType == 5 || item.ItemType == 6 || item.ItemType == 7 || item.ItemType == 8)
+            else if (item.ItemType == 2 || item.ItemType == 5 || item.ItemType == 6 || item.ItemType == 7 || item.ItemType == 8 || item.ItemType == 9)
             {
                 GlobalVariables.WaitToDraw(0, new Vector2((item.location.X + 115 + (widestString - item.ItemTexture.Width)), item.location.Y + 25), new Rectangle(0, 0, item.ItemTexture.Width, item.ItemTexture.Height), item.ItemColor, null, item.ItemTexture);
             }
@@ -404,7 +404,7 @@ namespace TextureAtlas
                 }
                 ScalarText += 30;
             }
-            else if (item.ItemSlot == Item.itemSlot.Boots || item.ItemSlot == Item.itemSlot.Pants || item.ItemSlot == Item.itemSlot.Gloves || item.ItemSlot == Item.itemSlot.Chest || item.ItemSlot == Item.itemSlot.Helmet)
+            else if (item.ItemSlot == Item.itemSlot.Boots || item.ItemSlot == Item.itemSlot.Pants || item.ItemSlot == Item.itemSlot.Gloves || item.ItemSlot == Item.itemSlot.Chest || item.ItemSlot == Item.itemSlot.Helmet || item.ItemSlot == Item.itemSlot.Shoulders)
             {
                 int newValue = GlobalVariables.CalculateEvasion(item.AffixList, item.BaseStat);
                 if (newValue != item.BaseStat)

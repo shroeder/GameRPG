@@ -837,6 +837,17 @@ namespace TextureAtlas
 
                     break;
 
+                case 9:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Shaman's Guard";
+                            break;
+                    }
+
+                    break;
+
             }
 
             return ItemName;
@@ -958,6 +969,16 @@ namespace TextureAtlas
                     }
 
                     break;
+                case 9:
+
+                    switch (SubType)
+                    {
+                        case 1:
+                            ItemName = "Leather Paulders";
+                            break;
+                    }
+
+                    break;
             }
 
             return ItemName;
@@ -1071,6 +1092,18 @@ namespace TextureAtlas
                             switch (SubType)
                             {
                                 //Leather Helmet
+                                case 1:
+
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    break;
+                            }
+                            break;
+                        //Shoulders
+                        case 9:
+
+                            switch (SubType)
+                            {
+                                //Leather Shoulders
                                 case 1:
 
                                     AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
@@ -1450,7 +1483,7 @@ namespace TextureAtlas
         public static int RollVsItemType()
         {
             Random rng = new Random();
-            int type = rng.Next(1, 9);
+            int type = rng.Next(1, 10);
             return type;
         }
 
@@ -1509,6 +1542,14 @@ namespace TextureAtlas
             return type;
         }
 
+        public static int RollVsShoulderType()
+        {
+            //8 Helm
+            Random rng = new Random();
+            int type = rng.Next(1, 1);
+            return type;
+        }
+
         public static int RollVsBootType()
         {
             //1 is leather boots
@@ -1539,10 +1580,12 @@ namespace TextureAtlas
                 case 1:
                     GlobalVariables.TheGame.CharWeapon = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
                     TheGame.equipment.Hero.txtLeftWeapon = TheGame.CharWeapon;
+                    TheGame.animatedSprite.CharWeapon = TheGame.CharWeapon;
                     break;
                 case 2:
                     GlobalVariables.TheGame.CharWeapon = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
                     TheGame.equipment.Hero.txtRightWeapon = TheGame.CharWeapon;
+                    TheGame.animatedSprite.CharWeapon = TheGame.CharWeapon;
                     break;
             }
 
@@ -1552,37 +1595,44 @@ namespace TextureAtlas
         {
             GlobalVariables.TheGame.CharBoots = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtBoots = TheGame.CharBoots;
+            TheGame.animatedSprite.CharBoots = TheGame.CharBoots;
         }
 
         public static void PantsEquipped(Item item)
         {
             GlobalVariables.TheGame.CharPants = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtPants = TheGame.CharPants;
+            TheGame.animatedSprite.CharPants = TheGame.CharPants;
         }
-
-        //public static void BeltEquipped(Item item)
-        //{
-        //    GlobalVariables.TheGame.CharBelt = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
-        //    TheGame.equipment.Hero.txtBelt = TheGame.CharBelt;
-        //}
 
         public static void HelmetEquipped(Item item)
         {
             GlobalVariables.TheGame.CharHelmet = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtHelm = TheGame.CharHelmet;
             TheGame.equipment.Hero.txtHero = TheGame.Content.Load<Texture2D>("SpriteSheetHelm");
+            TheGame.animatedSprite.CharHelm = TheGame.CharHelmet;
+            TheGame.animatedSprite.Texture = TheGame.Content.Load<Texture2D>("SpriteSheetHelm");
         }
 
         public static void GlovesEquipped(Item item)
         {
             GlobalVariables.TheGame.CharGloves = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtGloves = TheGame.CharGloves;
+            TheGame.animatedSprite.CharGloves = TheGame.CharGloves;
+        }
+
+        public static void ShouldersEquipped(Item item)
+        {
+            GlobalVariables.TheGame.CharShoulders = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
+            TheGame.equipment.Hero.txtShoulders = TheGame.CharShoulders;
+            TheGame.animatedSprite.CharShoulders = TheGame.CharShoulders;
         }
 
         public static void ChestEquipped(Item item)
         {
             GlobalVariables.TheGame.CharChest = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtChest = TheGame.CharChest;
+            TheGame.animatedSprite.CharChest = TheGame.CharChest;
         }
 
         public static string GetItemDescription(int type, int subType, bool isUnique)
@@ -1723,6 +1773,23 @@ namespace TextureAtlas
                             else
                             {
                                 itemDesc = "A worn leather cap.  Truly ordinary.";
+                            }
+                            break;
+                    }
+                    break;
+                //Shoulders
+                case 9:
+                    switch (subType)
+                    {
+                        //Leather Paulders
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemDesc = "Well known for their Horned appearance, these shoulders were given as a token of service to the Queen of the Shaman.";
+                            }
+                            else
+                            {
+                                itemDesc = "Leather Paulders offering little protection.";
                             }
                             break;
                     }
@@ -1940,6 +2007,25 @@ namespace TextureAtlas
                             break;
                     }
                     break;
+
+                //Shoulders
+                case 9:
+                    switch (subType)
+                    {
+                        //Leather Paulders
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "HeroSS2HShoulders1U";
+                            }
+                            else
+                            {
+                                itemName = "HeroSS2HShoulders1";
+                            }
+                            break;
+                    }
+                    break;
+
             }
             return itemName;
         }
@@ -2082,6 +2168,23 @@ namespace TextureAtlas
                             else
                             {
                                 itemName = "LeatherHelmet";
+                            }
+                            break;
+                    }
+                    break;
+                //helmet
+                case 9:
+                    switch (subType)
+                    {
+                        //Leather Shoulders
+                        case 1:
+                            if (isUnique)
+                            {
+                                itemName = "LeatherPauldersU";
+                            }
+                            else
+                            {
+                                itemName = "LeatherPaulders";
                             }
                             break;
                     }

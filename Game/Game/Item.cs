@@ -109,8 +109,8 @@ namespace TextureAtlas
 
             if (!indexed)
             {
-                //quality = 6;
-                quality = GlobalVariables.RollVsRarity();
+                quality = 6;
+                //quality = GlobalVariables.RollVsRarity();
                 if (quality > 5)
                 {
                     ItemTextureName = GlobalVariables.GetTexture(itemtype, SubType, true);
@@ -231,17 +231,72 @@ namespace TextureAtlas
                 RarityColor = Color.Brown;
                 ItemColor = Color.White;
             }
-            
 
                         if (hover)
                         {
-                            if (GlobalVariables.TheGame.blnEquip)
+
+                            if (GlobalVariables.TheGame.blnEquip || GlobalVariables.TheGame.blnOpen)
                             {
-                                if (!GlobalVariables.TheGame.equipment.Bounds.Intersects(Bounds))
+                                if (GlobalVariables.ShowItemNames)
                                 {
-                                    spriteBatch.End();
-                                    return;
+                                    double textWidth = Font1.MeasureString(ItemName).X;
+                                    if (ItemType == 1)
+                                    {
+                                        int offset = (int)(textWidth * .025);
+                                        spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset - offset, (location.Y - 20)), RarityColor);
+                                    }
+                                    else if (ItemType == 2 || ItemType == 5 || ItemType == 7 || ItemType == 8 || ItemType == 9)
+                                    {
+                                        int offset = (int)(textWidth * .275);
+                                        spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
+                                    }
+                                    else if (ItemType == 3 || ItemType == 4)
+                                    {
+                                        int offset = (int)(textWidth * .15);
+                                        spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
+                                    }
+                                    else if (ItemType == 6)
+                                    {
+                                        int offset = (int)(textWidth * .30);
+                                        spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
+                                    }
                                 }
+                                spriteBatch.End();
+                                return;
+                            }
+
+                            if (GlobalVariables.TheGame.ItemHovered)
+                            {
+                                if (GlobalVariables.ShowItemNames)
+                                {
+                                    double textWidth = Font1.MeasureString(ItemName).X;
+                                    if (ItemType == 1)
+                                    {
+                                        int offset = (int)(textWidth * .025);
+                                        spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset - offset, (location.Y - 20)), RarityColor);
+                                    }
+                                    else if (ItemType == 2 || ItemType == 5 || ItemType == 7 || ItemType == 8 || ItemType == 9)
+                                    {
+                                        int offset = (int)(textWidth * .275);
+                                        spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
+                                    }
+                                    else if (ItemType == 3 || ItemType == 4)
+                                    {
+                                        int offset = (int)(textWidth * .15);
+                                        spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
+                                    }
+                                    else if (ItemType == 6)
+                                    {
+                                        int offset = (int)(textWidth * .30);
+                                        spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
+                                    }
+                                }
+                                spriteBatch.End();
+                                return;
+                            }
+                            else
+                            {
+                                GlobalVariables.TheGame.ItemHovered = true;
                             }
 
                             if (GlobalVariables.ShowItemNames)
@@ -252,7 +307,7 @@ namespace TextureAtlas
                                     int offset = (int)(textWidth * .025);
                                     spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset - offset, (location.Y - 20)), RarityColor);
                                 }
-                                else if (ItemType == 2 || ItemType == 5 || ItemType == 7 || ItemType == 8)
+                                else if (ItemType == 2 || ItemType == 5 || ItemType == 7 || ItemType == 8 || ItemType == 9)
                                 {
                                     int offset = (int)(textWidth * .275);
                                     spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);
@@ -323,7 +378,7 @@ namespace TextureAtlas
                             {
                                 ItemDesc = GlobalVariables.GenerateDescList(ItemDescription, widestString + (ItemTexture.Width * .8), Font1);
                             }
-                            else if (ItemType == 2 || ItemType == 5 || ItemType == 6 || ItemType == 7 || ItemType == 8)
+                            else if (ItemType == 2 || ItemType == 5 || ItemType == 6 || ItemType == 7 || ItemType == 8 || ItemType == 9)
                             {
                                 ItemDesc = GlobalVariables.GenerateDescList(ItemDescription, widestString + (ItemTexture.Width * .4), Font1);
                             }
@@ -349,7 +404,7 @@ namespace TextureAtlas
                             {
                                 GlobalVariables.WaitToDraw(0, new Vector2((location.X + 175 + (widestString - ItemTexture.Width)), location.Y + 25), new Rectangle(0, 0, ItemTexture.Width, ItemTexture.Height), ItemColor, null, ItemTexture);
                             }
-                            else if (ItemType == 2 || ItemType == 5 || ItemType == 6 || ItemType == 7 || ItemType == 8)
+                            else if (ItemType == 2 || ItemType == 5 || ItemType == 6 || ItemType == 7 || ItemType == 8 || ItemType == 9)
                             {
                                 GlobalVariables.WaitToDraw(0, new Vector2((location.X + 115 + (widestString - ItemTexture.Width)), location.Y + 25), new Rectangle(0, 0, ItemTexture.Width, ItemTexture.Height), ItemColor, null, ItemTexture);
                             }
@@ -375,7 +430,7 @@ namespace TextureAtlas
                                 }
                                 ScalarText += 30;
                             }
-                            else if (ItemSlot == itemSlot.Boots || ItemSlot == itemSlot.Pants || ItemSlot == itemSlot.Chest || ItemSlot == itemSlot.Gloves || ItemSlot == itemSlot.Helmet)
+                            else if (ItemSlot == itemSlot.Boots || ItemSlot == itemSlot.Pants || ItemSlot == itemSlot.Chest || ItemSlot == itemSlot.Gloves || ItemSlot == itemSlot.Helmet || ItemSlot == itemSlot.Shoulders)
                             {
                                 int newValue = GlobalVariables.CalculateEvasion(AffixList, BaseStat);
                                 if (newValue != BaseStat)
@@ -450,7 +505,7 @@ namespace TextureAtlas
                                     int offset = (int)(textWidth * .025);
                                     spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset - offset, (location.Y - 20)), RarityColor);
                                 }
-                                else if (ItemType == 2 || ItemType == 5 || ItemType == 7 || ItemType == 8)
+                                else if (ItemType == 2 || ItemType == 5 || ItemType == 7 || ItemType == 8 || ItemType == 9)
                                 {
                                     int offset = (int)(textWidth * .275);
                                     spriteBatch.DrawString(Font1, ItemName, new Vector2(location.X - offset, (location.Y - 20)), RarityColor);

@@ -111,7 +111,6 @@ namespace TextureAtlas
             int column = currentFrame % Columns;
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
             spriteBatch.Draw(txtHero, DrawLocation, sourceRectangle, Color.White);
-
             spriteBatch.Draw(GlobalVariables.RotateCounter, RotateCounterBounds, Color.White);
             spriteBatch.Draw(GlobalVariables.RotateClock, RotateClockBounds, Color.White);
 
@@ -135,22 +134,10 @@ namespace TextureAtlas
             {
                 spriteBatch.Draw(txtShoulders, DrawLocation, sourceRectangle, GlobalVariables.TheGame.equipment.Shoulders.ItemColor);
             }
-            //if (GlobalVariables.TheGame.equipment.LeftRing != null)
-            //{
-            //    spriteBatch.Draw(txtLeftRing, DrawLocation, sourceRectangle, GlobalVariables.TheGame.equipment.LeftRing.ItemColor);
-            //}
-            //if (GlobalVariables.TheGame.equipment.RightRing != null)
-            //{
-            //    spriteBatch.Draw(txtRightRing, DrawLocation, sourceRectangle, GlobalVariables.TheGame.equipment.RightRing.ItemColor);
-            //}
             if (GlobalVariables.TheGame.equipment.Gloves != null)
             {
                 spriteBatch.Draw(txtGloves, DrawLocation, sourceRectangle, GlobalVariables.TheGame.equipment.Gloves.ItemColor);
             }
-            //if (GlobalVariables.TheGame.equipment.Belt != null)
-            //{
-            //    spriteBatch.Draw(txtBelt, DrawLocation, sourceRectangle, GlobalVariables.TheGame.equipment.Belt.ItemColor);
-            //}
             if (GlobalVariables.TheGame.equipment.RightWeapon != null)
             {
                 spriteBatch.Draw(txtRightWeapon, DrawLocation, sourceRectangle, GlobalVariables.TheGame.equipment.RightWeapon.ItemColor);

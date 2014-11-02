@@ -26,6 +26,13 @@ namespace TextureAtlas
         public Texture2D Texture { get; set; }
         public Texture2D CharWeapon { get; set; }
 
+        public Texture2D CharBoots { get; set; }
+        public Texture2D CharGloves { get; set; }
+        public Texture2D CharHelm { get; set; }
+        public Texture2D CharShoulders { get; set; }
+        public Texture2D CharChest { get; set; }
+        public Texture2D CharPants { get; set; }
+
         public Vector2 position;
         public Vector2 SwordTip;
         public Vector2 WorldPos;
@@ -261,20 +268,51 @@ namespace TextureAtlas
             Bounds.Width = Convert.ToInt32(width * .60);
             Bounds.Height = Convert.ToInt32(height * .8);
 
-            new Rectangle(destinationRectangle.X + 15, destinationRectangle.Y + 25, destinationRectangle.Width - 30, destinationRectangle.Height - 50);
+            //new Rectangle(destinationRectangle.X + 15, destinationRectangle.Y + 25, destinationRectangle.Width - 30, destinationRectangle.Height - 50);
 
             GlobalVariables.CharacterBounds = Bounds;
 
             spriteBatch.Begin();
             spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
+            
+            if (CharGloves != null)
+            {
+                spriteBatch.Draw(CharGloves, destinationRectangle, sourceRectangle, GlobalVariables.TheGame.equipment.Gloves.ItemColor);
+            }
+
+            if (CharBoots != null)
+            {
+                spriteBatch.Draw(CharBoots, destinationRectangle, sourceRectangle, GlobalVariables.TheGame.equipment.Boots.ItemColor);
+            }
+
+            if (CharShoulders != null)
+            {
+                spriteBatch.Draw(CharShoulders, destinationRectangle, sourceRectangle, GlobalVariables.TheGame.equipment.Shoulders.ItemColor);
+            }
+
+            if (CharHelm != null)
+            {
+                spriteBatch.Draw(CharHelm, destinationRectangle, sourceRectangle, GlobalVariables.TheGame.equipment.Helmet.ItemColor);
+            }
+
+            if (CharChest != null)
+            {
+                spriteBatch.Draw(CharChest, destinationRectangle, sourceRectangle, GlobalVariables.TheGame.equipment.Chest.ItemColor);
+            }
+
+            if (CharPants != null)
+            {
+                spriteBatch.Draw(CharPants, destinationRectangle, sourceRectangle, GlobalVariables.TheGame.equipment.Pants.ItemColor);
+            }
+
             if (CharWeapon != null)
             {
                 if (attack)
                 {
-                    //TODO : Once equipment screen is set up, draw the items display color onto the character
                     spriteBatch.Draw(CharWeapon, destinationRectangle, sourceRectangle, Color.White);
                 }
             }
+
             spriteBatch.End();
         }
 
