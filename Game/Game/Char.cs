@@ -62,12 +62,7 @@ namespace TextureAtlas
             {
                 GlobalVariables.CharacterLevel = 1;
             }
-
-            if (GlobalVariables.CharacterMeleeRange == 0)
-            {
-                GlobalVariables.CharacterMeleeRange = 40;
-            }
-
+            
             Width = Convert.ToInt32(texture.Width / columns);
             Height = Convert.ToInt32(texture.Height / rows);
             position = Location;

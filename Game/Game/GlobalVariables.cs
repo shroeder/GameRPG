@@ -110,57 +110,809 @@ namespace TextureAtlas
         public static float OverRoll { get; set; }
 
         //Savable Values
-        public static int CharacterMeleeRange { get; set; }
-        public static int CharacterWeaponType { get; set; }
-        public static string CharacterWeaponName { get; set; }
-        public static int GameDifficulty { get; set; }
-        public static int CharacterLevel { get; set; }
-        public static int CharacterStrength { get; set; }
-        public static int CharacterDex { get; set; }
-        public static int CharacterInt { get; set; }
-        public static int CharacterWisdom { get; set; }
-        public static int CharacterAccuracy { get; set; }
-        public static int CharacterLuck { get; set; }
-        public static int CharacterAllElementalReduction { get; set; }
-        public static int CharacterFireResist { get; set; }
-        public static int CharacterColdResist { get; set; }
-        public static int CharacterLightningResist { get; set; }
-        public static int CharacterEarthResist { get; set; }
-        public static int CharacterArmour { get; set; }
-        public static int CharacterMovementSpeed { get; set; }
-        public static int CharacterAttackSpeed { get; set; }
-        public static int CharacterHealth { get; set; }
-        public static int CharacterMana { get; set; }
-        public static int CharacterExperience { get; set; }
-        public static int CharacterStatPoints { get; set; }
-        public static int CharacterSkillPoints { get; set; }
-        public static int CharacterIncreaseFlatPhysical { get; set; }
-        public static int CharacterIncreaseFlatRange { get; set; }
-        public static int CharacterIncreaseFlatMelee { get; set; }
-        public static float CharacterIncreasePhysDmg { get; set; }
-        public static float CharacterIncreasePhysRangeDmg { get; set; }
-        public static float CharacterIncreasePhyMeleeDmg { get; set; }
-        public static float CharacterIncreaseExpPct { get; set; }
-        public static float CharacterMagicFindRarity { get; set; }
-        public static float CharacterMagicFindQuantity { get; set; }
-        public static float CharacterCritChance { get; set; }
-        public static float CharacterCritDamageModifier { get; set; }
-        public static float CharacterCoolDownReduction { get; set; }
-        public static float CharacterPhysDamageReduction { get; set; }
-        public static float CharacterVsBeastDamage { get; set; }
-        public static float CharacterVsHumanDamage { get; set; }
-        public static float CharacterVsUndeadDamage { get; set; }
-        public static float CharacterVsBossDamage { get; set; }
-        public static float CharacterVsEliteDamage { get; set; }
-        public static float CharacterMagicPenetration { get; set; }
-        public static float CharacterArmourPenetration { get; set; }
-        public static float CharacterPhysicalReflect { get; set; }
-        public static float CharacterMagicReflect { get; set; }
-        public static float CharacterSpellDamage { get; set; }
-        public static float CharacterHealthRegen { get; set; }
-        public static float CharacterManaRegen { get; set; }
-        public static float CharacterDamageReduction { get; set; }
+        public static double CharacterMeleeRange
+        {
+            get
+            {
+                return GetCharacterMeleeRange();
+            }
+        }
+        public static int _GameDifficulty { get; set; }
+        public static int GameDifficulty
+        {
+            get
+            {
+                if (_GameDifficulty < 1)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return _GameDifficulty;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static int _CharacterLevel { get; set; }
+        public static int CharacterLevel
+        {
+            get
+            {
+                if (_CharacterLevel < 1)
+                {
+                    return 1;
+                }
+                else
+                {
+                    return _CharacterLevel;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static int _CharacterStrength { get; set; }
+        public static double CharacterStrength
+        {
+            get
+            {
+                if (_CharacterStrength < 10)
+                {
+                    return 10;
+                }
+                else
+                {
+                    return _CharacterStrength;
+                }
+            }
+            set { }
+        }
+        public static double CharacterTotalStrength
+        {
+            get
+            {
+                return Math.Round(CharacterStrength + GetStatAcrossEquipment("STR"));
+            }
+        }
+        public static double _CharacterAgility { get; set; }
+        public static double CharacterAgility
+        {
+            get
+            {
+                if (_CharacterAgility < 10)
+                {
+
+                    return 10;
+                }
+                else
+                {
+                    return _CharacterAgility;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static double CharacterTotalAgility
+        {
+            get
+            {
+                return Math.Round(CharacterAgility + GetStatAcrossEquipment("AGI"));
+            }
+        }
+        public static double _CharacterDex { get; set; }
+        public static double CharacterDex
+        {
+            get
+            {
+                if (_CharacterDex < 10)
+                {
+                    return 10;
+                }
+                else
+                {
+                    return _CharacterDex;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static double CharacterTotalDex
+        {
+            get
+            {
+                return Math.Round(CharacterDex + GetStatAcrossEquipment("DEX"));
+            }
+        }
+        public static double _CharacterInt { get; set; }
+        public static double CharacterInt
+        {
+            get
+            {
+                if (_CharacterInt < 10)
+                {
+                    return 10;
+                }
+                else
+                {
+                    return _CharacterInt;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static double CharacterTotalInt
+        {
+            get
+            {
+                return Math.Round(CharacterInt + GetStatAcrossEquipment("INT"));
+            }
+        }
+        public static double _CharacterWisdom { get; set; }
+        public static double CharacterWisdom
+        {
+            get
+            {
+                if (_CharacterWisdom < 10)
+                {
+                    return 10;
+                }
+                else
+                {
+                    return _CharacterWisdom;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static double CharacterTotalWisdom
+        {
+            get
+            {
+                return Math.Round(CharacterWisdom + GetStatAcrossEquipment("WIS"));
+            }
+        }
+        public static double _CharacterVitality { get; set; }
+        public static double CharacterVitality
+        {
+            get
+            {
+                if (_CharacterVitality < 10)
+                {
+                    return 10;
+                }
+                else
+                {
+                    return _CharacterVitality;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static double CharacterTotalVitality
+        {
+            get
+            {
+                return Math.Round(CharacterVitality + GetStatAcrossEquipment("VIT"));
+            }
+        }
+        public static double _CharacterConstitution { get; set; }
+        public static double CharacterConstitution
+        {
+            get
+            {
+                if (_CharacterConstitution < 10)
+                {
+                    return 10;
+                }
+                else
+                {
+                    return _CharacterConstitution;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static double CharacterTotalConstitution
+        {
+            get
+            {
+                return Math.Round(CharacterConstitution + GetStatAcrossEquipment("CON"));
+            }
+        }
+        public static double CharacterAccuracy
+        {
+            get
+            {
+                double returnValue = 1;
+                if (Equipment.RightWeapon != null)
+                {
+                    if (Equipment.RightWeapon.RangedMelee == 0)
+                    {
+                        returnValue = CharacterMeleeAccuracy;
+                    }
+                    else if (Equipment.RightWeapon.RangedMelee == 1)
+                    {
+                        returnValue = CharacterRangedAccuracy;
+                    }
+                }
+                else if (Equipment.LeftWeapon != null)
+                {
+                    if (Equipment.LeftWeapon.RangedMelee == 0)
+                    {
+                        returnValue = CharacterMeleeAccuracy;
+                    }
+                    else if (Equipment.LeftWeapon.RangedMelee == 1)
+                    {
+                        returnValue = CharacterRangedAccuracy;
+                    }
+                }
+                else
+                {
+                    returnValue = CharacterMeleeAccuracy;
+                }
+                return Math.Round(returnValue,2);
+            }
+        }
+        public static double _CharacterLuck { get; set; }
+        public static double CharacterLuck
+        {
+            get
+            {
+                if (_CharacterLuck < 10)
+                {
+                    return 10;
+                }
+                else
+                {
+                    return _CharacterLuck;
+                }
+            }
+            set
+            {
+
+            }
+        }
+        public static double CharacterTotalLuck
+        {
+            get
+            {
+                return Math.Round(CharacterLuck + GetStatAcrossEquipment("LUC"));
+            }
+        }
+        public static double CharacterMeleeAccuracy
+        {
+            get
+            {
+                return Math.Round(GetCharacterAccuracy(0),2);
+            }
+        }
+        public static double CharacterRangedAccuracy
+        {
+            get
+            {
+                return Math.Round(GetCharacterAccuracy(1),2);
+            }
+        }
+        public static double CharacterAllElementalReduction
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("ALLRES"));
+            }
+        }
+        public static double CharacterFireResist
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("FIRERES"));
+            }
+        }
+        public static double CharacterColdResist
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("ICERES"));
+            }
+        }
+        public static double CharacterLightningResist
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("LIGHTRES"));
+            }
+        }
+        public static double CharacterEarthResist
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("EARTHRES"));
+            }
+        }
+        public static double CharacterArmour
+        {
+            get
+            {
+                return Math.Round(GetCharacterBaseArmour());
+            }
+        }
+        public static double CharacterEvasion
+        {
+            get
+            {
+                return Math.Round(GetCharacterBaseEvasion());
+            }
+        }
+        public static double CharacterMovementSpeed
+        {
+            get
+            {
+                return Math.Round(GetCharacterMovementSpeed());
+            }
+        }
+        public static double CharacterCastSpeed
+        {
+            get
+            {
+                return Math.Round(GetCharacterCastSpeed(),2);
+            }
+        }
+        public static double CharacterHealth
+        {
+            get
+            {
+                return Math.Round(GetCharacterBaseHealth());
+            }
+        }
+        public static double CharacterTotalHealth
+        {
+            get
+            {
+                double returnValue = CharacterHealth;
+
+                returnValue += CharacterTotalVitality * 5;
+                returnValue += CharacterTotalConstitution * 2;
+                returnValue += CharacterIncreaseHealthFlat;
+                returnValue *= 1 + (CharacterIncreaseHealth / 100);
+
+                return Math.Round(returnValue);
+            }
+        }
+        public static double CharacterMana
+        {
+            get
+            {
+                return Math.Round(GetCharacterBaseMana());
+            }
+        }
+        public static double CharacterTotalMana
+        {
+            get
+            {
+                double returnValue = CharacterHealth;
+
+                returnValue += CharacterWisdom * 3;
+                returnValue += CharacterInt * 2;
+                returnValue += CharacterIncreaseManaFlat;
+                returnValue *= 1 + (CharacterIncreaseMana / 100);
+
+                return Math.Round(returnValue);
+            }
+        }
+        public static double CharacterExperience { get; set; }
+        public static double CharacterStatPoints { get; set; }
+        public static double CharacterSkillPoints { get; set; }
+        public static double CharacterIncreaseFlatRange
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("FRPDMG"));
+            }
+        }
+        public static double CharacterIncreaseFlatMelee
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("FMPDMG"));
+            }
+        }
+        public static double CharacterIncreaseFlatPhysical
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("FPDMG"));
+            }
+        }
+        public static double CharacterRangedAttackSpeed 
+        { 
+            get 
+            {
+                return Math.Round(GetCharacterAttackSpeed(1),2); 
+            }
+        }
+        public static double CharacterMeleeAttackSpeed 
+        {
+            get
+            { 
+                return Math.Round(GetCharacterAttackSpeed(0),2); 
+            }
+        }
+        public static double CharacterIncreaseAttackSpeed
+        {
+            get
+            {
+                double returnValue = 1;
+                if (Equipment.RightWeapon != null)
+                {
+                    if (Equipment.RightWeapon.RangedMelee == 0)
+                    {
+                        returnValue = CharacterIncreaseMeleeAttackSpeed;
+                    }
+                    else if (Equipment.RightWeapon.RangedMelee == 1)
+                    {
+                        returnValue = CharacterIncreaseRangedAttackSpeed;
+                    }
+                }
+                else if (Equipment.LeftWeapon != null)
+                {
+                    if (Equipment.LeftWeapon.RangedMelee == 0)
+                    {
+                        returnValue = CharacterIncreaseMeleeAttackSpeed;
+                    }
+                    else if (Equipment.LeftWeapon.RangedMelee == 1)
+                    {
+                        returnValue = CharacterIncreaseRangedAttackSpeed;
+                    }
+                }
+                else
+                {
+                    returnValue = CharacterIncreaseMeleeAttackSpeed;
+                }
+                return Math.Round(returnValue,2);
+            }
+        }
+        public static double CharacterIncreaseRangedAttackSpeed
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("RATKSPD"));
+            }
+        }
+        public static double CharacterIncreaseMeleeAttackSpeed
+        {
+            get
+            {
+                return Math.Round(GetStatAcrossEquipment("MATKSPD"),2);
+            }
+        }
+        public static double CharacterAttackSpeed
+        {
+            get
+            {
+                double returnValue = 1;
+                if (Equipment.RightWeapon != null)
+                {
+                    if (Equipment.RightWeapon.RangedMelee == 0)
+                    {
+                        returnValue = CharacterMeleeAttackSpeed;
+                    }
+                    else if (Equipment.RightWeapon.RangedMelee == 1)
+                    {
+                        returnValue = CharacterRangedAttackSpeed;
+                    }
+                }
+                else if (Equipment.LeftWeapon != null)
+                {
+                    if (Equipment.LeftWeapon.RangedMelee == 0)
+                    {
+                        returnValue = CharacterMeleeAttackSpeed;
+                    }
+                    else if (Equipment.LeftWeapon.RangedMelee == 1)
+                    {
+                        returnValue = CharacterRangedAttackSpeed;
+                    }
+                }
+                else
+                {
+                    returnValue = CharacterMeleeAttackSpeed;
+                }
+                return Math.Round(returnValue, 2);
+            }
+        }
+        public static double CharacterBasePhysicalDamage
+        {
+            get
+            {
+                return Math.Round(GetCharacterBasePhysical(),2);
+            }
+        }
+        public static double CharacterBaseArmour
+        {
+            get
+            {
+                return Math.Round(GetCharacterBaseArmour());
+            }
+        }
+        public static double CharacterBaseEvasion
+        {
+            get
+            {
+                return Math.Round(GetCharacterBaseEvasion());
+            }
+        }
+        public static double CharacterTotalPhysicalDamage
+        {
+            get
+            {
+                double returnValue = CharacterBasePhysicalDamage;
+                if (Equipment.RightWeapon != null)
+                {
+                    if (Equipment.RightWeapon.RangedMelee == 0)
+                    {
+                        returnValue = (float)GetCharacterPhysicalDamage(0);
+                    }
+                    else if (Equipment.RightWeapon.RangedMelee == 1)
+                    {
+                        returnValue = (float)GetCharacterPhysicalDamage(1);
+                    }
+                }
+                else if (Equipment.LeftWeapon != null)
+                {
+                    if (Equipment.LeftWeapon.RangedMelee == 0)
+                    {
+                        returnValue = (float)GetCharacterPhysicalDamage(0);
+                    }
+                    else if (Equipment.LeftWeapon.RangedMelee == 1)
+                    {
+                        returnValue = (float)GetCharacterPhysicalDamage(1);
+                    }
+                }
+                
+                return Math.Round(returnValue,2);
+            }
+        }
+        public static double CharacterTotalArmour
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("ARM", "Armour"));
+            }
+        }
+        public static double CharacterTotalEvasion
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("EVA", "Evasion"));
+            }
+        }
+        public static double CharacterIncreaseHealthFlat
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("HPFLAT"));
+            }
+        }
+        public static double CharacterIncreaseHealth
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("HP"),2);
+            }
+        }
+        public static double CharacterIncreaseManaFlat
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("MPFLAT"));
+            }
+        }
+        public static double CharacterIncreaseMana
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("MP"),2);
+            }
+        }
+        public static double CharacterIncreasePhysDmg
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("PDMG"),2);
+            }
+        }
+        public static double CharacterIncreasePhysRangeDmg
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("RPDMG"),2);
+            }
+        }
+        public static double CharacterIncreasePhyMeleeDmg
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("MPDMG"),2);
+            }
+        }
+        public static double CharacterIncreaseExpPct
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("EXP"),2);
+            }
+        }
+        public static double CharacterMagicFindRarity
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("MF"));
+            }
+        }
+        public static double CharacterMagicFindQuantity
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("MQ"));
+            }
+        }
+        public static double CharacterBaseCritChance
+        {
+            get
+            {
+                return Math.Round(GetBaseCritChance(),2);
+            }
+        }
+        public static double CharacterCritChance
+        {
+            get
+            {
+                return Math.Round(CharacterBaseCritChance + GetCharacterStatTotal("CC"),2);
+            }
+        }
+        public static double CharacterCritDamageModifier
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("CD"),2);
+            }
+        }
+        public static double CharacterCoolDownReduction
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("CDR"),2);
+            }
+        }
+        public static double CharacterPhysDamageReduction
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("PDR"),2);
+            }
+        }
+        public static double CharacterVsBeastDamage
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("DVB"),2);
+            }
+        }
+        public static double CharacterVsHumanDamage
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("DVH"),2);
+            }
+        }
+        public static double CharacterVsUndeadDamage
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("DVU"),2);
+            }
+        }
+        public static double CharacterVsBossDamage
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("DVBS"),2);
+            }
+        }
+        public static double CharacterVsEliteDamage
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("DVE"),2);
+            }
+        }
+        public static double CharacterMagicPenetration
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("CMP"),2);
+            }
+        }
+        public static double CharacterArmourPenetration
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("ARPEN"),2);
+            }
+        }
+        public static double CharacterPhysicalReflect
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("PREF"),2);
+            }
+        }
+        public static double CharacterMagicReflect
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("MREF"),2);
+            }
+        }
+        public static double CharacterSpellDamage
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("SPDMG"),2);
+            }
+        }
+        public static double CharacterHealthRegen
+        {
+            get
+            {
+                return Math.Round(GetCharacterBaseHealthRegen(),2);
+            }
+        }
+        public static double CharacterTotalHealthregen
+        {
+            get
+            {
+                return Math.Round(CharacterHealthRegen + GetCharacterStatTotal("HPREGEN"), 2);
+            }
+        }
+        public static double CharacterManaRegen
+        {
+            get
+            {
+                return Math.Round(GetCharacterBaseManaRegen(),2);
+            }
+        }
+        public static double CharacterTotalManaRegen
+        {
+            get
+            {
+                return Math.Round(CharacterManaRegen + GetCharacterStatTotal("MPREGEN"), 2);
+            }
+        }//Left off here :  notes : keeps adding math.round to shit and DONT FORGET to add lifeleech and mana leech stats
+        public static double CharacterDamageReduction
+        {
+            get
+            {
+                return GetCharacterStatTotal("DRDC");
+            }
+        }
+
         public static bool CharacterHasSkillFireBall { get; set; }
+
         public static int UserSetWidth { get; set; }
         public static int UserSetHeight { get; set; }
         public static int ScreenWidth { get; set; }
@@ -219,56 +971,19 @@ namespace TextureAtlas
         {
             public Inventory theInventory { get; set; }
             public Equipment theEquipment { get; set; }
-            public string WeaponName { get; set; }
-            public int MeleeRange { get; set; }
-            public int WeaponType { get; set; }
             public int Difficulty { get; set; }
             public int Level { get; set; }
-            public int Strength { get; set; }
-            public int Dex { get; set; }
-            public int Int { get; set; }
-            public int Wisdom { get; set; }
-            public int Accuracy { get; set; }
-            public int Luck { get; set; }
-            public int AllElementalReduction { get; set; }
-            public int FireResist { get; set; }
-            public int ColdResist { get; set; }
-            public int LightningResist { get; set; }
-            public int EarthResist { get; set; }
-            public int Armour { get; set; }
-            public int MovementSpeed { get; set; }
-            public int AttackSpeed { get; set; }
-            public int Health { get; set; }
-            public int Mana { get; set; }
-            public int Experience { get; set; }
-            public int StatPoints { get; set; }
-            public int SkillPoints { get; set; }
-            public int IncreaseFlatPhys { get; set; }
-            public int IncreaseFlatRanged { get; set; }
-            public int IncreaseFlatMelee { get; set; }
-            public float IncreasePhysMelee { get; set; }
-            public float IncreasePhyRange { get; set; }
-            public float IncreasePhys { get; set; }
-            public float IncreaseExpPct { get; set; }
-            public float MagicFindRarity { get; set; }
-            public float MagicFindQuantity { get; set; }
-            public float CritChance { get; set; }
-            public float CritDamageModifier { get; set; }
-            public float CoolDownReduction { get; set; }
-            public float PhysDamageReduction { get; set; }
-            public float VsBeastDamage { get; set; }
-            public float VsHumanDamage { get; set; }
-            public float VsUndeadDamage { get; set; }
-            public float VsBossDamage { get; set; }
-            public float VsEliteDamage { get; set; }
-            public float MagicPenetration { get; set; }
-            public float ArmourPenetration { get; set; }
-            public float PhysicalReflect { get; set; }
-            public float MagicReflect { get; set; }
-            public float SpellDamage { get; set; }
-            public float HealthRegen { get; set; }
-            public float ManaRegen { get; set; }
-            public float DamageReduction { get; set; }
+            public double Strength { get; set; }
+            public double Agility { get; set; }
+            public double Vitality { get; set; }
+            public double Constitution { get; set; }
+            public double Dex { get; set; }
+            public double Int { get; set; }
+            public double Wisdom { get; set; }
+            public double Luck { get; set; }
+            public double Experience { get; set; }
+            public double StatPoints { get; set; }
+            public double SkillPoints { get; set; }
             public bool HasSkillFireBall { get; set; }
         }
 
@@ -277,54 +992,19 @@ namespace TextureAtlas
             GameData data = new GameData();
             data.theInventory = Inventory;
             data.theEquipment = Equipment;
-            data.MeleeRange = CharacterMeleeRange;
-            data.WeaponType = CharacterWeaponType;
             data.Difficulty = GameDifficulty;
             data.Level = CharacterLevel;
             data.Strength = CharacterStrength;
+            data.Agility = CharacterAgility;
             data.Dex = CharacterDex;
             data.Int = CharacterInt;
             data.Wisdom = CharacterWisdom;
-            data.Accuracy = CharacterAccuracy;
+            data.Vitality = CharacterVitality;
+            data.Constitution = CharacterConstitution;
             data.Luck = CharacterLuck;
-            data.AllElementalReduction = CharacterAllElementalReduction;
-            data.FireResist = CharacterFireResist;
-            data.ColdResist = CharacterColdResist;
-            data.LightningResist = CharacterLightningResist;
-            data.EarthResist = CharacterEarthResist;
-            data.Armour = CharacterArmour;
-            data.MovementSpeed = CharacterMovementSpeed;
-            data.AttackSpeed = CharacterAttackSpeed;
-            data.Health = CharacterHealth;
-            data.Mana = CharacterMana;
             data.Experience = CharacterExperience;
             data.StatPoints = CharacterStatPoints;
             data.SkillPoints = CharacterSkillPoints;
-            data.IncreaseExpPct = CharacterIncreaseExpPct;
-            data.MagicFindRarity = CharacterMagicFindRarity;
-            data.MagicFindQuantity = CharacterMagicFindQuantity;
-            data.CritChance = CharacterCritChance;
-            data.IncreasePhyRange = CharacterIncreasePhysRangeDmg;
-            data.IncreasePhysMelee = CharacterIncreasePhysDmg;
-            data.IncreasePhys = CharacterIncreasePhysDmg;
-            data.IncreaseFlatPhys = CharacterIncreaseFlatPhysical;
-            data.IncreaseFlatMelee = CharacterIncreaseFlatMelee;
-            data.IncreaseFlatRanged = CharacterIncreaseFlatRange;
-            data.CritDamageModifier = CharacterCritDamageModifier;
-            data.CoolDownReduction = CharacterCoolDownReduction;
-            data.PhysDamageReduction = CharacterPhysDamageReduction;
-            data.VsBeastDamage = CharacterVsBeastDamage;
-            data.VsHumanDamage = CharacterVsHumanDamage;
-            data.VsUndeadDamage = CharacterVsUndeadDamage;
-            data.VsBossDamage = CharacterVsBossDamage;
-            data.VsEliteDamage = CharacterVsEliteDamage;
-            data.MagicPenetration = CharacterMagicPenetration;
-            data.ArmourPenetration = CharacterArmourPenetration;
-            data.PhysicalReflect = CharacterPhysicalReflect;
-            data.MagicReflect = CharacterMagicReflect;
-            data.SpellDamage = CharacterSpellDamage;
-            data.HealthRegen = CharacterHealthRegen;
-            data.DamageReduction = CharacterDamageReduction;
             data.HasSkillFireBall = CharacterHasSkillFireBall;
 
             IAsyncResult result1 = StorageDevice.BeginShowSelector(PlayerIndex.One, null, null);
@@ -375,56 +1055,22 @@ namespace TextureAtlas
 
                 stream.Close();
                 container.Dispose();
+
                 Equipment = data.theEquipment;
                 Inventory = data.theInventory;
-                CharacterWeaponName = data.WeaponName;
-                CharacterMeleeRange = data.MeleeRange;
-                CharacterWeaponType = data.WeaponType;
                 GameDifficulty = data.Difficulty;
                 CharacterLevel = data.Level;
                 CharacterStrength = data.Strength;
+                CharacterAgility = data.Agility;
                 CharacterDex = data.Dex;
                 CharacterInt = data.Int;
                 CharacterWisdom = data.Wisdom;
-                CharacterAccuracy = data.Accuracy;
                 CharacterLuck = data.Luck;
-                CharacterAllElementalReduction = data.AllElementalReduction;
-                CharacterColdResist = data.ColdResist;
-                CharacterLightningResist = data.LightningResist;
-                CharacterEarthResist = data.EarthResist;
-                CharacterArmour = data.Armour;
-                CharacterMovementSpeed = data.MovementSpeed;
-                CharacterAttackSpeed = data.AttackSpeed;
-                CharacterHealth = data.Health;
-                CharacterMana = data.Mana;
+                CharacterVitality = data.Vitality;
+                CharacterConstitution = data.Constitution;
                 CharacterExperience = data.Experience;
-                CharacterIncreasePhysDmg = data.IncreasePhysMelee;
-                CharacterIncreasePhysRangeDmg = data.IncreasePhyRange;
-                CharacterIncreasePhysDmg = data.IncreasePhys;
-                CharacterIncreaseFlatMelee = data.IncreaseFlatMelee;
-                CharacterIncreaseFlatPhysical = data.IncreaseFlatPhys;
-                CharacterIncreaseFlatRange = data.IncreaseFlatRanged;
                 CharacterStatPoints = data.StatPoints;
                 CharacterSkillPoints = data.SkillPoints;
-                CharacterIncreaseExpPct = data.IncreaseExpPct;
-                CharacterMagicFindRarity = data.MagicFindRarity;
-                CharacterMagicFindQuantity = data.MagicFindQuantity;
-                CharacterCritChance = data.CritChance;
-                CharacterCritDamageModifier = data.CritDamageModifier;
-                CharacterCoolDownReduction = data.CoolDownReduction;
-                CharacterPhysDamageReduction = data.PhysDamageReduction;
-                CharacterVsBeastDamage = data.VsBeastDamage;
-                CharacterVsHumanDamage = data.VsHumanDamage;
-                CharacterVsUndeadDamage = data.VsUndeadDamage;
-                CharacterVsBossDamage = data.VsBossDamage;
-                CharacterVsEliteDamage = data.VsEliteDamage;
-                CharacterMagicPenetration = data.MagicPenetration;
-                CharacterArmourPenetration = data.ArmourPenetration;
-                CharacterPhysicalReflect = data.PhysicalReflect;
-                CharacterMagicReflect = data.MagicReflect;
-                CharacterSpellDamage = data.SpellDamage;
-                CharacterHealthRegen = data.HealthRegen;
-                CharacterDamageReduction = data.DamageReduction;
                 CharacterHasSkillFireBall = data.HasSkillFireBall;
             }
             catch (Exception ex)
@@ -662,7 +1308,7 @@ namespace TextureAtlas
                 }
                 else if (rarity >= 90)
                 {
-                    int isUnique = rng.Next(0 + CharacterLuck + (int)CharacterMagicFindRarity + (int)CharacterMagicFindQuantity, 1000);
+                    int isUnique = rng.Next(0 + (int)CharacterTotalLuck + (int)CharacterMagicFindRarity + (int)CharacterMagicFindQuantity, 1000);
                     if (isUnique > 600)
                     {
                         returnValue = 6;
@@ -1018,7 +1664,7 @@ namespace TextureAtlas
                                 //Leather Boots
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
                                     break;
                             }
 
@@ -1031,7 +1677,7 @@ namespace TextureAtlas
                                 //Leather PAnts
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
                                     break;
                             }
 
@@ -1044,7 +1690,7 @@ namespace TextureAtlas
                                 //Leather Chest
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
                                     break;
                             }
 
@@ -1057,7 +1703,7 @@ namespace TextureAtlas
                                 //Leather Gloves
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
                                     break;
                             }
 
@@ -1070,7 +1716,7 @@ namespace TextureAtlas
                                 //Gold Ring
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
                                     break;
                             }
                             break;
@@ -1082,7 +1728,7 @@ namespace TextureAtlas
                                 //Leather Belt
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
                                     break;
                             }
                             break;
@@ -1094,7 +1740,7 @@ namespace TextureAtlas
                                 //Leather Helmet
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
                                     break;
                             }
                             break;
@@ -1106,7 +1752,7 @@ namespace TextureAtlas
                                 //Leather Shoulders
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53 ,54, 55 };
                                     break;
                             }
                             break;
@@ -1337,7 +1983,7 @@ namespace TextureAtlas
                 case 29:
                     returnAffix.Value = rng.Next(3, 10);
                     returnAffix.Stat = "MPDMG";
-                    returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
+                    returnAffix.Desc = "Melee Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 30:
                     returnAffix.Value = rng.Next(10, 50);
@@ -1401,72 +2047,81 @@ namespace TextureAtlas
                     returnAffix.Stat = "AREVA";
                     returnAffix.Desc = "Item Evasion Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
+                case 42:
+                    returnAffix.Value = rng.Next(30, 250);
+                    returnAffix.Stat = "AR";
+                    returnAffix.Desc = "Item Armour Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 43:
+                    returnAffix.Value = rng.Next(30, 250);
+                    returnAffix.Stat = "FAR";
+                    returnAffix.Desc = "Item Armour Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                //Stats Continued
+                case 44:
+                    returnAffix.Value = rng.Next(3,5);
+                    returnAffix.Stat = "PDR";
+                    returnAffix.Desc = "Physical Damage Reduced By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 45:
+                    returnAffix.Value = rng.Next(20, 50);
+                    returnAffix.Stat = "DVB";
+                    returnAffix.Desc = "Damage Vs Beast Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 46:
+                    returnAffix.Value = rng.Next(20, 50);
+                    returnAffix.Stat = "DVH";
+                    returnAffix.Desc = "Damage Vs Human Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 47:
+                    returnAffix.Value = rng.Next(20, 50);
+                    returnAffix.Stat = "DVU";
+                    returnAffix.Desc = "Damage Vs Undead Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 48:
+                    returnAffix.Value = rng.Next(10, 25);
+                    returnAffix.Stat = "DVBS";
+                    returnAffix.Desc = "Damage Vs Bosses Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 49:
+                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Stat = "DVE";
+                    returnAffix.Desc = "Damage Vs Elites Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 50:
+                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Stat = "PREF";
+                    returnAffix.Desc = "Physical Damage Reflected : " + returnAffix.Value.ToString();
+                    break;
+                case 51:
+                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Stat = "MREF";
+                    returnAffix.Desc = "Magic Damage Reflected : " + returnAffix.Value.ToString();
+                    break;
+                case 52:
+                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Stat = "SPDMG";
+                    returnAffix.Desc = "Spell Damage Increased By : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 53:
+                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Stat = "HPREGEN";
+                    returnAffix.Desc = "Health Regeneration Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 54:
+                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Stat = "MPREGEN";
+                    returnAffix.Desc = "Mana Regeneration Increased By : " + returnAffix.Value.ToString();
+                    break;
+                case 55:
+                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Stat = "DRDC";
+                    returnAffix.Desc = "Damage Reduced By : " + returnAffix.Value.ToString() + "%";
+                    break;
             }
 
             AffixRange.Remove(AffixRange[index]);
             return returnAffix;
-        }
-
-        public static float CalculateMeleePhysStat(List<Affix> affixes, int BasePhys)
-        {
-            float returnValue = BasePhys;
-            foreach (Affix afx in affixes)
-            {
-                if (afx.Stat == "FWPDMG")
-                {
-                    returnValue += afx.Value;
-                    break;
-                }
-            }
-
-            foreach (Affix afx in affixes)
-            {
-                if (afx.Stat == "WPDMG")
-                {
-                    returnValue = returnValue * (1 + (float)(afx.Value * .01));
-                }
-            }
-
-            return returnValue;
-        }
-
-        public static float CalculateMeleeAttackSpeed(List<Affix> affixes, float BaseAtkSpd)
-        {
-            float returnValue = BaseAtkSpd;
-            foreach (Affix afx in affixes)
-            {
-                if (afx.Stat == "WATKSPD")
-                {
-                    returnValue = returnValue * (1 + (float)(afx.Value * .01));
-                    if (returnValue.ToString().Length > 3)
-                    {
-                        returnValue = (float)(Math.Round(returnValue, 2, MidpointRounding.AwayFromZero));
-                    }
-                }
-            }
-            return returnValue;
-        }
-
-        public static int CalculateEvasion(List<Affix> affixes, int baseEV)
-        {
-            int returnValue = baseEV;
-            foreach (Affix afx in affixes)
-            {
-                if (afx.Stat == "FAREVA")
-                {
-                    returnValue += afx.Value;
-                    break;
-                }
-            }
-
-            foreach (Affix afx in affixes)
-            {
-                if (afx.Stat == "AREVA")
-                {
-                    returnValue = (int)(returnValue * (1 + (float)(afx.Value * .01)));
-                }
-            }
-            return returnValue;
         }
 
         public static float RollMeleeHitDamage(bool isCrit, int enemyArmour)
@@ -1474,8 +2129,8 @@ namespace TextureAtlas
             enemyArmour -= (int)(enemyArmour * (CharacterArmourPenetration / 100));
             Random rng = new Random();
             int basedmg = rng.Next(GlobalVariables.CharacterMinDmg, GlobalVariables.CharacterMaxDmg);
-            float damage = (basedmg + CharacterIncreaseFlatMelee + CharacterIncreaseFlatPhysical);
-            damage += damage * (CharacterIncreasePhysDmg + CharacterIncreasePhyMeleeDmg);
+            float damage = (basedmg + (float)CharacterIncreaseFlatMelee + (float)CharacterIncreaseFlatPhysical);
+            damage += damage * ((float)CharacterIncreasePhysDmg + (float)CharacterIncreasePhyMeleeDmg);
             damage -= (damage * (int)(enemyArmour / 100));
             return damage;
         }
@@ -1565,12 +2220,6 @@ namespace TextureAtlas
             return type;
         }
 
-        public static int ItemRarity()
-        {
-            //Roll Logic Here, For Testing we will Return 5
-            return 5;
-        }
-
         public static void WeaponEquiped(Item item, int leftright)
         {
             //1 == left, 2 == right
@@ -1588,7 +2237,6 @@ namespace TextureAtlas
                     TheGame.animatedSprite.CharWeapon = TheGame.CharWeapon;
                     break;
             }
-
         }
 
         public static void BootsEquipped(Item item)
@@ -1633,6 +2281,493 @@ namespace TextureAtlas
             GlobalVariables.TheGame.CharChest = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtChest = TheGame.CharChest;
             TheGame.animatedSprite.CharChest = TheGame.CharChest;
+        }
+
+        public static float CalculateMeleePhysStat(List<Affix> affixes, int BasePhys)
+        {
+            float returnValue = BasePhys;
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "FWPDMG")
+                {
+                    returnValue += afx.Value;
+                    break;
+                }
+            }
+
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "WPDMG")
+                {
+                    returnValue = returnValue * (1 + (float)(afx.Value * .01));
+                }
+            }
+
+            return returnValue;
+        }
+
+        public static float CalculateMeleeAttackSpeed(List<Affix> affixes, float BaseAtkSpd)
+        {
+            float returnValue = BaseAtkSpd;
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "WATKSPD")
+                {
+                    returnValue = returnValue * (1 + (float)(afx.Value * .01));
+                    if (returnValue.ToString().Length > 3)
+                    {
+                        returnValue = (float)(Math.Round(returnValue, 2, MidpointRounding.AwayFromZero));
+                    }
+                }
+            }
+            return returnValue;
+        }
+
+        public static int CalculateEvasion(List<Affix> affixes, int baseEV)
+        {
+            int returnValue = baseEV;
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "FAREVA")
+                {
+                    returnValue += afx.Value;
+                    break;
+                }
+            }
+
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "AREVA")
+                {
+                    returnValue = (int)(returnValue * (1 + (float)(afx.Value * .01)));
+                }
+            }
+            return returnValue;
+        }
+
+        public static int CalculateArmour(List<Affix> affixes, int baseEV)
+        {
+            int returnValue = baseEV;
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "FAR")
+                {
+                    returnValue += afx.Value;
+                    break;
+                }
+            }
+
+            foreach (Affix afx in affixes)
+            {
+                if (afx.Stat == "AREVA")
+                {
+                    returnValue = (int)(returnValue * (1 + (float)(afx.Value * .01)));
+                }
+            }
+            return returnValue;
+        }
+
+        public static double GetCharacterBaseAttackSpeed()
+        {
+            double returnValue = 1;
+
+            //10 dex = .1 Attack Speed
+            //20 agi = .1 Attack Speed
+
+            returnValue += CharacterTotalDex / 100;
+            returnValue += CharacterTotalAgility / 200;    
+
+            return returnValue;
+        }
+
+        public static double GetCharacterAttackSpeed(int RangedMelee)
+        {
+            //0 = melee
+            //1 = ranged
+
+            double returnValue = GetCharacterBaseAttackSpeed();
+
+            if (GlobalVariables.TheGame.equipment.RightWeapon != null)
+            {
+                returnValue *= GlobalVariables.TheGame.equipment.RightWeapon.BaseAttackSpeed;
+                if (GlobalVariables.TheGame.equipment.LeftWeapon != null)
+                {
+                    double temp = GetCharacterBaseAttackSpeed();
+                    double tempItem = temp * GlobalVariables.TheGame.equipment.LeftWeapon.BaseAttackSpeed;
+                    tempItem = tempItem + returnValue;
+                    returnValue = tempItem / 2;
+                }
+            }
+            else if (GlobalVariables.TheGame.equipment.LeftWeapon != null)
+            {
+                returnValue *= GlobalVariables.TheGame.equipment.LeftWeapon.BaseAttackSpeed;
+            }
+
+            returnValue *= 1 + (CharacterIncreaseAttackSpeed / 100);
+
+            if (RangedMelee == 0)
+            {
+                returnValue *= 1 + (CharacterIncreaseMeleeAttackSpeed / 100);
+            }
+            else if (RangedMelee == 1)
+            {
+                returnValue *= 1 + (CharacterIncreaseRangedAttackSpeed / 100);
+            }
+
+            return returnValue;
+        }
+
+        public static double GetCharacterBasePhysical()
+        {
+            double returnValue = 1;
+
+            //2 str = 1 dmg
+            //10 con = 1 dmg
+
+            returnValue += (double)(CharacterTotalStrength / 2);
+            returnValue += (double)(CharacterTotalConstitution / 10);
+
+            return returnValue;
+        }
+
+        public static double GetCharacterPhysicalDamage(int RangedMelee)
+        {
+            //0 = melee
+            //1 = ranged
+
+            double returnValue = GetCharacterBasePhysical();
+
+            if (GlobalVariables.TheGame.equipment.RightWeapon != null)
+            {
+                returnValue += GlobalVariables.TheGame.equipment.RightWeapon.BaseStat;
+                if (GlobalVariables.TheGame.equipment.LeftWeapon != null)
+                {
+                    double temp = GetCharacterBasePhysical();
+                    double tempItem = temp + GlobalVariables.TheGame.equipment.LeftWeapon.BaseStat;
+                    tempItem = tempItem + returnValue;
+                    returnValue = tempItem / 2;
+                }
+            }
+            else if (GlobalVariables.TheGame.equipment.LeftWeapon != null)
+            {
+                returnValue += GlobalVariables.TheGame.equipment.LeftWeapon.BaseStat;
+            }
+
+            //Calculate Flat values
+
+            returnValue += CharacterIncreaseFlatPhysical;
+
+            if (RangedMelee == 0)
+            {
+                returnValue += CharacterIncreaseFlatMelee;
+            }
+            else
+            {
+                returnValue += CharacterIncreaseFlatRange;
+            }
+
+            //Apply Percentage Increases
+
+            returnValue *= 1 + (CharacterIncreasePhysDmg / 100);
+
+            if (RangedMelee == 0)
+            {
+                returnValue *= 1 + (CharacterIncreasePhyMeleeDmg / 100);
+            }
+            else
+            {
+                returnValue *= 1 + (CharacterIncreasePhysRangeDmg / 100);
+            }
+
+            return returnValue;
+
+        }
+
+        public static double GetBaseCritChance()
+        {
+            double returnValue = 1;
+
+            //Crit Chance increases .1 per 20 dex
+            //Crit Chance increases .1 per 20 agility
+
+            returnValue += CharacterTotalDex / 200;
+            returnValue += CharacterTotalAgility / 200;
+
+            return returnValue;
+        }
+
+        public static double GetCharacterBaseManaRegen()
+        {
+            double returnValue = 10;
+
+            //10 Int = 1 hp regen
+            //20 Wis = 1 hp regen
+
+            returnValue += CharacterTotalWisdom / 10;
+            returnValue += CharacterTotalInt / 20;
+
+            return returnValue;
+        }
+
+        public static double GetCharacterBaseHealthRegen()
+        {
+            double returnValue = 10;
+
+            //10 vit = 1 hp regen
+            //20 con = 1 hp regen
+
+            returnValue += CharacterTotalVitality / 10;
+            returnValue += CharacterTotalConstitution / 20;
+
+            return returnValue;
+        }
+
+        public static double GetCharacterStatTotal(string AffixDesc, string BaseStatName = "")
+        {
+
+            double ReturnValue = 0;
+
+            switch (BaseStatName)
+            {
+                case "Armour":
+                    ReturnValue += GetCharacterBaseArmour();
+                    break;
+                case "Evasion":
+                    ReturnValue += GetCharacterBaseEvasion();
+                    break;
+            }
+
+            if (BaseStatName.Length > 0)
+            {
+                ReturnValue += GetBaseStatAcrossEquipment(BaseStatName);
+            }
+
+            ReturnValue += GetStatAcrossEquipment(AffixDesc);
+
+            return ReturnValue;
+
+        }
+
+        public static double GetCharacterBaseArmour()
+        {
+            double returnValue = 1;
+
+            // 2 str = 1 AR
+            // 2 con = 1 AR
+
+            returnValue += CharacterTotalStrength / 2;
+            returnValue += CharacterTotalConstitution / 2;
+
+            return returnValue;
+        }
+
+        public static double GetCharacterBaseCastSpeed()
+        {
+            double returnValue = 100;
+
+            //base 100
+
+            return returnValue;
+        }
+
+        public static double GetCharacterCastSpeed()
+        {
+            double returnValue = GetCharacterBaseCastSpeed();
+
+            returnValue += GetStatAcrossEquipment("CSPD");
+
+            return returnValue;
+        }
+
+        public static double GetcharacterBaseMovementSpeed()
+        {
+            double returnValue = 100;
+
+            //base 100
+
+            return returnValue;
+        }
+
+        public static double GetCharacterMovementSpeed()
+        {
+            double returnValue = GetcharacterBaseMovementSpeed();
+
+            returnValue += GetStatAcrossEquipment("MVSPD");
+
+            return returnValue;
+        }
+
+        public static double GetCharacterBaseHealth()
+        {
+            double returnValue = 100;
+
+            returnValue *= CharacterLevel;
+
+            return returnValue;
+
+        }
+
+        public static double GetCharacterBaseMana()
+        {
+            double returnValue = 50;
+
+            returnValue *= CharacterLevel;
+
+            return returnValue;
+
+        }
+
+        public static double GetCharacterBaseEvasion()
+        {
+            double returnValue = 1;
+
+            // 2 dex = 1 Evasion
+            // 2 agility = 1 Evasion
+
+            returnValue += CharacterTotalDex / 2;
+            returnValue += CharacterTotalDex / 2;
+
+            return returnValue;
+
+        }
+
+        public static double GetCharacterMeleeRange()
+        {
+            double returnValue = 10;
+
+            returnValue += GetStatAcrossEquipment("MR");
+
+            return returnValue;
+        }
+
+        public static double GetCharacterBaseAccuracy()
+        {
+            double returnValue = 10;
+
+            //2 dex = 1 acc
+            //4 agi = 1 acc
+
+            returnValue += CharacterTotalDex / 2;
+            returnValue += CharacterTotalAgility / 4;
+
+            return returnValue;
+        }
+
+        public static double GetCharacterAccuracy(int MeleeRanged)
+        {
+            //0 = Melee
+            //1 = Ranged
+
+            double returnValue = GetCharacterBaseAccuracy();
+
+            if (MeleeRanged == 0)
+            {
+                returnValue += CharacterMeleeAccuracy;
+            }
+            else if (MeleeRanged == 1)
+            {
+                returnValue += CharacterRangedAccuracy;
+            }
+
+            return returnValue;
+
+        }
+
+        public static double GetStatAcrossEquipment(string StatName)
+        {
+            double returnValue = 0;
+
+            List<Item> listItems = new List<Item> { Equipment.Belt, Equipment.Boots, Equipment.Chest, Equipment.Gloves, Equipment.Helmet, Equipment.LeftRing, Equipment.RightRing, Equipment.Belt, Equipment.RightWeapon, Equipment.LeftWeapon };
+
+            foreach (Item item in listItems)
+            {
+                if (item != null)
+                {
+                    foreach (Affix affix in item.AffixList)
+                    {
+                        if (affix.Stat == StatName)
+                        {
+                            returnValue += affix.Value;
+                        }
+                    }
+                }
+            }
+
+            return returnValue;
+
+        }
+
+        public static int GetBaseStatAcrossEquipment(string BaseStatName)
+        {
+
+            int returnValue = 0;
+
+            if (Equipment.Boots != null)
+            {
+                if (Equipment.Boots.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.Boots.AffixList, Equipment.Boots.BaseStat);
+                }
+            }
+            if (Equipment.Chest != null)
+            {
+                if (Equipment.Chest.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.Chest.AffixList, Equipment.Chest.BaseStat);
+                }
+            }
+            if (Equipment.Shoulders != null)
+            {
+                if (Equipment.Shoulders.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.Shoulders.AffixList, Equipment.Shoulders.BaseStat);
+                }
+            }
+            if (Equipment.Pants != null)
+            {
+                if (Equipment.Pants.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.Pants.AffixList, Equipment.Pants.BaseStat);
+                }
+            }
+            if (Equipment.Helmet != null)
+            {
+                if (Equipment.Helmet.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.Helmet.AffixList, Equipment.Helmet.BaseStat);
+                }
+            }
+            if (Equipment.Gloves != null)
+            {
+                if (Equipment.Gloves.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.Gloves.AffixList, Equipment.Gloves.BaseStat);
+                }
+            }
+            if (Equipment.Belt != null)
+            {
+                if (Equipment.Belt.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.Belt.AffixList, Equipment.Belt.BaseStat);
+                }
+            }
+            if (Equipment.LeftRing != null)
+            {
+                if (Equipment.LeftRing.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.LeftRing.AffixList, Equipment.LeftRing.BaseStat);
+                }
+            }
+            if (Equipment.RightRing != null)
+            {
+                if (Equipment.RightRing.BaseStatName == BaseStatName)
+                {
+                    returnValue += CalculateEvasion(Equipment.RightRing.AffixList, Equipment.RightRing.BaseStat);
+                }
+            }
+
+            return returnValue;
+
         }
 
         public static string GetItemDescription(int type, int subType, bool isUnique)
@@ -2270,7 +3405,7 @@ namespace TextureAtlas
 
         public static bool MoveCharacterToPosition(AnimatedSprite Character, Game1 Game, Vector2 MoveTo, Vector2 Velocity, Vector2 VelocityUp, List<Enemy> enemies)
         {
-            Rectangle HeroMeleeRange = new Rectangle((Character.Bounds.X - CharacterMeleeRange), (Character.Bounds.Y - CharacterMeleeRange), (Character.Bounds.Width + (CharacterMeleeRange * 2)), (Character.Bounds.Height + (CharacterMeleeRange * 2)));
+            Rectangle HeroMeleeRange = new Rectangle((Character.Bounds.X - (int)CharacterMeleeRange), (Character.Bounds.Y - (int)CharacterMeleeRange), (Character.Bounds.Width + ((int)CharacterMeleeRange * 2)), (Character.Bounds.Height + ((int)CharacterMeleeRange * 2)));
 
             foreach (Enemy en in enemies)
             {

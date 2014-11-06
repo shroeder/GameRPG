@@ -44,6 +44,9 @@ namespace TextureAtlas
 
         public string ItemDescription;
 
+        //0 = melee, 1 = ranged;  indexed to melee
+        public int RangedMelee = 0;
+
         public Texture2D LegBeam;
         public Texture2D TextureBack;
         public Texture2D ItemTexture;

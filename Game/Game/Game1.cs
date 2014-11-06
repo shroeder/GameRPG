@@ -2547,7 +2547,6 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.Y = equipment.BeltBounds.Y;
                         Item tempitem = equipment.Belt;
                         equipment.Belt = inventory.ClampedItem;
-                        //GlobalVariables.BeltEquipped(inventory.ClampedItem);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;

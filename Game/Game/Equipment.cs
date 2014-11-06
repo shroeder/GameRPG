@@ -471,6 +471,52 @@ namespace TextureAtlas
         public void draw(SpriteBatch spriteBatach, Texture2D EquipSheet, SpriteFont font)
         {
 
+            List<string> Values = new List<string>();
+            double theValue = 0;
+
+            Vector2 StartPosition = new Vector2((float)(GlobalVariables.gfx.PreferredBackBufferWidth * .64), (float)(GlobalVariables.gfx.PreferredBackBufferHeight * .225));
+
+            //Base Damage
+
+            if (RightWeapon != null)
+            {
+                if (RightWeapon.RangedMelee == 0)
+                {
+                    theValue = GlobalVariables.GetCharacterPhysicalDamage(0);
+                }
+                else if (RightWeapon.RangedMelee == 1)
+                {
+                    theValue = GlobalVariables.GetCharacterPhysicalDamage(1);
+                }
+            }
+            else if (LeftWeapon != null)
+            {
+                if (RightWeapon.RangedMelee == 0)
+                {
+                    theValue = GlobalVariables.GetCharacterPhysicalDamage(0);
+                }
+                else if (RightWeapon.RangedMelee == 1)
+                {
+                    theValue = GlobalVariables.GetCharacterPhysicalDamage(1);
+                }
+            }
+            else
+            {
+                theValue = GlobalVariables.GetCharacterPhysicalDamage(0);
+            }
+
+            Values.Add("Physical Damage : " + theValue.ToString());
+            Values.Add("Attack Speed : " + GlobalVariables.CharacterAttackSpeed);
+
+
+            //Loop through and display values
+
+            foreach (string str in Values)
+            {
+                GlobalVariables.WaitToDraw(1, StartPosition, new Rectangle(0, 0, 0, 0), Color.Black, GlobalVariables.Font10, null, str);
+                StartPosition.Y += GlobalVariables.Font10.MeasureString("T").Y;
+            }
+
             font1 = font;
             CharBG = EquipSheet;
 
