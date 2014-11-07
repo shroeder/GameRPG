@@ -507,7 +507,26 @@ namespace TextureAtlas
 
             Values.Add("Physical Damage : " + theValue.ToString());
             Values.Add("Attack Speed : " + GlobalVariables.CharacterAttackSpeed);
-
+            Values.Add("Health : " + GlobalVariables.CharacterTotalHealth);
+            Values.Add("Mana : " + GlobalVariables.CharacterTotalMana);
+            Values.Add("Health Regen : " + GlobalVariables.CharacterTotalHealthregen);
+            Values.Add("Mana Regen : " + GlobalVariables.CharacterTotalManaRegen);
+            Values.Add("Critical Chance : " + GlobalVariables.CharacterCritChance);
+            Values.Add("Critical Damage : " + GlobalVariables.CharacterCritDamageModifier);
+            Values.Add("Life Steal : " + GlobalVariables.CharacterHealthSteal);
+            Values.Add("Mana Steal : " + GlobalVariables.CharacterManaSteal);
+            Values.Add("Armour : " + GlobalVariables.CharacterTotalArmour);
+            Values.Add("Evasion : " + GlobalVariables.CharacterTotalEvasion);
+            Values.Add("Chance to Dodge : " + GlobalVariables.CharacterChanceToDodge);
+            Values.Add("Physical Damage Reduction : ?");
+            Values.Add("Armour Penetration : " + GlobalVariables.CharacterArmourPenetration);
+            Values.Add("Magic Penetration : " + GlobalVariables.CharacterMagicPenetration);
+            Values.Add("Movement Speed : " + GlobalVariables.CharacterMovementSpeed);
+            Values.Add("Increase Damage Vs Boss : " + GlobalVariables.CharacterVsBossDamage);
+            Values.Add("Increase Damage Vs Elite : " + GlobalVariables.CharacterVsEliteDamage);
+            Values.Add("Increase Damage Vs Beast : " + GlobalVariables.CharacterVsBeastDamage);
+            Values.Add("Increase Damage Vs Human : " + GlobalVariables.CharacterVsHumanDamage);
+            Values.Add("Increase Damage Vs Undead : " + GlobalVariables.CharacterVsUndeadDamage);
 
             //Loop through and display values
 

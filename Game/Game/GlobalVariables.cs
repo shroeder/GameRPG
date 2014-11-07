@@ -335,6 +335,20 @@ namespace TextureAtlas
                 return Math.Round(CharacterConstitution + GetStatAcrossEquipment("CON"));
             }
         }
+        public static double CharacterChanceToDodge
+        {
+            get
+            {
+                return Math.Round(GetCharacterChanceToDodge(),2);
+            }
+        }
+        public static double CharacterPhysicalDamageReduction
+        {
+            get
+            {
+                return Math.Round(GetCharacterPhysicalDamageReduction(), 2);
+            }
+        }
         public static double CharacterAccuracy
         {
             get
@@ -902,12 +916,26 @@ namespace TextureAtlas
             {
                 return Math.Round(CharacterManaRegen + GetCharacterStatTotal("MPREGEN"), 2);
             }
-        }//Left off here :  notes : keeps adding math.round to shit and DONT FORGET to add lifeleech and mana leech stats
+        }
         public static double CharacterDamageReduction
         {
             get
             {
-                return GetCharacterStatTotal("DRDC");
+                return Math.Round(GetCharacterStatTotal("DRDC"),2);
+            }
+        }
+        public static double CharacterHealthSteal
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("HPSTEAL"),2);
+            }
+        }
+        public static double CharacterManaSteal
+        {
+            get
+            {
+                return Math.Round(GetCharacterStatTotal("MPSTEAL"), 2);
             }
         }
 
@@ -1651,7 +1679,7 @@ namespace TextureAtlas
                                 //Starter Two-Hander
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 36, 37, 38, 39 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 36, 37, 38, 39, 56, 57 };
                                     break;
                             }
 
@@ -1664,7 +1692,7 @@ namespace TextureAtlas
                                 //Leather Boots
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
 
@@ -1677,7 +1705,7 @@ namespace TextureAtlas
                                 //Leather PAnts
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
 
@@ -1690,7 +1718,7 @@ namespace TextureAtlas
                                 //Leather Chest
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
 
@@ -1703,7 +1731,7 @@ namespace TextureAtlas
                                 //Leather Gloves
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
 
@@ -1716,7 +1744,7 @@ namespace TextureAtlas
                                 //Gold Ring
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
                             break;
@@ -1728,7 +1756,7 @@ namespace TextureAtlas
                                 //Leather Belt
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
                             break;
@@ -1740,7 +1768,7 @@ namespace TextureAtlas
                                 //Leather Helmet
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
                             break;
@@ -1752,7 +1780,7 @@ namespace TextureAtlas
                                 //Leather Shoulders
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53 ,54, 55 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53 ,54, 55, 56, 57 };
                                     break;
                             }
                             break;
@@ -2118,6 +2146,17 @@ namespace TextureAtlas
                     returnAffix.Stat = "DRDC";
                     returnAffix.Desc = "Damage Reduced By : " + returnAffix.Value.ToString() + "%";
                     break;
+                case 56:
+                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Stat = "HPSTEAL";
+                    returnAffix.Desc = "Physical Damage Converted to Health : " + returnAffix.Value.ToString() + "%";
+                    break;
+                case 57:
+                    returnAffix.Value = rng.Next(20, 40);
+                    returnAffix.Stat = "MPSTEAL";
+                    returnAffix.Desc = "Physical Damage Converted to Mana : " + returnAffix.Value.ToString() + "%";
+                    break;
+
             }
 
             AffixRange.Remove(AffixRange[index]);
@@ -2365,6 +2404,53 @@ namespace TextureAtlas
                 }
             }
             return returnValue;
+        }
+
+        public static double GetCharacterPhysicalDamageReduction()
+        {
+            double returnValue = 10;
+
+            double armour = CharacterTotalArmour;
+            double perfArmour = CharacterLevel * 40;
+
+            if (CharacterLevel < 20)
+            {
+                perfArmour *= 2;
+            }
+            else if (CharacterLevel < 30)
+            {
+                perfArmour *= 3;
+            }
+            else if (CharacterLevel < 40)
+            {
+                perfArmour *= 4;
+            }
+            else if (CharacterLevel < 50)
+            {
+                perfArmour *= 5;
+            }
+
+            returnValue += (armour / perfArmour) * 100;
+
+            if (armour >= perfArmour)
+            {
+                returnValue = 75;
+            }
+
+            return Math.Round(returnValue,2);
+        }
+
+        public static double GetCharacterChanceToDodge()
+        {
+            double returnValue = 50;
+
+            //20 dex = 1%
+            //40 agi = 1%
+
+            returnValue += CharacterTotalDex / 20;
+            returnValue += CharacterTotalAgility / 40;
+
+            return Math.Round(returnValue,2);
         }
 
         public static double GetCharacterBaseAttackSpeed()
