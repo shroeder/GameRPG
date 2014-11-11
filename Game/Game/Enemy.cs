@@ -298,8 +298,6 @@ namespace TextureAtlas
 
             Rectangle Rec1 = new Rectangle((int)location.X, (int)location.Y, width1, height1);
 
-            spriteBatch.Begin();
-
             location.Y -= 1;
             if (GlobalVariables.ShowEnemyBars)
             {
@@ -386,7 +384,6 @@ namespace TextureAtlas
             {
                 spriteBatch.Draw(Texture2, destinationRectangle, sourceRectangle, Color.White);
             }
-            spriteBatch.End();
         }
     }
 }

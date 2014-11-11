@@ -47,8 +47,6 @@ namespace TextureAtlas
 
             Rect = new Rectangle(posX,posY,width,height);
 
-            spriteBatch.Begin();
-
             spriteBatch.DrawString(font, text, new Vector2(Rect.X - (textWidth + (int)(gfx.PreferredBackBufferWidth*.005)), Rect.Y - (int)(textHeight * .35)), Color.WhiteSmoke);
 
             spriteBatch.Draw(img, Rect, Color.White);
@@ -90,9 +88,6 @@ namespace TextureAtlas
             {
                 spriteBatch.Draw(GlobalVariables.CheckMark, Rect, Color.White);
             }
-
-            spriteBatch.End();
-
         }
 
         public void Uncheck()

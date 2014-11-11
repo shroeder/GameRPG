@@ -627,7 +627,7 @@ namespace TextureAtlas
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.Gloves.DroppedTextureName);
                 equipment.Gloves = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
                 equipment.Hero.txtGloves = Content.Load<Texture2D>(tempItem.ItemTextureName);
-                animatedSprite.CharGloves= Content.Load<Texture2D>(tempItem.ItemTextureName);
+                animatedSprite.CharGloves = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.Gloves.affixes = tempItem.affixes;
                 equipment.Gloves.ItemDescription = tempItem.ItemDescription;
                 equipment.Gloves.AffixList = tempItem.AffixList;
@@ -926,6 +926,7 @@ namespace TextureAtlas
             GlobalVariables.RotateCounter = Content.Load<Texture2D>("RotateCounter");
             GlobalVariables.LegendaryBG = Content.Load<Texture2D>("LegendaryBG");
             MenuBtn = Content.Load<Texture2D>("MenuBtn");
+            GlobalVariables.txtButton = Content.Load<Texture2D>("MenuBtn");
             Font1 = Content.Load<SpriteFont>("HpFont");
             imgPause = Content.Load<Texture2D>("PauseBG");
             fontMSG = Content.Load<SpriteFont>("MessageDisplay");
@@ -938,6 +939,8 @@ namespace TextureAtlas
             sword = Content.Load<Texture2D>("sword1");
             Font2 = Content.Load<SpriteFont>("EnemyName");
             GlobalVariables.TestSquare = Content.Load<Texture2D>("testSquare");
+            GlobalVariables.Font6 = Content.Load<SpriteFont>("Font6");
+            GlobalVariables.Font8 = Content.Load<SpriteFont>("Font8");
             GlobalVariables.Font10 = Content.Load<SpriteFont>("Font10");
             GlobalVariables.Font12 = Content.Load<SpriteFont>("Font12");
             GlobalVariables.font14 = Content.Load<SpriteFont>("Font14");
@@ -1202,9 +1205,12 @@ namespace TextureAtlas
                     }
                     else
                     {
-                        blnPaused = false;
-                        pauseMenu = null;
-                        CurrentGameState = GameState.Active;
+                        if (!blnIsConfirming)
+                        {
+                            blnPaused = false;
+                            pauseMenu = null;
+                            CurrentGameState = GameState.Active;
+                        }
                     }
                 }
 
@@ -2039,7 +2045,7 @@ namespace TextureAtlas
                                     break;
 
                             }
-                                DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, basestat, basestatname, SubType, false, baseatkspd));
+                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, basestat, basestatname, SubType, false, baseatkspd));
                         }
                         DoesDrop = false;
                         Enemies.Remove(Enemies[l]);
@@ -2634,6 +2640,9 @@ namespace TextureAtlas
 
         protected override void Draw(GameTime gameTime)
         {
+
+            spriteBatch.Begin();
+
             if (blnLogTime && DrawTimes.Count < DebugCycles)
             {
                 DebugTimer = new Stopwatch();
@@ -2641,8 +2650,6 @@ namespace TextureAtlas
             }
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            spriteBatch.Begin();
 
             if (blnLogTime && DrawTimes_BackGround.Count < DebugCycles)
             {
@@ -2660,8 +2667,6 @@ namespace TextureAtlas
                 DrawTimes_BackGround.Add(DebugTimer1.ElapsedTicks);
                 DebugTimer1.Reset();
             }
-
-            spriteBatch.End();
 
             if (blnLogTime && DrawTimes_Items.Count < DebugCycles)
             {
@@ -2719,8 +2724,6 @@ namespace TextureAtlas
 
 
             //Inventory Selector
-
-            spriteBatch.Begin();
 
             if (blnLogTime && DrawTimes_Equipment.Count < DebugCycles)
             {
@@ -2786,8 +2789,6 @@ namespace TextureAtlas
             spriteBatch.DrawString(GlobalVariables.Font10, "Inventory", new Vector2(10, -2), Color.Beige);
             spriteBatch.DrawString(GlobalVariables.Font10, "Equipment", new Vector2(80, -2), Color.Beige);
 
-            spriteBatch.End();
-
             if (blnLogTime && DrawTimes_Other.Count < DebugCycles && DebugTimer1 != null)
             {
                 DebugTimer1.Stop();
@@ -2796,7 +2797,7 @@ namespace TextureAtlas
             }
 
             //Wait To Draw
-            spriteBatch.Begin();
+
             foreach (DrawItem draw in GlobalVariables.ItemsToBeDrawn)
             {
                 switch (draw.CaseOfDraw)
@@ -2812,7 +2813,6 @@ namespace TextureAtlas
                 }
             }
             GlobalVariables.ItemsToBeDrawn = new List<DrawItem>();
-            spriteBatch.End();
             if (blnLogTime && DrawTimes_PauseMenu.Count < DebugCycles)
             {
                 DebugTimer1 = new Stopwatch();
@@ -2983,6 +2983,9 @@ namespace TextureAtlas
                 DrawTimes.Add(DebugTimer.ElapsedTicks);
                 DebugTimer.Reset();
             }
+
+            spriteBatch.End();
+
         }
 
         private void ConfirmChange(object sender, EventArgs e)

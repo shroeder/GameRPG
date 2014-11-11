@@ -13,7 +13,7 @@ using System.Timers;
 
 namespace TextureAtlas
 {
-    class MenuButton
+    public class MenuButton
     {
 
         public MouseState oms;
@@ -26,8 +26,6 @@ namespace TextureAtlas
 
             float TextWidth = font.MeasureString(mnuText).X;
             float TextHeight = font.MeasureString(mnuText).Y;
-
-            spriteBatch.Begin();
 
             oms = ms;
             ms = Mouse.GetState();
@@ -56,8 +54,6 @@ namespace TextureAtlas
                 spriteBatch.Draw(img, Location, Color.SlateGray);
                 spriteBatch.DrawString(font, mnuText, new Vector2(((Location.X + Convert.ToInt32(Location.Width * .50) - (TextWidth / 2))), (Location.Y + Convert.ToInt32(Location.Height * .50) - (TextHeight / 2))), Color.Black);
             }
-
-            spriteBatch.End();
 
         }
 

@@ -62,7 +62,7 @@ namespace TextureAtlas
             {
                 GlobalVariables.CharacterLevel = 1;
             }
-            
+
             Width = Convert.ToInt32(texture.Width / columns);
             Height = Convert.ToInt32(texture.Height / rows);
             position = Location;
@@ -267,9 +267,8 @@ namespace TextureAtlas
 
             GlobalVariables.CharacterBounds = Bounds;
 
-            spriteBatch.Begin();
             spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
-            
+
             if (CharGloves != null)
             {
                 spriteBatch.Draw(CharGloves, destinationRectangle, sourceRectangle, GlobalVariables.TheGame.equipment.Gloves.ItemColor);
@@ -307,8 +306,6 @@ namespace TextureAtlas
                     spriteBatch.Draw(CharWeapon, destinationRectangle, sourceRectangle, Color.White);
                 }
             }
-
-            spriteBatch.End();
         }
 
     }

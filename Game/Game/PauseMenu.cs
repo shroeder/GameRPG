@@ -114,10 +114,8 @@ namespace TextureAtlas
 
                     Rectangle Rect = new Rectangle(0, 0, gfx.PreferredBackBufferWidth, gfx.PreferredBackBufferHeight);
 
-                    spriteBatch.Begin();
                     spriteBatch.Draw(img, Rect, Color.Black);
-                    spriteBatch.End();
-
+                    
                     int startposx = Convert.ToInt32(gfx.PreferredBackBufferWidth * .35);
                     int width = Convert.ToInt32(gfx.PreferredBackBufferWidth * .25);
                     int startposy = Convert.ToInt32(gfx.PreferredBackBufferHeight * .15);
@@ -278,12 +276,7 @@ namespace TextureAtlas
                             int SliderWidth = (int)(gfx.PreferredBackBufferWidth * .3);
                             int SliderHeight = (int)(gfx.PreferredBackBufferHeight * .005);
 
-                            spriteBatch.Begin();
-
                             spriteBatch.DrawString(font, "Aspect Ratio", new Vector2(startposx + ((float)(gfx.PreferredBackBufferWidth * .1) - (float)(TextWidth * .25)), startposy - (int)(gfx.PreferredBackBufferHeight * .05)), Color.Gray);
-
-                            spriteBatch.End();
-
                             slider1.Draw(spriteBatch, smallfont, gfx, MenuBtn, Ratios, SliderWidth, SliderHeight, startposx - (int)(gfx.PreferredBackBufferWidth * .025), startposy - (int)(gfx.PreferredBackBufferHeight * .01), Color.Black);
 
                             string AspectRatio = slider1.ReturnValue();
@@ -301,12 +294,7 @@ namespace TextureAtlas
                                 DesiredArray = Resolution_43;
                             }
 
-                            spriteBatch.Begin();
-
                             spriteBatch.DrawString(font, "Resolution", new Vector2(startposx + ((float)(gfx.PreferredBackBufferWidth * .1) - (float)(TextWidth * .25)), startposy + (int)(gfx.PreferredBackBufferHeight * .08)), Color.Gray);
-
-                            spriteBatch.End();
-
                             slider.Draw(spriteBatch, smallfont, gfx, MenuBtn, DesiredArray, SliderWidth, SliderHeight, startposx - (int)(gfx.PreferredBackBufferWidth * .025), startposy + (int)(gfx.PreferredBackBufferHeight * .12), Color.Black);
 
                             string Resolution = slider.ReturnValue();
@@ -326,15 +314,10 @@ namespace TextureAtlas
                                 mnuBtnAcceptChangesBound = true;
                             }
 
-                            spriteBatch.Begin();
-
                             spriteBatch.DrawString(font, "FullScreen", new Vector2(startposx + ((float)(gfx.PreferredBackBufferWidth * .1) - (float)(TextWidth * .25)), startposy + (int)(gfx.PreferredBackBufferHeight * .22)), Color.Gray);
-
-                            spriteBatch.End();
 
                             chkYes.draw(spriteBatch, MenuBtn, (int)((gfx.PreferredBackBufferWidth / 2) - gfx.PreferredBackBufferWidth * .10), (int)(gfx.PreferredBackBufferHeight * .45), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "Yes", gfx);
                             chkNo.draw(spriteBatch, MenuBtn, (int)((gfx.PreferredBackBufferWidth / 2) + gfx.PreferredBackBufferWidth * .05), (int)(gfx.PreferredBackBufferHeight * .45), (int)(gfx.PreferredBackBufferWidth * .01), (int)(gfx.PreferredBackBufferWidth * .01), "No", gfx);
-
                             mnuBtnAcceptChanges.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .45), width, height), "Accept", font);
                             mnuBtnCancel.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .60), width, height), "Back", font);
 
@@ -480,6 +463,7 @@ namespace TextureAtlas
                             mnuBtnAudio.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .15), width, height), "Audio", font);
                             mnuBtnGamePlay.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .30), width, height), "Gameplay", font);
                             mnuBtnBack.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(startposx, startposy + Convert.ToInt32(gfx.PreferredBackBufferHeight * .45), width, height), "Back", font);
+
                         }
                     }
 
@@ -493,9 +477,7 @@ namespace TextureAtlas
 
                     Rect = new Rectangle(((int)(gfx.PreferredBackBufferWidth / 2) - (int)(gfx.PreferredBackBufferWidth * .3)), ((int)(gfx.PreferredBackBufferHeight / 2) - (int)(gfx.PreferredBackBufferHeight * .25)), (int)(gfx.PreferredBackBufferWidth * .55), (int)(gfx.PreferredBackBufferHeight * .30));
 
-                    spriteBatch.Begin();
                     spriteBatch.Draw(MenuBtn, Rect, Color.SlateGray);
-                    spriteBatch.End();
 
                     if (mnuBtnConfirm == null)
                     {
@@ -519,11 +501,7 @@ namespace TextureAtlas
                         mnuBtnRevertBound = true;
                     }
 
-                    spriteBatch.Begin();
-
                     spriteBatch.DrawString(font, "Keep Changes?", new Vector2((Rect.X + (int)(gfx.PreferredBackBufferWidth * .205)), ((Rect.Y) + (int)(gfx.PreferredBackBufferHeight * .02))), Color.WhiteSmoke);
-
-                    spriteBatch.End();
 
                     mnuBtnConfirm.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(Rect.X + (int)(gfx.PreferredBackBufferWidth * .1), Rect.Y + (int)(gfx.PreferredBackBufferHeight * .12), (int)(Rect.Width * .3), (int)(Rect.Height * .2)), "Confirm", font);
                     mnuBtnRevert.Draw(spriteBatch, MenuBtn, gfx, new Rectangle(Rect.X + (int)(gfx.PreferredBackBufferWidth * .3), Rect.Y + (int)(gfx.PreferredBackBufferHeight * .12), (int)(Rect.Width * .3), (int)(Rect.Height * .2)), "Revert", font);

@@ -37,8 +37,6 @@ namespace TextureAtlas
         public void Draw(SpriteBatch spriteBatch, SpriteFont font, GraphicsDeviceManager gfx, Texture2D txt, List<string> Array, int width, int height, int posX, int posY, Color color)
         {
 
-            spriteBatch.Begin();
-
             ReturnArray = Array;
 
             MouseState ms = Mouse.GetState();
@@ -126,9 +124,6 @@ namespace TextureAtlas
                     spriteBatch.Draw(txt, TheSlider, Color.SlateGray);
                 }
             }
-
-            spriteBatch.End();
-
         }
 
         public string ReturnValue()

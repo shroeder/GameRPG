@@ -20,7 +20,26 @@ namespace TextureAtlas
         //Variable
         [XmlIgnore]
         public SpriteFont font1;
-        //public List<Item> Items = new List<Item>();
+
+        [XmlIgnore]
+        public MenuButton btnOffense;
+        [XmlIgnore]
+        public MenuButton btnDefense;
+        [XmlIgnore]
+        public MenuButton btnUtility;
+        [XmlIgnore]
+        public Boolean btnOffenseBound = false;
+        [XmlIgnore]
+        public Boolean btnUtilityBound = false;
+        [XmlIgnore]
+        public Boolean btnDefenseBound = false;
+        [XmlIgnore]
+        public Boolean Offense = true;
+        [XmlIgnore]
+        public Boolean Defense = false;
+        [XmlIgnore]
+        public Boolean Utility = false;
+
         public Texture2D CharBG;
 
         public Rectangle Bounds;
@@ -78,6 +97,37 @@ namespace TextureAtlas
                 Hero.Direction = 0;
                 Hero.RotateClock += RotateClock;
                 Hero.RotateCounter += RotateCounter;
+
+                if (btnOffense == null)
+                {
+                    btnOffense = new MenuButton();
+                    btnOffenseBound = false;
+                }
+                if (btnDefense == null)
+                {
+                    btnDefense = new MenuButton();
+                    btnDefenseBound = false;
+                }
+                if (btnUtility == null)
+                {
+                    btnUtility = new MenuButton();
+                    btnUtilityBound = false;
+                }
+                if (!btnOffenseBound)
+                {
+                    btnOffense.ButtonClicked += btnOffense_Clicked;
+                    btnOffenseBound = true;
+                }
+                if (!btnDefenseBound)
+                {
+                    btnDefense.ButtonClicked += btnDefense_Clicked;
+                    btnDefenseBound = true;
+                }
+                if (!btnUtilityBound)
+                {
+                    btnUtility.ButtonClicked += btnUtility_Clicked;
+                    btnUtilityBound = true;
+                }
             }
             
 
@@ -159,8 +209,68 @@ namespace TextureAtlas
 
         }
 
+        private void btnUtility_Clicked(object sender, EventArgs e)
+        {
+            Offense = false;
+            Defense = false;
+            Utility = true;
+        }
+
+        private void btnDefense_Clicked(object sender, EventArgs e)
+        {
+            Offense = false;
+            Defense = true;
+            Utility = false;
+        }
+
+        private void btnOffense_Clicked(object sender, EventArgs e)
+        {
+            Offense = true;
+            Defense = false;
+            Utility = false;
+        }
+
         public void Update()
         {
+
+            if (GlobalVariables.gfx != null)
+            {
+                if (Hero != null)
+                {
+                    Hero.DrawLocation = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .395), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .14), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3675));
+                }
+
+                Bounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .3), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .1), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .6), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6));
+
+                int width = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .0628);
+                int height = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .0971);
+
+                HelmBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), width, height);
+                ChestBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3525), width, height);
+                RWeapbounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .455), width, height);
+                GlovesBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .323425), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .5565), width, height);
+
+                ShouldersBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .25), width, height);
+                PantsBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .3525), width, height);
+                LWeapBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .455), width, height);
+                BootsBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .544), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .5565), width, height);
+
+                int beltwidth = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .0954);
+                int beltheight = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .032);
+
+                BeltBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .4175), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), beltwidth, beltheight);
+
+                int ringwidth = (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .02);
+                int ringheight = (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .032);
+
+                LeftRingBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .3945), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), ringwidth, ringheight);
+                RightRingBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .515), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .6215), ringwidth, ringheight);
+
+                Hero.RotateCounterBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .5), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .57), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .03), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .03));
+                Hero.RotateClockBounds = new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .4), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .57), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .03), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .03));
+
+
+            }
 
             ms = Mouse.GetState();
 
@@ -474,7 +584,7 @@ namespace TextureAtlas
             List<string> Values = new List<string>();
             double theValue = 0;
 
-            Vector2 StartPosition = new Vector2((float)(GlobalVariables.gfx.PreferredBackBufferWidth * .64), (float)(GlobalVariables.gfx.PreferredBackBufferHeight * .225));
+            Vector2 StartPosition = new Vector2((float)(GlobalVariables.gfx.PreferredBackBufferWidth * .64), (float)(GlobalVariables.gfx.PreferredBackBufferHeight * .275));
 
             //Base Damage
 
@@ -505,35 +615,50 @@ namespace TextureAtlas
                 theValue = GlobalVariables.GetCharacterPhysicalDamage(0);
             }
 
-            Values.Add("Physical Damage : " + theValue.ToString());
-            Values.Add("Attack Speed : " + GlobalVariables.CharacterAttackSpeed);
-            Values.Add("Health : " + GlobalVariables.CharacterTotalHealth);
-            Values.Add("Mana : " + GlobalVariables.CharacterTotalMana);
-            Values.Add("Health Regen : " + GlobalVariables.CharacterTotalHealthregen);
-            Values.Add("Mana Regen : " + GlobalVariables.CharacterTotalManaRegen);
-            Values.Add("Critical Chance : " + GlobalVariables.CharacterCritChance);
-            Values.Add("Critical Damage : " + GlobalVariables.CharacterCritDamageModifier);
-            Values.Add("Life Steal : " + GlobalVariables.CharacterHealthSteal);
-            Values.Add("Mana Steal : " + GlobalVariables.CharacterManaSteal);
-            Values.Add("Armour : " + GlobalVariables.CharacterTotalArmour);
-            Values.Add("Evasion : " + GlobalVariables.CharacterTotalEvasion);
-            Values.Add("Chance to Dodge : " + GlobalVariables.CharacterChanceToDodge);
-            Values.Add("Physical Damage Reduction : ?");
-            Values.Add("Armour Penetration : " + GlobalVariables.CharacterArmourPenetration);
-            Values.Add("Magic Penetration : " + GlobalVariables.CharacterMagicPenetration);
-            Values.Add("Movement Speed : " + GlobalVariables.CharacterMovementSpeed);
-            Values.Add("Increase Damage Vs Boss : " + GlobalVariables.CharacterVsBossDamage);
-            Values.Add("Increase Damage Vs Elite : " + GlobalVariables.CharacterVsEliteDamage);
-            Values.Add("Increase Damage Vs Beast : " + GlobalVariables.CharacterVsBeastDamage);
-            Values.Add("Increase Damage Vs Human : " + GlobalVariables.CharacterVsHumanDamage);
-            Values.Add("Increase Damage Vs Undead : " + GlobalVariables.CharacterVsUndeadDamage);
+            theValue = Math.Round(theValue,2);
+
+            if (Offense)
+            {
+                Values.Add("Physical Damage : " + theValue.ToString());
+                Values.Add("Attack Speed : " + GlobalVariables.CharacterAttackSpeed.ToString());
+                Values.Add("Melee Range : " + GlobalVariables.CharacterMeleeRange.ToString());
+                Values.Add("Critical Chance : " + GlobalVariables.CharacterCritChance.ToString());
+                Values.Add("Critical Damage : " + GlobalVariables.CharacterCritDamageModifier.ToString());
+                Values.Add("Armour Penetration : " + GlobalVariables.CharacterArmourPenetration.ToString());
+                Values.Add("Magic Penetration : " + GlobalVariables.CharacterMagicPenetration.ToString());
+                Values.Add("Increase Damage Vs Boss : " + GlobalVariables.CharacterVsBossDamage.ToString());
+                Values.Add("Increase Damage Vs Elite : " + GlobalVariables.CharacterVsEliteDamage.ToString());
+                Values.Add("Increase Damage Vs Beast : " + GlobalVariables.CharacterVsBeastDamage.ToString());
+                Values.Add("Increase Damage Vs Human : " + GlobalVariables.CharacterVsHumanDamage.ToString());
+                Values.Add("Increase Damage Vs Undead : " + GlobalVariables.CharacterVsUndeadDamage.ToString());
+            }
+            else if (Defense)
+            {
+                Values.Add("Health : " + GlobalVariables.CharacterTotalHealth.ToString());
+                Values.Add("Health Regen : " + GlobalVariables.CharacterTotalHealthregen.ToString());
+                Values.Add("Life Steal : " + GlobalVariables.CharacterHealthSteal.ToString());
+                Values.Add("Armour : " + GlobalVariables.CharacterTotalArmour.ToString());
+                Values.Add("Evasion : " + GlobalVariables.CharacterTotalEvasion.ToString());
+                Values.Add("Chance to Dodge : " + GlobalVariables.CharacterChanceToDodge.ToString());
+                Values.Add("Physical Damage Reduction : " + GlobalVariables.CharacterPhysDamageReduction.ToString());
+            }
+            else if (Utility)
+            {
+                Values.Add("Mana : " + GlobalVariables.CharacterTotalMana.ToString());
+                Values.Add("Mana Regen : " + GlobalVariables.CharacterTotalManaRegen.ToString());
+                Values.Add("Mana Steal : " + GlobalVariables.CharacterManaSteal.ToString());
+                Values.Add("Movement Speed : " + GlobalVariables.CharacterMovementSpeed.ToString());
+                Values.Add("Increased Experience : " + GlobalVariables.CharacterIncreaseExpPct.ToString());
+                Values.Add("Increased Rarity : " + GlobalVariables.CharacterMagicFindRarity.ToString());
+                Values.Add("Increased Quantity : " + GlobalVariables.CharacterMagicFindQuantity.ToString());
+            }
 
             //Loop through and display values
 
             foreach (string str in Values)
             {
-                GlobalVariables.WaitToDraw(1, StartPosition, new Rectangle(0, 0, 0, 0), Color.Black, GlobalVariables.Font10, null, str);
-                StartPosition.Y += GlobalVariables.Font10.MeasureString("T").Y;
+                GlobalVariables.WaitToDraw(1, StartPosition, new Rectangle(0, 0, 0, 0), Color.Black, GlobalVariables.AutoFont(GlobalVariables.gfx, 3), null, str);
+                StartPosition.Y += GlobalVariables.AutoFont(GlobalVariables.gfx, 3).MeasureString("T").Y;
             }
 
             font1 = font;
@@ -647,6 +772,10 @@ namespace TextureAtlas
                 }
             }
                 Hero.Draw(spriteBatach);
+
+                btnOffense.Draw(spriteBatach, GlobalVariables.txtButton, GlobalVariables.gfx, new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .64), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .22), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .05), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .05)), "Offense", GlobalVariables.AutoFont(GlobalVariables.gfx, 2));
+                btnDefense.Draw(spriteBatach, GlobalVariables.txtButton, GlobalVariables.gfx, new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .70), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .22), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .05), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .05)), "Defense", GlobalVariables.AutoFont(GlobalVariables.gfx, 2));
+                btnUtility.Draw(spriteBatach, GlobalVariables.txtButton, GlobalVariables.gfx, new Rectangle((int)(GlobalVariables.gfx.PreferredBackBufferWidth * .76), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .22), (int)(GlobalVariables.gfx.PreferredBackBufferWidth * .05), (int)(GlobalVariables.gfx.PreferredBackBufferHeight * .05)), "Utility", GlobalVariables.AutoFont(GlobalVariables.gfx, 2));
 
         }
 

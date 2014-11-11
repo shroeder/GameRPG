@@ -32,9 +32,7 @@ namespace TextureAtlas
 
             ms = Mouse.GetState();
 
-            Rectangle BgButton= new Rectangle(PositionX, 100, 225, 300);
-
-            spriteBatch.Begin();
+            Rectangle BgButton = new Rectangle(PositionX, 100, 225, 300);
 
             if (StillRunning)
             {
@@ -186,7 +184,7 @@ namespace TextureAtlas
 
                 spriteBatch.Draw(BackGround, BgButton, colorCode);
 
-                spriteBatch.DrawString(font, baseClass + "." + NameOfCycle, new Vector2(PositionX + 20, offsetY +  120), Color.White);
+                spriteBatch.DrawString(font, baseClass + "." + NameOfCycle, new Vector2(PositionX + 20, offsetY + 120), Color.White);
 
                 spriteBatch.DrawString(font, "Number Of Cycles : " + Convert.ToString(NumberOfCycles), new Vector2(PositionX + 20, offsetY + 140), Color.White);
 
@@ -213,9 +211,6 @@ namespace TextureAtlas
                 spriteBatch.DrawString(font, "Average : " + average.ToString(), new Vector2(PositionX + 20, 350 + offsetY), Color.Black);
 
             }
-
-            spriteBatch.End();
-
         }
     }
 }

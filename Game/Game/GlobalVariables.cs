@@ -73,6 +73,8 @@ namespace TextureAtlas
 
         public static Vector2 MoveToLoc { get; set; }
 
+        public static Texture2D txtButton { get; set; }
+
         public static Rectangle CharacterBounds { get; set; }
 
         public static List<int> AffixRange = new List<int>();
@@ -91,6 +93,8 @@ namespace TextureAtlas
         public static Texture2D LegendaryBeam { get; set; }
         public static Texture2D TextureBack { get; set; }
 
+        public static SpriteFont Font6 { get; set; }
+        public static SpriteFont Font8 { get; set; }
         public static SpriteFont Font10 { get; set; }
         public static SpriteFont Font12 { get; set; }
         public static SpriteFont font14 { get; set; }
@@ -339,7 +343,7 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetCharacterChanceToDodge(),2);
+                return Math.Round(GetCharacterChanceToDodge(), 2);
             }
         }
         public static double CharacterPhysicalDamageReduction
@@ -380,7 +384,7 @@ namespace TextureAtlas
                 {
                     returnValue = CharacterMeleeAccuracy;
                 }
-                return Math.Round(returnValue,2);
+                return Math.Round(returnValue, 2);
             }
         }
         public static double _CharacterLuck { get; set; }
@@ -413,14 +417,14 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetCharacterAccuracy(0),2);
+                return Math.Round(GetCharacterAccuracy(0), 2);
             }
         }
         public static double CharacterRangedAccuracy
         {
             get
             {
-                return Math.Round(GetCharacterAccuracy(1),2);
+                return Math.Round(GetCharacterAccuracy(1), 2);
             }
         }
         public static double CharacterAllElementalReduction
@@ -483,7 +487,7 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetCharacterCastSpeed(),2);
+                return Math.Round(GetCharacterCastSpeed(), 2);
             }
         }
         public static double CharacterHealth
@@ -552,18 +556,18 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("FPDMG"));
             }
         }
-        public static double CharacterRangedAttackSpeed 
-        { 
-            get 
-            {
-                return Math.Round(GetCharacterAttackSpeed(1),2); 
-            }
-        }
-        public static double CharacterMeleeAttackSpeed 
+        public static double CharacterRangedAttackSpeed
         {
             get
-            { 
-                return Math.Round(GetCharacterAttackSpeed(0),2); 
+            {
+                return Math.Round(GetCharacterAttackSpeed(1), 2);
+            }
+        }
+        public static double CharacterMeleeAttackSpeed
+        {
+            get
+            {
+                return Math.Round(GetCharacterAttackSpeed(0), 2);
             }
         }
         public static double CharacterIncreaseAttackSpeed
@@ -597,7 +601,7 @@ namespace TextureAtlas
                 {
                     returnValue = CharacterIncreaseMeleeAttackSpeed;
                 }
-                return Math.Round(returnValue,2);
+                return Math.Round(returnValue, 2);
             }
         }
         public static double CharacterIncreaseRangedAttackSpeed
@@ -611,7 +615,7 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetStatAcrossEquipment("MATKSPD"),2);
+                return Math.Round(GetStatAcrossEquipment("MATKSPD"), 2);
             }
         }
         public static double CharacterAttackSpeed
@@ -652,7 +656,7 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetCharacterBasePhysical(),2);
+                return Math.Round(GetCharacterBasePhysical(), 2);
             }
         }
         public static double CharacterBaseArmour
@@ -696,8 +700,8 @@ namespace TextureAtlas
                         returnValue = (float)GetCharacterPhysicalDamage(1);
                     }
                 }
-                
-                return Math.Round(returnValue,2);
+
+                return Math.Round(returnValue, 2);
             }
         }
         public static double CharacterTotalArmour
@@ -725,7 +729,7 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("HP"),2);
+                return Math.Round(GetCharacterStatTotal("HP"), 2);
             }
         }
         public static double CharacterIncreaseManaFlat
@@ -739,35 +743,35 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("MP"),2);
+                return Math.Round(GetCharacterStatTotal("MP"), 2);
             }
         }
         public static double CharacterIncreasePhysDmg
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("PDMG"),2);
+                return Math.Round(GetCharacterStatTotal("PDMG"), 2);
             }
         }
         public static double CharacterIncreasePhysRangeDmg
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("RPDMG"),2);
+                return Math.Round(GetCharacterStatTotal("RPDMG"), 2);
             }
         }
         public static double CharacterIncreasePhyMeleeDmg
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("MPDMG"),2);
+                return Math.Round(GetCharacterStatTotal("MPDMG"), 2);
             }
         }
         public static double CharacterIncreaseExpPct
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("EXP"),2);
+                return Math.Round(GetCharacterStatTotal("EXP"), 2);
             }
         }
         public static double CharacterMagicFindRarity
@@ -788,112 +792,112 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetBaseCritChance(),2);
+                return Math.Round(GetBaseCritChance(), 2);
             }
         }
         public static double CharacterCritChance
         {
             get
             {
-                return Math.Round(CharacterBaseCritChance + GetCharacterStatTotal("CC"),2);
+                return Math.Round(CharacterBaseCritChance + GetCharacterStatTotal("CC"), 2);
             }
         }
         public static double CharacterCritDamageModifier
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("CD"),2);
+                return 100 + Math.Round(GetCharacterStatTotal("CD"), 2);
             }
         }
         public static double CharacterCoolDownReduction
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("CDR"),2);
+                return Math.Round(GetCharacterStatTotal("CDR"), 2);
             }
         }
         public static double CharacterPhysDamageReduction
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("PDR"),2);
+                return Math.Round(GetCharacterPhysicalDamageReduction(), 2);
             }
         }
         public static double CharacterVsBeastDamage
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("DVB"),2);
+                return Math.Round(GetCharacterStatTotal("DVB"), 2);
             }
         }
         public static double CharacterVsHumanDamage
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("DVH"),2);
+                return Math.Round(GetCharacterStatTotal("DVH"), 2);
             }
         }
         public static double CharacterVsUndeadDamage
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("DVU"),2);
+                return Math.Round(GetCharacterStatTotal("DVU"), 2);
             }
         }
         public static double CharacterVsBossDamage
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("DVBS"),2);
+                return Math.Round(GetCharacterStatTotal("DVBS"), 2);
             }
         }
         public static double CharacterVsEliteDamage
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("DVE"),2);
+                return Math.Round(GetCharacterStatTotal("DVE"), 2);
             }
         }
         public static double CharacterMagicPenetration
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("CMP"),2);
+                return Math.Round(GetCharacterStatTotal("CMP"), 2);
             }
         }
         public static double CharacterArmourPenetration
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("ARPEN"),2);
+                return Math.Round(GetCharacterStatTotal("ARPEN"), 2);
             }
         }
         public static double CharacterPhysicalReflect
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("PREF"),2);
+                return Math.Round(GetCharacterStatTotal("PREF"), 2);
             }
         }
         public static double CharacterMagicReflect
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("MREF"),2);
+                return Math.Round(GetCharacterStatTotal("MREF"), 2);
             }
         }
         public static double CharacterSpellDamage
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("SPDMG"),2);
+                return Math.Round(GetCharacterStatTotal("SPDMG"), 2);
             }
         }
         public static double CharacterHealthRegen
         {
             get
             {
-                return Math.Round(GetCharacterBaseHealthRegen(),2);
+                return Math.Round(GetCharacterBaseHealthRegen(), 2);
             }
         }
         public static double CharacterTotalHealthregen
@@ -907,7 +911,7 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetCharacterBaseManaRegen(),2);
+                return Math.Round(GetCharacterBaseManaRegen(), 2);
             }
         }
         public static double CharacterTotalManaRegen
@@ -921,14 +925,14 @@ namespace TextureAtlas
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("DRDC"),2);
+                return Math.Round(GetCharacterStatTotal("DRDC"), 2);
             }
         }
         public static double CharacterHealthSteal
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("HPSTEAL"),2);
+                return Math.Round(GetCharacterStatTotal("HPSTEAL"), 2);
             }
         }
         public static double CharacterManaSteal
@@ -1180,48 +1184,52 @@ namespace TextureAtlas
 
                 case 1:
 
-                    if (gfx.PreferredBackBufferWidth > 1600)
+                    if (gfx.PreferredBackBufferWidth > 2000)
                     {
                         return Font32;
                     }
-                    else if (gfx.PreferredBackBufferWidth > 1200 && gfx.PreferredBackBufferWidth < 1601)
+                    else if (gfx.PreferredBackBufferWidth > 1800 && gfx.PreferredBackBufferWidth < 2001)
                     {
                         return Font28;
                     }
-                    else if (gfx.PreferredBackBufferWidth > 1000 && gfx.PreferredBackBufferWidth < 1201)
+                    else if (gfx.PreferredBackBufferWidth > 1600 && gfx.PreferredBackBufferWidth < 1801)
                     {
                         return Font24;
                     }
-                    else if (gfx.PreferredBackBufferWidth > 800 && gfx.PreferredBackBufferWidth < 1001)
+                    else if (gfx.PreferredBackBufferWidth > 1400 && gfx.PreferredBackBufferWidth < 1601)
                     {
                         return Font20;
                     }
-                    else if (gfx.PreferredBackBufferWidth > 600 && gfx.PreferredBackBufferWidth < 801)
+                    else if (gfx.PreferredBackBufferWidth > 1200 && gfx.PreferredBackBufferWidth < 1401)
                     {
                         return Font16;
                     }
-                    else if (gfx.PreferredBackBufferWidth > 0 && gfx.PreferredBackBufferWidth < 601)
+                    else if (gfx.PreferredBackBufferWidth > 1000 && gfx.PreferredBackBufferWidth < 1201)
                     {
                         return Font10;
                     }
+                    else if (gfx.PreferredBackBufferWidth > 0 && gfx.PreferredBackBufferWidth < 1001)
+                    {
+                        return Font8;
+                    }
                     else
                     {
-                        return Font10;
+                        return Font6;
                     }
 
                 case 2:
 
                     if (gfx.PreferredBackBufferWidth > 1600)
                     {
-                        return Font24;
+                        return Font20;
                     }
                     else if (gfx.PreferredBackBufferWidth > 1200 && gfx.PreferredBackBufferWidth < 1601)
                     {
-                        return Font20;
+                        return font14;
                     }
                     else if (gfx.PreferredBackBufferWidth > 1000 && gfx.PreferredBackBufferWidth < 1201)
                     {
-                        return Font16;
+                        return Font10;
                     }
                     else
                     {
@@ -1230,17 +1238,21 @@ namespace TextureAtlas
 
                 case 3:
 
-                    if (gfx.PreferredBackBufferWidth > 1600)
-                    {
-                        return Font20;
-                    }
-                    else if (gfx.PreferredBackBufferWidth > 1200 && gfx.PreferredBackBufferWidth < 1601)
+                    if (gfx.PreferredBackBufferWidth > 2000)
                     {
                         return Font16;
                     }
+                    else if (gfx.PreferredBackBufferWidth > 1000 && gfx.PreferredBackBufferWidth < 2000)
+                    {
+                        return Font12;
+                    }
+                    else if (gfx.PreferredBackBufferWidth > 0 && gfx.PreferredBackBufferWidth < 1001)
+                    {
+                        return Font8;
+                    }
                     else
                     {
-                        return Font10;
+                        return Font8;
                     }
 
 
@@ -1744,7 +1756,7 @@ namespace TextureAtlas
                                 //Gold Ring
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
                             break;
@@ -1756,7 +1768,7 @@ namespace TextureAtlas
                                 //Leather Belt
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
                             break;
@@ -1780,7 +1792,7 @@ namespace TextureAtlas
                                 //Leather Shoulders
                                 case 1:
 
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53 ,54, 55, 56, 57 };
+                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                                     break;
                             }
                             break;
@@ -1976,12 +1988,12 @@ namespace TextureAtlas
                 case 22:
                     returnAffix.Value = rng.Next(10, 35);
                     returnAffix.Stat = "MF";
-                    returnAffix.Desc = "Magic Find Increased By : " + returnAffix.Value.ToString() + "%";
+                    returnAffix.Desc = "Increase Rarity of Items : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 23:
                     returnAffix.Value = rng.Next(10, 35);
                     returnAffix.Stat = "MQ";
-                    returnAffix.Desc = "Magic Quantity Increased By : " + returnAffix.Value.ToString() + "%";
+                    returnAffix.Desc = "Increased Quantity of Magic Items : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 24:
                     returnAffix.Value = rng.Next(3, 15);
@@ -2087,7 +2099,7 @@ namespace TextureAtlas
                     break;
                 //Stats Continued
                 case 44:
-                    returnAffix.Value = rng.Next(3,5);
+                    returnAffix.Value = rng.Next(3, 5);
                     returnAffix.Stat = "PDR";
                     returnAffix.Desc = "Physical Damage Reduced By : " + returnAffix.Value.ToString() + "%";
                     break;
@@ -2410,39 +2422,16 @@ namespace TextureAtlas
         {
             double returnValue = 10;
 
-            double armour = CharacterTotalArmour;
-            double perfArmour = CharacterLevel * 40;
+            returnValue += (CharacterTotalArmour / (CharacterTotalArmour + 400)) * 100;
+            
+            returnValue += GetStatAcrossEquipment("PDR");
 
-            if (CharacterLevel < 20)
-            {
-                perfArmour *= 2;
-            }
-            else if (CharacterLevel < 30)
-            {
-                perfArmour *= 3;
-            }
-            else if (CharacterLevel < 40)
-            {
-                perfArmour *= 4;
-            }
-            else if (CharacterLevel < 50)
-            {
-                perfArmour *= 5;
-            }
-
-            returnValue += (armour / perfArmour) * 100;
-
-            if (armour >= perfArmour)
-            {
-                returnValue = 75;
-            }
-
-            return Math.Round(returnValue,2);
+            return Math.Round(returnValue, 2);
         }
 
         public static double GetCharacterChanceToDodge()
         {
-            double returnValue = 50;
+            double returnValue = 10;
 
             //20 dex = 1%
             //40 agi = 1%
@@ -2450,7 +2439,9 @@ namespace TextureAtlas
             returnValue += CharacterTotalDex / 20;
             returnValue += CharacterTotalAgility / 40;
 
-            return Math.Round(returnValue,2);
+            returnValue += (CharacterTotalEvasion / (CharacterTotalEvasion + 400)) * 100;
+
+            return Math.Round(returnValue, 2);
         }
 
         public static double GetCharacterBaseAttackSpeed()
@@ -2461,7 +2452,7 @@ namespace TextureAtlas
             //20 agi = .1 Attack Speed
 
             returnValue += CharacterTotalDex / 100;
-            returnValue += CharacterTotalAgility / 200;    
+            returnValue += CharacterTotalAgility / 200;
 
             return returnValue;
         }
@@ -2763,7 +2754,7 @@ namespace TextureAtlas
         {
             double returnValue = 0;
 
-            List<Item> listItems = new List<Item> { Equipment.Belt, Equipment.Boots, Equipment.Chest, Equipment.Gloves, Equipment.Helmet, Equipment.LeftRing, Equipment.RightRing, Equipment.Belt, Equipment.RightWeapon, Equipment.LeftWeapon };
+            List<Item> listItems = new List<Item> { Equipment.Belt, Equipment.Boots, Equipment.Chest, Equipment.Gloves, Equipment.Helmet, Equipment.LeftRing, Equipment.RightRing, Equipment.Belt, Equipment.RightWeapon, Equipment.LeftWeapon, Equipment.Pants };
 
             foreach (Item item in listItems)
             {
@@ -3209,7 +3200,7 @@ namespace TextureAtlas
                     }
                     break;
 
-                    //no case 6 or 7 for ring and belt since we don't draw them on the character
+                //no case 6 or 7 for ring and belt since we don't draw them on the character
 
                 //Helmet
                 case 8:
