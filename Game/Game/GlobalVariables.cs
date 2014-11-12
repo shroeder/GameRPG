@@ -2727,6 +2727,8 @@ namespace TextureAtlas
             returnValue += CharacterTotalDex / 2;
             returnValue += CharacterTotalAgility / 4;
 
+            returnValue += (GetStatAcrossEquipment("ACC") / (GetStatAcrossEquipment("ACC") + 400)) * 100;
+
             return returnValue;
         }
 
@@ -2739,11 +2741,11 @@ namespace TextureAtlas
 
             if (MeleeRanged == 0)
             {
-                returnValue += CharacterMeleeAccuracy;
+                returnValue += (GetStatAcrossEquipment("MACC") / (GetStatAcrossEquipment("MACC") + 400) * 100);
             }
             else if (MeleeRanged == 1)
             {
-                returnValue += CharacterRangedAccuracy;
+                returnValue += (GetStatAcrossEquipment("RACC") / (GetStatAcrossEquipment("RACC") + 400) * 100);
             }
 
             return returnValue;
