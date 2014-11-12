@@ -112,8 +112,8 @@ namespace TextureAtlas
 
             if (!indexed)
             {
-                quality = 6;
-                //quality = GlobalVariables.RollVsRarity();
+                //quality = 6;
+                quality = GlobalVariables.RollVsRarity();
                 if (quality > 5)
                 {
                     ItemTextureName = GlobalVariables.GetTexture(itemtype, SubType, true);

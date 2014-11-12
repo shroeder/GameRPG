@@ -77,6 +77,14 @@ namespace TextureAtlas
 
         public static Rectangle CharacterBounds { get; set; }
 
+        public static Random theRandom
+        {
+            get
+            {
+                return TheGame.RNG;
+            }
+        }
+
         public static List<int> AffixRange = new List<int>();
 
         public static List<DrawItem> ItemsToBeDrawn = new List<DrawItem>();
@@ -114,6 +122,7 @@ namespace TextureAtlas
         public static float OverRoll { get; set; }
 
         //Savable Values
+        public static double _CharacterMeleeRange { get; set; }
         public static double CharacterMeleeRange
         {
             get
@@ -159,7 +168,7 @@ namespace TextureAtlas
 
             }
         }
-        public static int _CharacterStrength { get; set; }
+        public static double _CharacterStrength { get; set; }
         public static double CharacterStrength
         {
             get
@@ -175,6 +184,7 @@ namespace TextureAtlas
             }
             set { }
         }
+        public static double _CharacterTotalStrength { get; set; }
         public static double CharacterTotalStrength
         {
             get
@@ -202,6 +212,7 @@ namespace TextureAtlas
 
             }
         }
+        public static double _CharacterTotalAgility { get; set; }
         public static double CharacterTotalAgility
         {
             get
@@ -228,6 +239,7 @@ namespace TextureAtlas
 
             }
         }
+        public static double _CharacterTotalDex { get; set; }
         public static double CharacterTotalDex
         {
             get
@@ -254,6 +266,7 @@ namespace TextureAtlas
 
             }
         }
+        public static double _CharacterTotalInt { get; set; }
         public static double CharacterTotalInt
         {
             get
@@ -280,6 +293,7 @@ namespace TextureAtlas
 
             }
         }
+        public static double _CharacterTotalWisdom { get; set; }
         public static double CharacterTotalWisdom
         {
             get
@@ -306,6 +320,7 @@ namespace TextureAtlas
 
             }
         }
+        public static double _CharacterTotalVitality { get; set; }
         public static double CharacterTotalVitality
         {
             get
@@ -332,6 +347,7 @@ namespace TextureAtlas
 
             }
         }
+        public static double _CharacterTotalConstitution { get; set; }
         public static double CharacterTotalConstitution
         {
             get
@@ -339,6 +355,15 @@ namespace TextureAtlas
                 return Math.Round(CharacterConstitution + GetStatAcrossEquipment("CON"));
             }
         }
+        public static double _CharacterChanceToHit { get; set; }
+        public static double CharacterChanceToHit
+        {
+            get
+            {
+                return Math.Round(GetCharacterChanceToHit(), 2);
+            }
+        }
+        public static double _CharacterChanceToDodge { get; set; }
         public static double CharacterChanceToDodge
         {
             get
@@ -346,6 +371,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterChanceToDodge(), 2);
             }
         }
+        public static double _CharacterPhysicalDamageReduction { get; set; }
         public static double CharacterPhysicalDamageReduction
         {
             get
@@ -353,6 +379,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterPhysicalDamageReduction(), 2);
             }
         }
+        public static double _CharacterAccuracy { get; set; }
         public static double CharacterAccuracy
         {
             get
@@ -406,6 +433,7 @@ namespace TextureAtlas
 
             }
         }
+        public static double _CharacterTotalLuck { get; set; }
         public static double CharacterTotalLuck
         {
             get
@@ -413,6 +441,7 @@ namespace TextureAtlas
                 return Math.Round(CharacterLuck + GetStatAcrossEquipment("LUC"));
             }
         }
+        public static double _CharacteMeleeAccuracy { get; set; }
         public static double CharacterMeleeAccuracy
         {
             get
@@ -420,6 +449,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterAccuracy(0), 2);
             }
         }
+        public static double _CharacterRangedAccuracy { get; set; }
         public static double CharacterRangedAccuracy
         {
             get
@@ -427,6 +457,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterAccuracy(1), 2);
             }
         }
+        public static double _CharacterAllElementalReduction { get; set; }
         public static double CharacterAllElementalReduction
         {
             get
@@ -434,6 +465,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("ALLRES"));
             }
         }
+        public static double _CharacterFireResist { get; set; }
         public static double CharacterFireResist
         {
             get
@@ -441,6 +473,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("FIRERES"));
             }
         }
+        public static double _CharacterColdResist { get; set; }
         public static double CharacterColdResist
         {
             get
@@ -448,6 +481,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("ICERES"));
             }
         }
+        public static double _CharacterLightningResist { get; set; }
         public static double CharacterLightningResist
         {
             get
@@ -455,6 +489,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("LIGHTRES"));
             }
         }
+        public static double _CharacterEarthResist { get; set; }
         public static double CharacterEarthResist
         {
             get
@@ -462,6 +497,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("EARTHRES"));
             }
         }
+        public static double _CharacterArmour { get; set; }
         public static double CharacterArmour
         {
             get
@@ -469,6 +505,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBaseArmour());
             }
         }
+        public static double _CharacterEvasion { get; set; }
         public static double CharacterEvasion
         {
             get
@@ -476,6 +513,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBaseEvasion());
             }
         }
+        public static double _CharacterMovementSpeed { get; set; }
         public static double CharacterMovementSpeed
         {
             get
@@ -483,6 +521,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterMovementSpeed());
             }
         }
+        public static double _CharacterCastSpeed { get; set; }
         public static double CharacterCastSpeed
         {
             get
@@ -490,6 +529,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterCastSpeed(), 2);
             }
         }
+        public static double _CharacterHealth { get; set; }
         public static double CharacterHealth
         {
             get
@@ -497,6 +537,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBaseHealth());
             }
         }
+        public static double _CharacterTotalHealth { get; set; }
         public static double CharacterTotalHealth
         {
             get
@@ -511,6 +552,7 @@ namespace TextureAtlas
                 return Math.Round(returnValue);
             }
         }
+        public static double _CharacterMana { get; set; }
         public static double CharacterMana
         {
             get
@@ -518,6 +560,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBaseMana());
             }
         }
+        public static double _CharacterTotalMana { get; set; }
         public static double CharacterTotalMana
         {
             get
@@ -535,6 +578,7 @@ namespace TextureAtlas
         public static double CharacterExperience { get; set; }
         public static double CharacterStatPoints { get; set; }
         public static double CharacterSkillPoints { get; set; }
+        public static double _CharacterIncreaseFlatRange { get; set; }
         public static double CharacterIncreaseFlatRange
         {
             get
@@ -542,6 +586,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("FRPDMG"));
             }
         }
+        public static double _CharacterIncreaseFlatMelee { get; set; }
         public static double CharacterIncreaseFlatMelee
         {
             get
@@ -549,6 +594,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("FMPDMG"));
             }
         }
+        public static double _CharacterIncreaseFlatPhysical { get; set; }
         public static double CharacterIncreaseFlatPhysical
         {
             get
@@ -556,6 +602,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("FPDMG"));
             }
         }
+        public static double _CharacterRangedAttackSpeed { get; set; }
         public static double CharacterRangedAttackSpeed
         {
             get
@@ -563,6 +610,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterAttackSpeed(1), 2);
             }
         }
+        public static double _CharacterMeleeAttackSpeed { get; set; }
         public static double CharacterMeleeAttackSpeed
         {
             get
@@ -570,6 +618,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterAttackSpeed(0), 2);
             }
         }
+        public static double _CharacterIncreaseAttackSpeed { get; set; }
         public static double CharacterIncreaseAttackSpeed
         {
             get
@@ -604,6 +653,7 @@ namespace TextureAtlas
                 return Math.Round(returnValue, 2);
             }
         }
+        public static double _CharacterIncreaseRangedAttackSpeed { get; set; }
         public static double CharacterIncreaseRangedAttackSpeed
         {
             get
@@ -611,6 +661,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("RATKSPD"));
             }
         }
+        public static double _CharacterIncreaseMeleeAttackSpeed { get; set; }
         public static double CharacterIncreaseMeleeAttackSpeed
         {
             get
@@ -618,6 +669,7 @@ namespace TextureAtlas
                 return Math.Round(GetStatAcrossEquipment("MATKSPD"), 2);
             }
         }
+        public static double _CharacterAttackSpeed { get; set; }
         public static double CharacterAttackSpeed
         {
             get
@@ -652,6 +704,7 @@ namespace TextureAtlas
                 return Math.Round(returnValue, 2);
             }
         }
+        public static double _CharacterBasePhysicalDamage { get; set; }
         public static double CharacterBasePhysicalDamage
         {
             get
@@ -659,6 +712,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBasePhysical(), 2);
             }
         }
+        public static double _CharacterBaseArmour { get; set; }
         public static double CharacterBaseArmour
         {
             get
@@ -666,6 +720,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBaseArmour());
             }
         }
+        public static double _CharacterBaseEvasion { get; set; }
         public static double CharacterBaseEvasion
         {
             get
@@ -673,6 +728,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBaseEvasion());
             }
         }
+        public static double _CharacterTotalPhysicalDamage { get; set; }
         public static double CharacterTotalPhysicalDamage
         {
             get
@@ -704,6 +760,7 @@ namespace TextureAtlas
                 return Math.Round(returnValue, 2);
             }
         }
+        public static double _CharacterTotalArmour { get; set; }
         public static double CharacterTotalArmour
         {
             get
@@ -711,6 +768,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("ARM", "Armour"));
             }
         }
+        public static double _CharacterTotalEvasion { get; set; }
         public static double CharacterTotalEvasion
         {
             get
@@ -718,6 +776,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("EVA", "Evasion"));
             }
         }
+        public static double _CharacterIncreaseHealthFlat { get; set; }
         public static double CharacterIncreaseHealthFlat
         {
             get
@@ -725,6 +784,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("HPFLAT"));
             }
         }
+        public static double _CharacterIncreaseHealth { get; set; }
         public static double CharacterIncreaseHealth
         {
             get
@@ -732,6 +792,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("HP"), 2);
             }
         }
+        public static double _CharacterIncreaseManaFlat { get; set; }
         public static double CharacterIncreaseManaFlat
         {
             get
@@ -739,6 +800,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("MPFLAT"));
             }
         }
+        public static double _CharacterIncreasemana { get; set; }
         public static double CharacterIncreaseMana
         {
             get
@@ -746,6 +808,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("MP"), 2);
             }
         }
+        public static double _CharacterIncreasePhysDmg { get; set; }
         public static double CharacterIncreasePhysDmg
         {
             get
@@ -753,6 +816,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("PDMG"), 2);
             }
         }
+        public static double _CharacterIncreasePhysRangeDmg { get; set; }
         public static double CharacterIncreasePhysRangeDmg
         {
             get
@@ -760,6 +824,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("RPDMG"), 2);
             }
         }
+        public static double _CharacterIncreasePhysMeleeDmg { get; set; }
         public static double CharacterIncreasePhyMeleeDmg
         {
             get
@@ -767,6 +832,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("MPDMG"), 2);
             }
         }
+        public static double _CharacterIncreaseExpPct { get; set; }
         public static double CharacterIncreaseExpPct
         {
             get
@@ -774,6 +840,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("EXP"), 2);
             }
         }
+        public static double _CharacterMagicFindRarity { get; set; }
         public static double CharacterMagicFindRarity
         {
             get
@@ -781,6 +848,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("MF"));
             }
         }
+        public static double _CharacterMagicFindQuantity { get; set; }
         public static double CharacterMagicFindQuantity
         {
             get
@@ -788,6 +856,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("MQ"));
             }
         }
+        public static double _CharacterBaseCritChance { get; set; }
         public static double CharacterBaseCritChance
         {
             get
@@ -795,6 +864,7 @@ namespace TextureAtlas
                 return Math.Round(GetBaseCritChance(), 2);
             }
         }
+        public static double _CharacterCritChance { get; set; }
         public static double CharacterCritChance
         {
             get
@@ -802,13 +872,15 @@ namespace TextureAtlas
                 return Math.Round(CharacterBaseCritChance + GetCharacterStatTotal("CC"), 2);
             }
         }
+        public static double _CharacterCritDamageModifier { get; set; }
         public static double CharacterCritDamageModifier
         {
             get
             {
-                return 100 + Math.Round(GetCharacterStatTotal("CD"), 2);
+                return Math.Round(GetCharacterStatTotal("CD"), 2);
             }
         }
+        public static double _CharacterCoolDownReduction { get; set; }
         public static double CharacterCoolDownReduction
         {
             get
@@ -816,6 +888,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("CDR"), 2);
             }
         }
+        public static double _CharacterPhysDamageReduction { get; set; }
         public static double CharacterPhysDamageReduction
         {
             get
@@ -823,6 +896,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterPhysicalDamageReduction(), 2);
             }
         }
+        public static double _CharacterVsBeastDamage { get; set; }
         public static double CharacterVsBeastDamage
         {
             get
@@ -830,6 +904,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("DVB"), 2);
             }
         }
+        public static double _CharacterVsHumanDamage { get; set; }
         public static double CharacterVsHumanDamage
         {
             get
@@ -837,6 +912,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("DVH"), 2);
             }
         }
+        public static double _CharacterVsUndeadDamage { get; set; }
         public static double CharacterVsUndeadDamage
         {
             get
@@ -844,6 +920,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("DVU"), 2);
             }
         }
+        public static double _CharacterVsBossDamage { get; set; }
         public static double CharacterVsBossDamage
         {
             get
@@ -851,6 +928,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("DVBS"), 2);
             }
         }
+        public static double _CharacterVsEliteDamage { get; set; }
         public static double CharacterVsEliteDamage
         {
             get
@@ -858,6 +936,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("DVE"), 2);
             }
         }
+        public static double _CharacterMagicPenetration { get; set; }
         public static double CharacterMagicPenetration
         {
             get
@@ -865,6 +944,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("CMP"), 2);
             }
         }
+        public static double _CharacterArmourPenetration { get; set; }
         public static double CharacterArmourPenetration
         {
             get
@@ -872,6 +952,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("ARPEN"), 2);
             }
         }
+        public static double _CharacterPhysicalReflect { get; set; }
         public static double CharacterPhysicalReflect
         {
             get
@@ -879,6 +960,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("PREF"), 2);
             }
         }
+        public static double _CharacterMagicReflect { get; set; }
         public static double CharacterMagicReflect
         {
             get
@@ -886,6 +968,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("MREF"), 2);
             }
         }
+        public static double _CharacterSpellDamage { get; set; }
         public static double CharacterSpellDamage
         {
             get
@@ -893,6 +976,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("SPDMG"), 2);
             }
         }
+        public static double _CharacterHealthRegen { get; set; }
         public static double CharacterHealthRegen
         {
             get
@@ -900,6 +984,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBaseHealthRegen(), 2);
             }
         }
+        public static double _CharacterTotalHealthRegen { get; set; }
         public static double CharacterTotalHealthregen
         {
             get
@@ -907,6 +992,7 @@ namespace TextureAtlas
                 return Math.Round(CharacterHealthRegen + GetCharacterStatTotal("HPREGEN"), 2);
             }
         }
+        public static double _CharacterManaRegen { get; set; }
         public static double CharacterManaRegen
         {
             get
@@ -914,6 +1000,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterBaseManaRegen(), 2);
             }
         }
+        public static double _CharacterTotalManaRegen { get; set; }
         public static double CharacterTotalManaRegen
         {
             get
@@ -921,6 +1008,7 @@ namespace TextureAtlas
                 return Math.Round(CharacterManaRegen + GetCharacterStatTotal("MPREGEN"), 2);
             }
         }
+        public static double _CharacterDamageReduction { get; set; }
         public static double CharacterDamageReduction
         {
             get
@@ -928,6 +1016,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("DRDC"), 2);
             }
         }
+        public static double _CharacterHealthSteal { get; set; }
         public static double CharacterHealthSteal
         {
             get
@@ -935,6 +1024,7 @@ namespace TextureAtlas
                 return Math.Round(GetCharacterStatTotal("HPSTEAL"), 2);
             }
         }
+        public static double _CharacterManaSteal { get; set; }
         public static double CharacterManaSteal
         {
             get
@@ -1262,6 +1352,94 @@ namespace TextureAtlas
             }
         }
 
+        public static void UpdateStats()
+        {
+            _CharacterMeleeRange = CharacterMeleeRange;
+            _CharacterStrength = CharacterStrength;
+            _CharacterTotalStrength = CharacterTotalStrength;
+            _CharacterAgility = CharacterAgility;
+            _CharacterTotalAgility = CharacterTotalAgility;
+            _CharacterDex = CharacterDex;
+            _CharacterTotalDex = CharacterTotalDex;
+            _CharacterInt = CharacterInt;
+            _CharacterTotalInt = CharacterTotalInt;
+            _CharacterWisdom = CharacterWisdom;
+            _CharacterTotalWisdom = CharacterTotalWisdom;
+            _CharacterVitality = CharacterVitality;
+            _CharacterTotalVitality = CharacterTotalVitality;
+            _CharacterConstitution = CharacterConstitution;
+            _CharacterTotalConstitution = CharacterTotalConstitution;
+            _CharacterChanceToHit = CharacterChanceToHit;
+            _CharacterChanceToDodge = CharacterChanceToDodge;
+            _CharacterPhysicalDamageReduction = CharacterPhysicalDamageReduction;
+            _CharacterAccuracy = CharacterAccuracy;
+            _CharacterLuck = CharacterLuck;
+            _CharacterTotalLuck = CharacterTotalLuck;
+            _CharacteMeleeAccuracy = CharacterMeleeAccuracy;
+            _CharacterRangedAccuracy = CharacterRangedAccuracy;
+            _CharacterAllElementalReduction = CharacterAllElementalReduction;
+            _CharacterFireResist = CharacterFireResist;
+            _CharacterColdResist = CharacterColdResist;
+            _CharacterLightningResist = CharacterLightningResist;
+            _CharacterEarthResist  = CharacterEarthResist;
+            _CharacterArmour = CharacterArmour;
+            _CharacterEvasion = CharacterEvasion;
+            _CharacterMovementSpeed = CharacterMovementSpeed;
+            _CharacterCastSpeed = CharacterCastSpeed;
+            _CharacterHealth = CharacterHealth;
+            _CharacterTotalHealth = CharacterTotalHealth;
+            _CharacterMana = CharacterMana;
+            _CharacterTotalMana = CharacterTotalMana;
+            _CharacterIncreaseFlatRange = CharacterIncreaseFlatRange;
+            _CharacterIncreaseFlatMelee = CharacterIncreaseFlatMelee;
+            _CharacterIncreaseFlatPhysical = CharacterIncreaseFlatPhysical;
+            _CharacterRangedAttackSpeed  = CharacterRangedAttackSpeed;
+            _CharacterMeleeAttackSpeed = CharacterMeleeAttackSpeed;
+            _CharacterIncreaseAttackSpeed = CharacterIncreaseAttackSpeed;
+            _CharacterIncreaseRangedAttackSpeed = CharacterIncreaseRangedAttackSpeed;
+            _CharacterIncreaseMeleeAttackSpeed = CharacterIncreaseMeleeAttackSpeed;
+            _CharacterAttackSpeed = CharacterAttackSpeed;
+            _CharacterBasePhysicalDamage = CharacterBasePhysicalDamage;
+            _CharacterBaseArmour = CharacterBaseArmour;
+            _CharacterBaseEvasion = CharacterBaseEvasion;
+            _CharacterTotalPhysicalDamage = CharacterTotalPhysicalDamage;
+            _CharacterTotalArmour = CharacterTotalArmour;
+            _CharacterTotalEvasion = CharacterTotalEvasion;
+            _CharacterIncreaseHealthFlat = CharacterIncreaseHealthFlat;
+            _CharacterIncreaseHealth = CharacterIncreaseHealth;
+            _CharacterIncreaseManaFlat = CharacterIncreaseManaFlat;
+            _CharacterIncreasemana  = CharacterIncreaseMana;
+            _CharacterIncreasePhysDmg = CharacterIncreasePhysDmg;
+            _CharacterIncreasePhysRangeDmg = CharacterIncreasePhysRangeDmg;
+            _CharacterIncreasePhysMeleeDmg = CharacterIncreasePhyMeleeDmg;
+            _CharacterIncreaseExpPct = CharacterIncreaseExpPct;
+            _CharacterMagicFindRarity = CharacterMagicFindRarity;
+            _CharacterMagicFindQuantity = CharacterMagicFindQuantity;
+            _CharacterBaseCritChance = CharacterBaseCritChance;
+            _CharacterCritChance  = CharacterCritChance;
+            _CharacterCritDamageModifier  = CharacterCritDamageModifier;
+            _CharacterCoolDownReduction = CharacterCoolDownReduction;
+            _CharacterPhysDamageReduction = CharacterPhysDamageReduction;
+            _CharacterVsBeastDamage = CharacterVsBeastDamage;
+            _CharacterVsHumanDamage =CharacterVsHumanDamage;
+            _CharacterVsUndeadDamage = CharacterVsUndeadDamage;
+            _CharacterVsBossDamage = CharacterVsBossDamage;
+            _CharacterVsEliteDamage = CharacterVsEliteDamage;
+            _CharacterMagicPenetration = CharacterMagicPenetration;
+            _CharacterArmourPenetration = CharacterArmourPenetration;
+            _CharacterPhysicalReflect = CharacterPhysicalReflect;
+            _CharacterMagicReflect = CharacterMagicReflect;
+            _CharacterSpellDamage =CharacterSpellDamage;
+            _CharacterHealthRegen =CharacterHealthRegen;
+            _CharacterTotalHealthRegen =CharacterTotalHealthregen;
+            _CharacterManaRegen = CharacterManaRegen;
+            _CharacterTotalManaRegen = CharacterTotalManaRegen;
+            _CharacterDamageReduction = CharacterDamageReduction;
+            _CharacterHealthSteal = CharacterHealthSteal;
+            _CharacterManaSteal = CharacterManaSteal;
+        
+        }
+
         public static Vector2 GetInterSect(Rectangle me, Rectangle them, string XY = "")
         {
 
@@ -1328,65 +1506,58 @@ namespace TextureAtlas
 
         public static int RollVsRarity()
         {
-            int returnValue = 0;
-            Random rng = new Random();
-            int applyMF = rng.Next(1 + (int)(CharacterMagicFindQuantity / 5), 20 + (int)(CharacterMagicFindQuantity / 2));
-            if (applyMF > 10)
+
+            int rarityRoll = theRandom.Next(0, 100);
+
+            double rarity = rarityRoll;
+
+            rarity += CharacterMagicFindQuantity * .03;
+            rarity += CharacterMagicFindRarity * .05;
+
+            if (rarity < 40)
             {
-                int rarity = rng.Next(1 + (int)(applyMF - 10) + (int)(CharacterMagicFindQuantity / 5) + (int)(CharacterMagicFindRarity / 5), 100);
-                if (rarity >= 30 && rarity < 60)
-                {
-                    returnValue = 2;
-                }
-                else if (rarity >= 60 && rarity < 80)
-                {
-                    returnValue = 3;
-                }
-                else if (rarity >= 80 && rarity < 90)
-                {
-                    returnValue = 4;
-                }
-                else if (rarity >= 90)
-                {
-                    int isUnique = rng.Next(0 + (int)CharacterTotalLuck + (int)CharacterMagicFindRarity + (int)CharacterMagicFindQuantity, 1000);
-                    if (isUnique > 600)
-                    {
-                        returnValue = 6;
-                    }
-                    else
-                    {
-                        returnValue = 5;
-                    }
-                }
-                else
-                {
-                    returnValue = 1;
-                }
+                return 1;
+            }
+            else if (rarity < 70)
+            {
+                return 2;
+            }
+            else if (rarity < 85)
+            {
+                return 3;
+            }
+            else if (rarity < 95)
+            {
+                return 4;
+            }
+            else if (rarity < 99)
+            {
+                return 5;
+            }
+            else if (rarity >= 99)
+            {
+                return 6;
             }
             else
             {
-                returnValue = 1;
+                return 1;
             }
-
-            return returnValue;
 
         }
 
         public static bool RollVsHit(int EnemyLevel, int EnemyEvasion)
         {
             Random rng = new Random();
-            float DifficultyPrimitive = (CharacterLevel / 10);
-            float requiredRollToHit = (float)((((EnemyEvasion * (GameDifficulty * 1.3)) + (EnemyLevel * GameDifficulty)) * DifficultyPrimitive) * (GameDifficulty * 1.3));
-            float HitMark = (float)(((CharacterDex * .4) * (CharacterAccuracy / (CharacterLevel * .15))) / (DifficultyPrimitive * .3));
-            int RandomNumber = rng.Next(5 - Convert.ToInt32(CharacterAccuracy * .07), 15 - Convert.ToInt32(CharacterDex * .12));
-            if ((HitMark / RandomNumber) > requiredRollToHit)
+
+            int accRoll = rng.Next(1, 100);
+
+            if (accRoll >= CharacterChanceToHit)
             {
-                OverRoll = (HitMark / RandomNumber) - requiredRollToHit;
-                return true;
+                return false;
             }
             else
             {
-                return false;
+                return true;
             }
 
         }
@@ -1394,14 +1565,16 @@ namespace TextureAtlas
         public static bool RollVsCrit()
         {
             Random rng = new Random();
-            float myRoll = (float)(OverRoll * (CharacterLuck * 2.5) / (rng.Next((50 - (int)(CharacterCritChance * .5)), 100)));
-            if (myRoll > 100)
+
+            int critRoll = rng.Next(1, 100);
+
+            if (critRoll > CharacterCritChance)
             {
-                return true;
+                return false;
             }
             else
             {
-                return false;
+                return true;
             }
         }
 
@@ -1676,137 +1849,160 @@ namespace TextureAtlas
 
             List<Affix> returnAffixs = new List<Affix>();
 
-            for (int intlc = 0; intlc < Affixes; intlc++)
+            switch (ItemType)
             {
-                if (AffixRange.Count == 0)
-                {
+                //Two-Handed Sword
+                case 1:
 
-                    switch (ItemType)
+                    switch (SubType)
                     {
-                        //Two-Handed Sword
+                        //Starter Two-Hander
                         case 1:
 
-                            switch (SubType)
-                            {
-                                //Starter Two-Hander
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 36, 37, 38, 39, 56, 57 };
-                                    break;
-                            }
-
-                            break;
-                        //Boots
-                        case 2:
-
-                            switch (SubType)
-                            {
-                                //Leather Boots
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
-                                    break;
-                            }
-
-                            break;
-                        //Pants
-                        case 3:
-
-                            switch (SubType)
-                            {
-                                //Leather PAnts
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
-                                    break;
-                            }
-
-                            break;
-                        //Chest
-                        case 4:
-
-                            switch (SubType)
-                            {
-                                //Leather Chest
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
-                                    break;
-                            }
-
-                            break;
-                        //Gloves
-                        case 5:
-
-                            switch (SubType)
-                            {
-                                //Leather Gloves
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
-                                    break;
-                            }
-
-                            break;
-                        //Ring
-                        case 6:
-
-                            switch (SubType)
-                            {
-                                //Gold Ring
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
-                                    break;
-                            }
-                            break;
-                        //Belt
-                        case 7:
-
-                            switch (SubType)
-                            {
-                                //Leather Belt
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
-                                    break;
-                            }
-                            break;
-                        //Helmet
-                        case 8:
-
-                            switch (SubType)
-                            {
-                                //Leather Helmet
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
-                                    break;
-                            }
-                            break;
-                        //Shoulders
-                        case 9:
-
-                            switch (SubType)
-                            {
-                                //Leather Shoulders
-                                case 1:
-
-                                    AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
-                                    break;
-                            }
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
                             break;
                     }
-                }
 
-                Affix afx = RollAffix(AffixRange, ItmLvl);
-                returnAffixs.Add(afx);
+                    break;
+                //Boots
+                case 2:
+
+                    switch (SubType)
+                    {
+                        //Leather Boots
+                        case 1:
+
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                            break;
+                    }
+
+                    break;
+                //Pants
+                case 3:
+
+                    switch (SubType)
+                    {
+                        //Leather PAnts
+                        case 1:
+
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                            break;
+                    }
+
+                    break;
+                //Chest
+                case 4:
+
+                    switch (SubType)
+                    {
+                        //Leather Chest
+                        case 1:
+
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                            break;
+                    }
+
+                    break;
+                //Gloves
+                case 5:
+
+                    switch (SubType)
+                    {
+                        //Leather Gloves
+                        case 1:
+
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                            break;
+                    }
+
+                    break;
+                //Ring
+                case 6:
+
+                    switch (SubType)
+                    {
+                        //Gold Ring
+                        case 1:
+
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                            break;
+                    }
+                    break;
+                //Belt
+                case 7:
+
+                    switch (SubType)
+                    {
+                        //Leather Belt
+                        case 1:
+
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                            break;
+                    }
+                    break;
+                //Helmet
+                case 8:
+
+                    switch (SubType)
+                    {
+                        //Leather Helmet
+                        case 1:
+
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                            break;
+                    }
+                    break;
+                //Shoulders
+                case 9:
+
+                    switch (SubType)
+                    {
+                        //Leather Shoulders
+                        case 1:
+
+                            AffixRange = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 40, 41, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+                            break;
+                    }
+                    break;
             }
 
-            AffixRange = new List<int>();
+            List<int> AffixOrder = new List<int>();
+
+            for (int intlc = 0; intlc < Affixes; intlc++)
+            {
+                int index = PickAffixes(AffixRange);
+                int newIndex = AffixRange[index];
+                AffixRange.Remove(AffixRange[index]);
+                AffixOrder.Add(newIndex);
+            }
+
+            AffixOrder = ReOrder(AffixOrder, Affixes);
+
+            Affix afx = new Affix();
+
+            foreach (int i in AffixOrder)
+            {
+                afx = GetAffix(i, ItmLvl);
+                returnAffixs.Add(afx);
+                afx = null;
+            }
+
+            AffixRange = null;
 
             return returnAffixs;
+        }
 
+        public static List<int> ReOrder(List<int> theList, int count)
+        {
+            List<int> newList = new List<int>();
+
+            for (int intlc = 0; intlc < count; intlc++)
+            {
+                newList.Add(theList.Min());
+                theList.Remove(theList.Min());
+            }
+
+            return newList;
         }
 
         public static int GetBaseStat(int type, int subtype)
@@ -1868,322 +2064,370 @@ namespace TextureAtlas
             return returnValue;
         }
 
-        public static Affix RollAffix(List<int> AffixRange, int ItemLvl)
+        public static int PickAffixes(List<int> AffixRange)
         {
-            Random rng = new Random();
+            int index = theRandom.Next(0, AffixRange.Count - 1);
+            return index;
+        }
+
+        public static Affix GetAffix(int AffixNbr, int ItemLvl)
+        {
+
             Affix returnAffix = new Affix();
-            returnAffix.Stat = "";
-            returnAffix.Desc = "";
-            returnAffix.Value = 0;
-            int index = rng.Next(1, AffixRange.Count);
-            //Random Stats
-            switch (AffixRange[index])
+
+            switch (AffixNbr)
             {
                 case 1:
-                    returnAffix.Value = rng.Next(10, 20);
+                    returnAffix.Value = theRandom.Next(10, 20);
                     returnAffix.Desc = "Strength Increased By : " + returnAffix.Value.ToString();
                     returnAffix.Stat = "STR";
                     break;
                 case 2:
-                    returnAffix.Value = rng.Next(10, 20);
+                    returnAffix.Value = theRandom.Next(10, 20);
                     returnAffix.Stat = "AGI";
                     returnAffix.Desc = "Agility Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 3:
-                    returnAffix.Value = rng.Next(10, 20);
+                    returnAffix.Value = theRandom.Next(10, 20);
                     returnAffix.Stat = "WIS";
                     returnAffix.Desc = "Wisdom Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 4:
-                    returnAffix.Value = rng.Next(10, 20);
+                    returnAffix.Value = theRandom.Next(10, 20);
                     returnAffix.Stat = "DEX";
                     returnAffix.Desc = "Dexterity Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 5:
-                    returnAffix.Value = rng.Next(10, 20);
+                    returnAffix.Value = theRandom.Next(10, 20);
                     returnAffix.Stat = "LUC";
                     returnAffix.Desc = "Luck Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 6:
-                    returnAffix.Value = rng.Next(10, 20);
+                    returnAffix.Value = theRandom.Next(10, 20);
                     returnAffix.Stat = "INT";
                     returnAffix.Desc = "Intelligence Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 7:
-                    returnAffix.Value = rng.Next(10, 20);
+                    returnAffix.Value = theRandom.Next(10, 20);
                     returnAffix.Stat = "VIT";
                     returnAffix.Desc = "Vitality Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 8:
-                    returnAffix.Value = rng.Next(10, 20);
+                    returnAffix.Value = theRandom.Next(10, 20);
                     returnAffix.Stat = "CON";
                     returnAffix.Desc = "Constitution Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 9:
-                    returnAffix.Value = rng.Next(50, 250);
+                    returnAffix.Value = theRandom.Next(50, 250);
                     returnAffix.Stat = "ACC";
                     returnAffix.Desc = "Accuracy Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 10:
-                    returnAffix.Value = rng.Next(50, 250);
+                    returnAffix.Value = theRandom.Next(50, 250);
                     returnAffix.Stat = "MACC";
                     returnAffix.Desc = "Melee Accuracy Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 11:
-                    returnAffix.Value = rng.Next(50, 250);
+                    returnAffix.Value = theRandom.Next(50, 250);
                     returnAffix.Stat = "RACC";
                     returnAffix.Desc = "Ranged Accuracy Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 12:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "CC";
                     returnAffix.Desc = "Critical Chance Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 13:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "CD";
                     returnAffix.Desc = "Critical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 14:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "ATKSPD";
                     returnAffix.Desc = "Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 15:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "CDR";
                     returnAffix.Desc = "CoolDowns Reduced By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 16:
-                    returnAffix.Value = rng.Next(10, 25);
+                    returnAffix.Value = theRandom.Next(10, 25);
                     returnAffix.Stat = "HPFLAT";
                     returnAffix.Desc = "Health Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 17:
-                    returnAffix.Value = rng.Next(10, 25);
+                    returnAffix.Value = theRandom.Next(10, 25);
                     returnAffix.Stat = "MPFLAT";
                     returnAffix.Desc = "Mana Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 18:
-                    returnAffix.Value = rng.Next(5, 20);
+                    returnAffix.Value = theRandom.Next(5, 20);
                     returnAffix.Stat = "HP";
                     returnAffix.Desc = "Health Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 19:
-                    returnAffix.Value = rng.Next(5, 20);
+                    returnAffix.Value = theRandom.Next(5, 20);
                     returnAffix.Stat = "MP";
                     returnAffix.Desc = "Mana Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 20:
-                    returnAffix.Value = rng.Next(10, 50);
+                    returnAffix.Value = theRandom.Next(10, 50);
                     returnAffix.Stat = "ARM";
                     returnAffix.Desc = "Armour Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 21:
-                    returnAffix.Value = rng.Next(20, 40);
-                    returnAffix.Value += rng.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
+                    returnAffix.Value = theRandom.Next(20, 40);
+                    returnAffix.Value += theRandom.Next((int)(ItemLvl * .5), (int)(ItemLvl * 2));
                     returnAffix.Stat = "EVA";
                     returnAffix.Desc = "Evasion Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 22:
-                    returnAffix.Value = rng.Next(10, 35);
+                    returnAffix.Value = theRandom.Next(10, 35);
                     returnAffix.Stat = "MF";
                     returnAffix.Desc = "Increase Rarity of Items : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 23:
-                    returnAffix.Value = rng.Next(10, 35);
+                    returnAffix.Value = theRandom.Next(10, 35);
                     returnAffix.Stat = "MQ";
                     returnAffix.Desc = "Increased Quantity of Magic Items : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 24:
-                    returnAffix.Value = rng.Next(3, 15);
+                    returnAffix.Value = theRandom.Next(3, 15);
                     returnAffix.Stat = "MR";
                     returnAffix.Desc = "Melee Range Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 25:
-                    returnAffix.Value = rng.Next(10, 25);
+                    returnAffix.Value = theRandom.Next(10, 25);
                     returnAffix.Stat = "EXP";
                     returnAffix.Desc = "Experience Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 26:
-                    returnAffix.Value = rng.Next(10, 50);
+                    returnAffix.Value = theRandom.Next(10, 50);
                     returnAffix.Stat = "FPDMG";
                     returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 27:
-                    returnAffix.Value = rng.Next(3, 10);
+                    returnAffix.Value = theRandom.Next(3, 10);
                     returnAffix.Stat = "PDMG";
                     returnAffix.Desc = "Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 28:
-                    returnAffix.Value = rng.Next(10, 50);
+                    returnAffix.Value = theRandom.Next(10, 50);
                     returnAffix.Stat = "FMPDMG";
                     returnAffix.Desc = "Melee Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 29:
-                    returnAffix.Value = rng.Next(3, 10);
+                    returnAffix.Value = theRandom.Next(3, 10);
                     returnAffix.Stat = "MPDMG";
                     returnAffix.Desc = "Melee Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 30:
-                    returnAffix.Value = rng.Next(10, 50);
+                    returnAffix.Value = theRandom.Next(10, 50);
                     returnAffix.Stat = "FRPDMG";
                     returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 31:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "RPDMG";
                     returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 32:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "RATKSPD";
                     returnAffix.Desc = "Ranged Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 33:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "MATKSPD";
                     returnAffix.Desc = "Melee Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 34:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "CSPD";
                     returnAffix.Desc = "Cast Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 35:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "MVSPD";
                     returnAffix.Desc = "Movement Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 36:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "ARPEN";
                     returnAffix.Desc = "Armour Penetration Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 //WeaponSpecific
                 case 37:
-                    returnAffix.Value = rng.Next(30, 250);
+                    returnAffix.Value = theRandom.Next(30, 250);
                     returnAffix.Stat = "WPDMG";
                     returnAffix.Desc = "Weapon Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 38:
-                    returnAffix.Value = rng.Next(10, 50);
+                    returnAffix.Value = theRandom.Next(10, 50);
                     returnAffix.Stat = "FWPDMG";
                     returnAffix.Desc = "Weapon Damage Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 39:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "WATKSPD";
                     returnAffix.Desc = "Weapon Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 //Armor Specific -- EVA
                 case 40:
-                    returnAffix.Value = rng.Next(10, 50);
+                    returnAffix.Value = theRandom.Next(10, 50);
                     returnAffix.Stat = "FAREVA";
                     returnAffix.Desc = "Item Evasion Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 41:
-                    returnAffix.Value = rng.Next(30, 250);
+                    returnAffix.Value = theRandom.Next(30, 250);
                     returnAffix.Stat = "AREVA";
                     returnAffix.Desc = "Item Evasion Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 42:
-                    returnAffix.Value = rng.Next(30, 250);
+                    returnAffix.Value = theRandom.Next(30, 250);
                     returnAffix.Stat = "AR";
                     returnAffix.Desc = "Item Armour Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 43:
-                    returnAffix.Value = rng.Next(30, 250);
+                    returnAffix.Value = theRandom.Next(30, 250);
                     returnAffix.Stat = "FAR";
                     returnAffix.Desc = "Item Armour Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 //Stats Continued
                 case 44:
-                    returnAffix.Value = rng.Next(3, 5);
+                    returnAffix.Value = theRandom.Next(3, 5);
                     returnAffix.Stat = "PDR";
                     returnAffix.Desc = "Physical Damage Reduced By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 45:
-                    returnAffix.Value = rng.Next(20, 50);
+                    returnAffix.Value = theRandom.Next(20, 50);
                     returnAffix.Stat = "DVB";
                     returnAffix.Desc = "Damage Vs Beast Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 46:
-                    returnAffix.Value = rng.Next(20, 50);
+                    returnAffix.Value = theRandom.Next(20, 50);
                     returnAffix.Stat = "DVH";
                     returnAffix.Desc = "Damage Vs Human Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 47:
-                    returnAffix.Value = rng.Next(20, 50);
+                    returnAffix.Value = theRandom.Next(20, 50);
                     returnAffix.Stat = "DVU";
                     returnAffix.Desc = "Damage Vs Undead Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 48:
-                    returnAffix.Value = rng.Next(10, 25);
+                    returnAffix.Value = theRandom.Next(10, 25);
                     returnAffix.Stat = "DVBS";
                     returnAffix.Desc = "Damage Vs Bosses Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 49:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "DVE";
                     returnAffix.Desc = "Damage Vs Elites Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 50:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "PREF";
                     returnAffix.Desc = "Physical Damage Reflected : " + returnAffix.Value.ToString();
                     break;
                 case 51:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "MREF";
                     returnAffix.Desc = "Magic Damage Reflected : " + returnAffix.Value.ToString();
                     break;
                 case 52:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "SPDMG";
                     returnAffix.Desc = "Spell Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 53:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "HPREGEN";
                     returnAffix.Desc = "Health Regeneration Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 54:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "MPREGEN";
                     returnAffix.Desc = "Mana Regeneration Increased By : " + returnAffix.Value.ToString();
                     break;
                 case 55:
-                    returnAffix.Value = rng.Next(10, 30);
+                    returnAffix.Value = theRandom.Next(10, 30);
                     returnAffix.Stat = "DRDC";
                     returnAffix.Desc = "Damage Reduced By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 56:
-                    returnAffix.Value = rng.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(10, 15);
                     returnAffix.Stat = "HPSTEAL";
                     returnAffix.Desc = "Physical Damage Converted to Health : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 57:
-                    returnAffix.Value = rng.Next(20, 40);
+                    returnAffix.Value = theRandom.Next(20, 40);
                     returnAffix.Stat = "MPSTEAL";
                     returnAffix.Desc = "Physical Damage Converted to Mana : " + returnAffix.Value.ToString() + "%";
                     break;
 
             }
 
-            AffixRange.Remove(AffixRange[index]);
             return returnAffix;
+
         }
 
-        public static float RollMeleeHitDamage(bool isCrit, int enemyArmour)
+        public static double RollPhysicalDamage()
         {
-            enemyArmour -= (int)(enemyArmour * (CharacterArmourPenetration / 100));
+            double returnValue = 0;
+            if (GlobalVariables.Equipment.RightWeapon != null)
+            {
+                if (GlobalVariables.Equipment.RightWeapon.RangedMelee == 0)
+                {
+                    returnValue = GetCharacterPhysicalDamage(0);
+                }
+                else if (GlobalVariables.Equipment.RightWeapon.RangedMelee == 1)
+                {
+                    returnValue = GetCharacterPhysicalDamage(1);
+                }
+            }
+            else if (GlobalVariables.Equipment.LeftWeapon != null)
+            {
+                if (GlobalVariables.Equipment.LeftWeapon.RangedMelee == 0)
+                {
+                    returnValue = GetCharacterPhysicalDamage(0);
+                }
+                else if (GlobalVariables.Equipment.LeftWeapon.RangedMelee == 1)
+                {
+                    returnValue = GetCharacterPhysicalDamage(1);
+                }
+            }
+
+            //Random
+
             Random rng = new Random();
-            int basedmg = rng.Next(GlobalVariables.CharacterMinDmg, GlobalVariables.CharacterMaxDmg);
-            float damage = (basedmg + (float)CharacterIncreaseFlatMelee + (float)CharacterIncreaseFlatPhysical);
-            damage += damage * ((float)CharacterIncreasePhysDmg + (float)CharacterIncreasePhyMeleeDmg);
-            damage -= (damage * (int)(enemyArmour / 100));
-            return damage;
+
+            int plusOrMinus = rng.Next(1, 100);
+
+            bool UpOrDown = false;
+
+            if (plusOrMinus <= 50)
+            {
+                UpOrDown = false;
+            }
+            else
+            {
+                UpOrDown = true;
+            }
+
+            int offSetDamage = rng.Next((int)(returnValue * .1), (int)(returnValue * .4));
+
+            if (UpOrDown)
+            {
+                returnValue += offSetDamage;
+            }
+            else
+            {
+                returnValue -= offSetDamage;
+            }
+
+            return returnValue;
         }
 
         public static int RollVsItemType()
@@ -2281,13 +2525,24 @@ namespace TextureAtlas
                     GlobalVariables.TheGame.CharWeapon = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
                     TheGame.equipment.Hero.txtLeftWeapon = TheGame.CharWeapon;
                     TheGame.animatedSprite.CharWeapon = TheGame.CharWeapon;
+                    UpdateStats();
                     break;
                 case 2:
                     GlobalVariables.TheGame.CharWeapon = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
                     TheGame.equipment.Hero.txtRightWeapon = TheGame.CharWeapon;
                     TheGame.animatedSprite.CharWeapon = TheGame.CharWeapon;
+                    UpdateStats();
                     break;
             }
+        }
+
+        public static void RingEquipped(Item item)
+        {
+            UpdateStats();
+        }
+
+        public static void BeltEquipped(Item item){
+            UpdateStats();
         }
 
         public static void BootsEquipped(Item item)
@@ -2295,6 +2550,7 @@ namespace TextureAtlas
             GlobalVariables.TheGame.CharBoots = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtBoots = TheGame.CharBoots;
             TheGame.animatedSprite.CharBoots = TheGame.CharBoots;
+            UpdateStats();
         }
 
         public static void PantsEquipped(Item item)
@@ -2302,6 +2558,7 @@ namespace TextureAtlas
             GlobalVariables.TheGame.CharPants = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtPants = TheGame.CharPants;
             TheGame.animatedSprite.CharPants = TheGame.CharPants;
+            UpdateStats();
         }
 
         public static void HelmetEquipped(Item item)
@@ -2311,6 +2568,7 @@ namespace TextureAtlas
             TheGame.equipment.Hero.txtHero = TheGame.Content.Load<Texture2D>("SpriteSheetHelm");
             TheGame.animatedSprite.CharHelm = TheGame.CharHelmet;
             TheGame.animatedSprite.Texture = TheGame.Content.Load<Texture2D>("SpriteSheetHelm");
+            UpdateStats();
         }
 
         public static void GlovesEquipped(Item item)
@@ -2318,6 +2576,7 @@ namespace TextureAtlas
             GlobalVariables.TheGame.CharGloves = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtGloves = TheGame.CharGloves;
             TheGame.animatedSprite.CharGloves = TheGame.CharGloves;
+            UpdateStats();
         }
 
         public static void ShouldersEquipped(Item item)
@@ -2325,6 +2584,7 @@ namespace TextureAtlas
             GlobalVariables.TheGame.CharShoulders = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtShoulders = TheGame.CharShoulders;
             TheGame.animatedSprite.CharShoulders = TheGame.CharShoulders;
+            UpdateStats();
         }
 
         public static void ChestEquipped(Item item)
@@ -2332,6 +2592,7 @@ namespace TextureAtlas
             GlobalVariables.TheGame.CharChest = TheGame.Content.Load<Texture2D>(item.ItemTextureName);
             TheGame.equipment.Hero.txtChest = TheGame.CharChest;
             TheGame.animatedSprite.CharChest = TheGame.CharChest;
+            UpdateStats();
         }
 
         public static float CalculateMeleePhysStat(List<Affix> affixes, int BasePhys)
@@ -2423,8 +2684,17 @@ namespace TextureAtlas
             double returnValue = 10;
 
             returnValue += (CharacterTotalArmour / (CharacterTotalArmour + 400)) * 100;
-            
+
             returnValue += GetStatAcrossEquipment("PDR");
+
+            return Math.Round(returnValue, 2);
+        }
+
+        public static double GetCharacterChanceToHit()
+        {
+            double returnValue = 50;
+
+            returnValue += (CharacterAccuracy / (CharacterAccuracy + 400)) * 100;
 
             return Math.Round(returnValue, 2);
         }
@@ -2727,7 +2997,7 @@ namespace TextureAtlas
             returnValue += CharacterTotalDex / 2;
             returnValue += CharacterTotalAgility / 4;
 
-            returnValue += (GetStatAcrossEquipment("ACC") / (GetStatAcrossEquipment("ACC") + 400)) * 100;
+            returnValue += GetStatAcrossEquipment("ACC");
 
             return returnValue;
         }
@@ -2741,11 +3011,11 @@ namespace TextureAtlas
 
             if (MeleeRanged == 0)
             {
-                returnValue += (GetStatAcrossEquipment("MACC") / (GetStatAcrossEquipment("MACC") + 400) * 100);
+                returnValue += GetStatAcrossEquipment("MACC");
             }
             else if (MeleeRanged == 1)
             {
-                returnValue += (GetStatAcrossEquipment("RACC") / (GetStatAcrossEquipment("RACC") + 400) * 100);
+                returnValue += GetStatAcrossEquipment("RACC");
             }
 
             return returnValue;
@@ -2756,7 +3026,7 @@ namespace TextureAtlas
         {
             double returnValue = 0;
 
-            List<Item> listItems = new List<Item> { Equipment.Belt, Equipment.Boots, Equipment.Chest, Equipment.Gloves, Equipment.Helmet, Equipment.LeftRing, Equipment.RightRing, Equipment.Belt, Equipment.RightWeapon, Equipment.LeftWeapon, Equipment.Pants };
+            List<Item> listItems = new List<Item> { Equipment.Shoulders, Equipment.Belt, Equipment.Boots, Equipment.Chest, Equipment.Gloves, Equipment.Helmet, Equipment.LeftRing, Equipment.RightRing, Equipment.Belt, Equipment.RightWeapon, Equipment.LeftWeapon, Equipment.Pants };
 
             foreach (Item item in listItems)
             {

@@ -620,37 +620,38 @@ namespace TextureAtlas
             if (Offense)
             {
                 Values.Add("Physical Damage : " + theValue.ToString());
-                Values.Add("Attack Speed : " + GlobalVariables.CharacterAttackSpeed.ToString());
-                Values.Add("Melee Range : " + GlobalVariables.CharacterMeleeRange.ToString());
-                Values.Add("Critical Chance : " + GlobalVariables.CharacterCritChance.ToString());
-                Values.Add("Critical Damage : " + GlobalVariables.CharacterCritDamageModifier.ToString());
-                Values.Add("Armour Penetration : " + GlobalVariables.CharacterArmourPenetration.ToString());
-                Values.Add("Magic Penetration : " + GlobalVariables.CharacterMagicPenetration.ToString());
-                Values.Add("Increase Damage Vs Boss : " + GlobalVariables.CharacterVsBossDamage.ToString());
-                Values.Add("Increase Damage Vs Elite : " + GlobalVariables.CharacterVsEliteDamage.ToString());
-                Values.Add("Increase Damage Vs Beast : " + GlobalVariables.CharacterVsBeastDamage.ToString());
-                Values.Add("Increase Damage Vs Human : " + GlobalVariables.CharacterVsHumanDamage.ToString());
-                Values.Add("Increase Damage Vs Undead : " + GlobalVariables.CharacterVsUndeadDamage.ToString());
+                Values.Add("Attack Speed : " + GlobalVariables._CharacterAttackSpeed.ToString() + "%");
+                Values.Add("Chance To Hit : " + GlobalVariables._CharacterChanceToHit.ToString() + "%");
+                Values.Add("Melee Range : " + GlobalVariables._CharacterMeleeRange.ToString() + "%");
+                Values.Add("Critical Chance : " + GlobalVariables._CharacterCritChance.ToString() + "%");
+                Values.Add("Critical Damage Modifier : " + GlobalVariables._CharacterCritDamageModifier.ToString() + "%");
+                Values.Add("Armour Penetration : " + GlobalVariables._CharacterArmourPenetration.ToString() + "%");
+                Values.Add("Magic Penetration : " + GlobalVariables._CharacterMagicPenetration.ToString() + "%");
+                Values.Add("Increase Damage Vs Boss : " + GlobalVariables._CharacterVsBossDamage.ToString() + "%");
+                Values.Add("Increase Damage Vs Elite : " + GlobalVariables._CharacterVsEliteDamage.ToString() + "%");
+                Values.Add("Increase Damage Vs Beast : " + GlobalVariables._CharacterVsBeastDamage.ToString() + "%");
+                Values.Add("Increase Damage Vs Human : " + GlobalVariables._CharacterVsHumanDamage.ToString() + "%");
+                Values.Add("Increase Damage Vs Undead : " + GlobalVariables._CharacterVsUndeadDamage.ToString() + "%");
             }
             else if (Defense)
             {
-                Values.Add("Health : " + GlobalVariables.CharacterTotalHealth.ToString());
-                Values.Add("Health Regen : " + GlobalVariables.CharacterTotalHealthregen.ToString());
-                Values.Add("Life Steal : " + GlobalVariables.CharacterHealthSteal.ToString());
-                Values.Add("Armour : " + GlobalVariables.CharacterTotalArmour.ToString());
-                Values.Add("Evasion : " + GlobalVariables.CharacterTotalEvasion.ToString());
-                Values.Add("Chance to Dodge : " + GlobalVariables.CharacterChanceToDodge.ToString());
-                Values.Add("Physical Damage Reduction : " + GlobalVariables.CharacterPhysDamageReduction.ToString());
+                Values.Add("Health : " + GlobalVariables._CharacterTotalHealth.ToString());
+                Values.Add("Health Regen : " + GlobalVariables._CharacterTotalHealthRegen.ToString());
+                Values.Add("Life Steal : " + GlobalVariables._CharacterHealthSteal.ToString() + "%");
+                Values.Add("Armour : " + GlobalVariables._CharacterTotalArmour.ToString());
+                Values.Add("Evasion : " + GlobalVariables._CharacterTotalEvasion.ToString());
+                Values.Add("Chance to Dodge : " + GlobalVariables._CharacterChanceToDodge.ToString() + "%");
+                Values.Add("Physical Damage Reduction : " + GlobalVariables._CharacterPhysDamageReduction.ToString() + "%");
             }
             else if (Utility)
             {
-                Values.Add("Mana : " + GlobalVariables.CharacterTotalMana.ToString());
-                Values.Add("Mana Regen : " + GlobalVariables.CharacterTotalManaRegen.ToString());
-                Values.Add("Mana Steal : " + GlobalVariables.CharacterManaSteal.ToString());
-                Values.Add("Movement Speed : " + GlobalVariables.CharacterMovementSpeed.ToString());
-                Values.Add("Increased Experience : " + GlobalVariables.CharacterIncreaseExpPct.ToString());
-                Values.Add("Increased Rarity : " + GlobalVariables.CharacterMagicFindRarity.ToString());
-                Values.Add("Increased Quantity : " + GlobalVariables.CharacterMagicFindQuantity.ToString());
+                Values.Add("Mana : " + GlobalVariables._CharacterTotalMana.ToString());
+                Values.Add("Mana Regen : " + GlobalVariables._CharacterTotalManaRegen.ToString());
+                Values.Add("Mana Steal : " + GlobalVariables._CharacterManaSteal.ToString() + "%");
+                Values.Add("Movement Speed : " + GlobalVariables._CharacterMovementSpeed.ToString() + "%");
+                Values.Add("Increased Experience : " + GlobalVariables._CharacterIncreaseExpPct.ToString() + "%");
+                Values.Add("Increased Rarity : " + GlobalVariables._CharacterMagicFindRarity.ToString() + "%");
+                Values.Add("Increased Quantity : " + GlobalVariables._CharacterMagicFindQuantity.ToString() + "%");
             }
 
             //Loop through and display values

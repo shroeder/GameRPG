@@ -79,7 +79,6 @@ namespace TextureAtlas
         public int EnemyTextureRows;
         public int CountMouseHeld;
         public int dir = 1;
-        public int DamageCounter = 0;
         public int Columns = 26;
         public int Rows = 26;
         public int TileWidth = 160;
@@ -894,7 +893,7 @@ namespace TextureAtlas
                     }
                 }
             }
-
+            GlobalVariables.UpdateStats();
         }
 
         protected override void LoadContent()
@@ -2129,25 +2128,45 @@ namespace TextureAtlas
                     {
                         animatedSprite.AnimateAttack(en.Bounds);
 
-                        string damage;
+                        double damage = 0;
                         bool IsHit = GlobalVariables.RollVsHit(en.Level, en.Evasion);
-                        bool IsCrit = GlobalVariables.RollVsCrit();
+                        bool IsCrit = false;
                         if (IsHit)
                         {
-                            damage = Convert.ToString(GlobalVariables.RollMeleeHitDamage(IsCrit, en.Armour));
+                            IsCrit = GlobalVariables.RollVsCrit();
+                        }
+                        if (IsHit)
+                        {
                             if (IsCrit)
                             {
-                                damage += "Crit";
+                                damage = (GlobalVariables.RollPhysicalDamage() * (1 + (GlobalVariables.CharacterCritDamageModifier * .01)));
                             }
+                            else
+                            {
+                                damage = GlobalVariables.RollPhysicalDamage();
+                            }
+                            //Enemy Damage reduction
+                            double enReduction = (en.Armour / (en.Armour + 400)) * 100;
+                            double damageReduced = damage * enReduction;
+                            damage -= damageReduced;
+                        }
+                        if (IsHit)
+                        {
+                            en.hp -= Convert.ToInt32(damage);
+                            if (IsCrit)
+                            {
+                                en.DamageCounter = Convert.ToString(Convert.ToUInt32(damage)) + "Crit";
+                            }
+                            else
+                            {
+                                en.DamageCounter = Convert.ToString(Convert.ToUInt32(damage));
+                            }
+                            break;
                         }
                         else
                         {
-                            damage = "Miss";
+                            en.DamageCounter = "Miss";
                         }
-                        en.hp -= DamageCounter;
-                        en.DamageCounter = damage;
-
-                        break;
                     }
                 }
             }
@@ -2244,6 +2263,7 @@ namespace TextureAtlas
                         blnClamp = true;
                         animatedSprite.CharHelm = null;
                         animatedSprite.Texture = Content.Load<Texture2D>("HeroSS2H");
+                        GlobalVariables.UpdateStats();
                     }
                 }
             }
@@ -2277,6 +2297,7 @@ namespace TextureAtlas
                         equipment.Chest = null;
                         blnClamp = true;
                         animatedSprite.CharChest = null;
+                        GlobalVariables.UpdateStats();
                     }
                 }
             }
@@ -2311,6 +2332,7 @@ namespace TextureAtlas
                         equipment.RightWeapon = null;
                         blnClamp = true;
                         animatedSprite.CharWeapon = null;
+                        GlobalVariables.UpdateStats();
                     }
                 }
             }
@@ -2323,8 +2345,8 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.X = equipment.LWeapBounds.X;
                         inventory.ClampedItem.location.Y = equipment.LWeapBounds.Y;
                         Item tempitem = equipment.LeftWeapon;
-                        GlobalVariables.WeaponEquiped(inventory.ClampedItem, 1);
                         equipment.LeftWeapon = inventory.ClampedItem;
+                        GlobalVariables.WeaponEquiped(inventory.ClampedItem, 1);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;
@@ -2345,6 +2367,7 @@ namespace TextureAtlas
                         equipment.LeftWeapon = null;
                         blnClamp = true;
                         animatedSprite.CharWeapon = null;
+                        GlobalVariables.UpdateStats();
                     }
                 }
             }
@@ -2378,6 +2401,7 @@ namespace TextureAtlas
                         equipment.Gloves = null;
                         blnClamp = true;
                         animatedSprite.CharGloves = null;
+                        GlobalVariables.UpdateStats();
                     }
                 }
             }
@@ -2411,6 +2435,7 @@ namespace TextureAtlas
                         equipment.Shoulders = null;
                         blnClamp = true;
                         animatedSprite.CharShoulders = null;
+                        GlobalVariables.UpdateStats();
                     }
                 }
             }
@@ -2444,6 +2469,7 @@ namespace TextureAtlas
                         equipment.Pants = null;
                         blnClamp = true;
                         animatedSprite.CharPants = null;
+                        GlobalVariables.UpdateStats();
                     }
                 }
             }
@@ -2478,6 +2504,7 @@ namespace TextureAtlas
                         equipment.Boots = null;
                         blnClamp = true;
                         animatedSprite.CharBoots = null;
+                        GlobalVariables.UpdateStats();
                     }
                 }
             }
@@ -2491,6 +2518,7 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.Y = equipment.RightRingBounds.Y;
                         Item tempitem = equipment.RightRing;
                         equipment.RightRing = inventory.ClampedItem;
+                        GlobalVariables.RingEquipped(inventory.ClampedItem);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;
@@ -2509,6 +2537,7 @@ namespace TextureAtlas
                         inventory.ClampedItem = equipment.RightRing;
                         equipment.RightRing = null;
                         blnClamp = true;
+                        GlobalVariables.RingEquipped(inventory.ClampedItem);
                     }
                 }
             }
@@ -2522,6 +2551,7 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.Y = equipment.LeftRingBounds.Y;
                         Item tempitem = equipment.LeftRing;
                         equipment.LeftRing = inventory.ClampedItem;
+                        GlobalVariables.RingEquipped(inventory.ClampedItem);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;
@@ -2535,11 +2565,12 @@ namespace TextureAtlas
                 }
                 else
                 {
-                    if (equipment.Chest != null)
+                    if (equipment.LeftRing != null)
                     {
                         inventory.ClampedItem = equipment.LeftRing;
                         equipment.LeftRing = null;
                         blnClamp = true;
+                        GlobalVariables.RingEquipped(inventory.ClampedItem);
                     }
                 }
             }
@@ -2553,6 +2584,7 @@ namespace TextureAtlas
                         inventory.ClampedItem.location.Y = equipment.BeltBounds.Y;
                         Item tempitem = equipment.Belt;
                         equipment.Belt = inventory.ClampedItem;
+                        GlobalVariables.BeltEquipped(inventory.ClampedItem);
                         if (tempitem != null)
                         {
                             inventory.ClampedItem = tempitem;
@@ -2571,6 +2603,7 @@ namespace TextureAtlas
                         inventory.ClampedItem = equipment.Belt;
                         equipment.Belt = null;
                         blnClamp = true;
+                        GlobalVariables.BeltEquipped(inventory.ClampedItem);
                     }
                 }
             }

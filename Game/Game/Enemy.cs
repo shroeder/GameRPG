@@ -319,7 +319,7 @@ namespace TextureAtlas
 
             if (DamageCounter != null)
             {
-                if (!blnDie && GlobalVariables.ShowEnemyDamage)
+                if (GlobalVariables.ShowEnemyDamage)
                 {
                     if (m < 100)
                     {
@@ -327,7 +327,6 @@ namespace TextureAtlas
                         if (DamageCounter.Contains("Crit"))
                         {
                             crit = true;
-                            DamageCounter = DamageCounter.Replace("Crit", "");
                         }
                         else
                         {
@@ -335,7 +334,8 @@ namespace TextureAtlas
                         }
                         if (crit)
                         {
-                            spriteBatch.DrawString(GlobalVariables.MediumFont, DamageCounter, new Vector2(location.X, (location.Y - m)), Color.Yellow);
+                            string damagewithoutcrit = DamageCounter.Replace("Crit", "");
+                            spriteBatch.DrawString(GlobalVariables.MediumFont, damagewithoutcrit, new Vector2(location.X, (location.Y - m)), Color.Yellow);
                             m += (float)(GlobalVariables.UserSetHeight * .001);
                         }
                         else
