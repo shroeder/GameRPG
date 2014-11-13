@@ -85,7 +85,7 @@ namespace TextureAtlas
 
         public Item() : this(new Vector2(0, 0), null, 1, 1, itemSlot.Nothing, "", 0, "", 1) { }
 
-        public Item(Vector2 Location, Texture2D tex, int itemtype, int itmlvl, itemSlot itmslot, string drptxtname, int basestat, string basestatname, int subType = 0, bool indexed = false, double baseatkspd = 0)
+        public Item(Vector2 Location, Texture2D tex, int itemtype, int itmlvl, itemSlot itmslot, string drptxtname, int basestat, string basestatname, int subType = 0, bool indexed = false, double baseatkspd = 0, int EnemyRarity = 0)
         {
             BaseAttackSpeed = baseatkspd;
             ItemLevel = itmlvl;
@@ -113,7 +113,7 @@ namespace TextureAtlas
             if (!indexed)
             {
                 //quality = 6;
-                quality = GlobalVariables.RollVsRarity();
+                quality = GlobalVariables.RollVsRarity(EnemyRarity);
                 if (quality > 5)
                 {
                     ItemTextureName = GlobalVariables.GetTexture(itemtype, SubType, true);

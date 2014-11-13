@@ -623,34 +623,7 @@ namespace TextureAtlas
         {
             get
             {
-                double returnValue = 1;
-                if (Equipment.RightWeapon != null)
-                {
-                    if (Equipment.RightWeapon.RangedMelee == 0)
-                    {
-                        returnValue = CharacterIncreaseMeleeAttackSpeed;
-                    }
-                    else if (Equipment.RightWeapon.RangedMelee == 1)
-                    {
-                        returnValue = CharacterIncreaseRangedAttackSpeed;
-                    }
-                }
-                else if (Equipment.LeftWeapon != null)
-                {
-                    if (Equipment.LeftWeapon.RangedMelee == 0)
-                    {
-                        returnValue = CharacterIncreaseMeleeAttackSpeed;
-                    }
-                    else if (Equipment.LeftWeapon.RangedMelee == 1)
-                    {
-                        returnValue = CharacterIncreaseRangedAttackSpeed;
-                    }
-                }
-                else
-                {
-                    returnValue = CharacterIncreaseMeleeAttackSpeed;
-                }
-                return Math.Round(returnValue, 2);
+                return Math.Round(GetStatAcrossEquipment("ATKSPD"), 2);
             }
         }
         public static double _CharacterIncreaseRangedAttackSpeed { get; set; }
@@ -872,12 +845,20 @@ namespace TextureAtlas
                 return Math.Round(CharacterBaseCritChance + GetCharacterStatTotal("CC"), 2);
             }
         }
+        public static double _CharacterBaseCritDamageModifier { get; set; }
+        public static double CharacterBaseCritDamageModifier
+        {
+            get
+            {
+                return Math.Round(GetBaseCritDamage(), 2);
+            }
+        }
         public static double _CharacterCritDamageModifier { get; set; }
         public static double CharacterCritDamageModifier
         {
             get
             {
-                return Math.Round(GetCharacterStatTotal("CD"), 2);
+                return Math.Round(CharacterBaseCritDamageModifier + GetCharacterStatTotal("CD"), 2);
             }
         }
         public static double _CharacterCoolDownReduction { get; set; }
@@ -1381,7 +1362,7 @@ namespace TextureAtlas
             _CharacterFireResist = CharacterFireResist;
             _CharacterColdResist = CharacterColdResist;
             _CharacterLightningResist = CharacterLightningResist;
-            _CharacterEarthResist  = CharacterEarthResist;
+            _CharacterEarthResist = CharacterEarthResist;
             _CharacterArmour = CharacterArmour;
             _CharacterEvasion = CharacterEvasion;
             _CharacterMovementSpeed = CharacterMovementSpeed;
@@ -1393,7 +1374,7 @@ namespace TextureAtlas
             _CharacterIncreaseFlatRange = CharacterIncreaseFlatRange;
             _CharacterIncreaseFlatMelee = CharacterIncreaseFlatMelee;
             _CharacterIncreaseFlatPhysical = CharacterIncreaseFlatPhysical;
-            _CharacterRangedAttackSpeed  = CharacterRangedAttackSpeed;
+            _CharacterRangedAttackSpeed = CharacterRangedAttackSpeed;
             _CharacterMeleeAttackSpeed = CharacterMeleeAttackSpeed;
             _CharacterIncreaseAttackSpeed = CharacterIncreaseAttackSpeed;
             _CharacterIncreaseRangedAttackSpeed = CharacterIncreaseRangedAttackSpeed;
@@ -1408,7 +1389,7 @@ namespace TextureAtlas
             _CharacterIncreaseHealthFlat = CharacterIncreaseHealthFlat;
             _CharacterIncreaseHealth = CharacterIncreaseHealth;
             _CharacterIncreaseManaFlat = CharacterIncreaseManaFlat;
-            _CharacterIncreasemana  = CharacterIncreaseMana;
+            _CharacterIncreasemana = CharacterIncreaseMana;
             _CharacterIncreasePhysDmg = CharacterIncreasePhysDmg;
             _CharacterIncreasePhysRangeDmg = CharacterIncreasePhysRangeDmg;
             _CharacterIncreasePhysMeleeDmg = CharacterIncreasePhyMeleeDmg;
@@ -1416,12 +1397,12 @@ namespace TextureAtlas
             _CharacterMagicFindRarity = CharacterMagicFindRarity;
             _CharacterMagicFindQuantity = CharacterMagicFindQuantity;
             _CharacterBaseCritChance = CharacterBaseCritChance;
-            _CharacterCritChance  = CharacterCritChance;
-            _CharacterCritDamageModifier  = CharacterCritDamageModifier;
+            _CharacterCritChance = CharacterCritChance;
+            _CharacterCritDamageModifier = CharacterCritDamageModifier;
             _CharacterCoolDownReduction = CharacterCoolDownReduction;
             _CharacterPhysDamageReduction = CharacterPhysDamageReduction;
             _CharacterVsBeastDamage = CharacterVsBeastDamage;
-            _CharacterVsHumanDamage =CharacterVsHumanDamage;
+            _CharacterVsHumanDamage = CharacterVsHumanDamage;
             _CharacterVsUndeadDamage = CharacterVsUndeadDamage;
             _CharacterVsBossDamage = CharacterVsBossDamage;
             _CharacterVsEliteDamage = CharacterVsEliteDamage;
@@ -1429,15 +1410,15 @@ namespace TextureAtlas
             _CharacterArmourPenetration = CharacterArmourPenetration;
             _CharacterPhysicalReflect = CharacterPhysicalReflect;
             _CharacterMagicReflect = CharacterMagicReflect;
-            _CharacterSpellDamage =CharacterSpellDamage;
-            _CharacterHealthRegen =CharacterHealthRegen;
-            _CharacterTotalHealthRegen =CharacterTotalHealthregen;
+            _CharacterSpellDamage = CharacterSpellDamage;
+            _CharacterHealthRegen = CharacterHealthRegen;
+            _CharacterTotalHealthRegen = CharacterTotalHealthregen;
             _CharacterManaRegen = CharacterManaRegen;
             _CharacterTotalManaRegen = CharacterTotalManaRegen;
             _CharacterDamageReduction = CharacterDamageReduction;
             _CharacterHealthSteal = CharacterHealthSteal;
             _CharacterManaSteal = CharacterManaSteal;
-        
+
         }
 
         public static Vector2 GetInterSect(Rectangle me, Rectangle them, string XY = "")
@@ -1504,15 +1485,24 @@ namespace TextureAtlas
             return ApplyValue;
         }
 
-        public static int RollVsRarity()
+        public static int RollVsRarity(int deadEnemyRarity = 0)
         {
 
             int rarityRoll = theRandom.Next(0, 100);
 
             double rarity = rarityRoll;
 
-            rarity += CharacterMagicFindQuantity * .03;
             rarity += CharacterMagicFindRarity * .05;
+
+            if (deadEnemyRarity < 5)
+            {
+                rarity += deadEnemyRarity * 2;
+            }
+            else
+            {
+                return 6;
+            }
+
 
             if (rarity < 40)
             {
@@ -2143,7 +2133,7 @@ namespace TextureAtlas
                     returnAffix.Desc = "Critical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 14:
-                    returnAffix.Value = theRandom.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(3, 5);
                     returnAffix.Stat = "ATKSPD";
                     returnAffix.Desc = "Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
@@ -2234,12 +2224,12 @@ namespace TextureAtlas
                     returnAffix.Desc = "Ranged Physical Damage Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 32:
-                    returnAffix.Value = theRandom.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(3, 5);
                     returnAffix.Stat = "RATKSPD";
                     returnAffix.Desc = "Ranged Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
                 case 33:
-                    returnAffix.Value = theRandom.Next(10, 15);
+                    returnAffix.Value = theRandom.Next(3, 7);
                     returnAffix.Stat = "MATKSPD";
                     returnAffix.Desc = "Melee Attack Speed Increased By : " + returnAffix.Value.ToString() + "%";
                     break;
@@ -2416,7 +2406,7 @@ namespace TextureAtlas
                 UpOrDown = true;
             }
 
-            int offSetDamage = rng.Next((int)(returnValue * .1), (int)(returnValue * .4));
+            int offSetDamage = rng.Next((int)(returnValue * .1), (int)(returnValue * .2));
 
             if (UpOrDown)
             {
@@ -2541,7 +2531,8 @@ namespace TextureAtlas
             UpdateStats();
         }
 
-        public static void BeltEquipped(Item item){
+        public static void BeltEquipped(Item item)
+        {
             UpdateStats();
         }
 
@@ -2718,11 +2709,9 @@ namespace TextureAtlas
         {
             double returnValue = 1;
 
-            //10 dex = .1 Attack Speed
-            //20 agi = .1 Attack Speed
+            double raisedPercent = (CharacterTotalDex / 1000) + (CharacterTotalAgility / 2000);
 
-            returnValue += CharacterTotalDex / 100;
-            returnValue += CharacterTotalAgility / 200;
+            returnValue += returnValue * raisedPercent;
 
             return returnValue;
         }
@@ -2750,15 +2739,15 @@ namespace TextureAtlas
                 returnValue *= GlobalVariables.TheGame.equipment.LeftWeapon.BaseAttackSpeed;
             }
 
-            returnValue *= 1 + (CharacterIncreaseAttackSpeed / 100);
+            returnValue += GetCharacterBaseAttackSpeed() * (CharacterIncreaseAttackSpeed / 100);
 
             if (RangedMelee == 0)
             {
-                returnValue *= 1 + (CharacterIncreaseMeleeAttackSpeed / 100);
+                returnValue += GetCharacterBaseAttackSpeed() * (CharacterIncreaseMeleeAttackSpeed / 100);
             }
             else if (RangedMelee == 1)
             {
-                returnValue *= 1 + (CharacterIncreaseRangedAttackSpeed / 100);
+                returnValue += GetCharacterBaseAttackSpeed() * (CharacterIncreaseRangedAttackSpeed / 100);
             }
 
             return returnValue;
@@ -2828,6 +2817,17 @@ namespace TextureAtlas
 
             return returnValue;
 
+        }
+
+        public static double GetBaseCritDamage()
+        {
+            double returnValue = 50;
+
+            //Crit Damage increases 1 per 20 dex
+            
+            returnValue += CharacterTotalDex / 20;
+
+            return returnValue;
         }
 
         public static double GetBaseCritChance()
@@ -3026,7 +3026,7 @@ namespace TextureAtlas
         {
             double returnValue = 0;
 
-            List<Item> listItems = new List<Item> { Equipment.Shoulders, Equipment.Belt, Equipment.Boots, Equipment.Chest, Equipment.Gloves, Equipment.Helmet, Equipment.LeftRing, Equipment.RightRing, Equipment.Belt, Equipment.RightWeapon, Equipment.LeftWeapon, Equipment.Pants };
+            List<Item> listItems = new List<Item> { Equipment.Shoulders, Equipment.Belt, Equipment.Boots, Equipment.Chest, Equipment.Gloves, Equipment.Helmet, Equipment.LeftRing, Equipment.RightRing, Equipment.RightWeapon, Equipment.LeftWeapon, Equipment.Pants };
 
             foreach (Item item in listItems)
             {
@@ -3762,9 +3762,21 @@ namespace TextureAtlas
                 {
                     if (HeroMeleeRange.Intersects(en.Bounds))
                     {
-                        CurrentDir = Dir.Nothing;
-                        MoveToLoc = new Vector2(0, 0);
-                        return true;
+                        if (GlobalVariables.TheGame.canAttack)
+                        {
+                            GlobalVariables.TheGame.canAttack = false;
+                            GlobalVariables.TheGame.AttackTimer.Start();
+                            GlobalVariables.TheGame.AttackTimerOn = true;
+                            CurrentDir = Dir.Nothing;
+                            MoveToLoc = new Vector2(0, 0);
+                            return true;
+                        }
+                        else
+                        {
+                            CurrentDir = Dir.Nothing;
+                            MoveToLoc = new Vector2(0, 0);
+                            return false;
+                        }
                     }
                 }
             }
@@ -3817,7 +3829,7 @@ namespace TextureAtlas
                 {
                     //Im to the left
                     Rectangle newRect = new Rectangle(Character.Bounds.X, Character.Bounds.Y, Character.Bounds.Width + Convert.ToInt32(Velocity.X), Character.Bounds.Height);
-                    if (newRect.Intersects(enemy.Bounds))
+                    if (newRect.Intersects(enemy.Bounds) && !enemy.blnDie)
                     {
                         EnmyPos.Add(EnemyPos.IsRight);
                     }
@@ -3827,7 +3839,7 @@ namespace TextureAtlas
                     //Im to the right
 
                     Rectangle newRect = new Rectangle(Character.Bounds.X - Convert.ToInt32(Velocity.X), Character.Bounds.Y, Character.Bounds.Width, Character.Bounds.Height);
-                    if (newRect.Intersects(enemy.Bounds))
+                    if (newRect.Intersects(enemy.Bounds) && !enemy.blnDie)
                     {
                         EnmyPos.Add(EnemyPos.IsLeft);
                     }
@@ -3837,7 +3849,7 @@ namespace TextureAtlas
                     //Im Above
 
                     Rectangle newRect = new Rectangle(Character.Bounds.X, Character.Bounds.Y, Character.Bounds.Width, Character.Bounds.Height + Convert.ToInt32(VelocityUp.Y));
-                    if (newRect.Intersects(enemy.Bounds))
+                    if (newRect.Intersects(enemy.Bounds) && !enemy.blnDie)
                     {
                         EnmyPos.Add(EnemyPos.IsDown);
                     }
@@ -3847,7 +3859,7 @@ namespace TextureAtlas
                     //Im Below
 
                     Rectangle newRect = new Rectangle(Character.Bounds.X, Character.Bounds.Y - Convert.ToInt32(VelocityUp.Y), Character.Bounds.Width, Character.Bounds.Height);
-                    if (newRect.Intersects(enemy.Bounds))
+                    if (newRect.Intersects(enemy.Bounds) && !enemy.blnDie)
                     {
                         EnmyPos.Add(EnemyPos.IsUp);
                     }

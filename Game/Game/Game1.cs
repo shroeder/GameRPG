@@ -49,6 +49,8 @@ namespace TextureAtlas
         private Vector2 InvPos = new Vector2(150, 150);
         private Vector2 OldPos = new Vector2(0, 0);
 
+        public bool AttackTimerOn = false;
+        public bool canAttack = false;
         public bool ItemHovered = false;
         public bool blnClamp = false;
         public bool LeftMouseHeld = false;
@@ -112,6 +114,7 @@ namespace TextureAtlas
         public AnimatedSprite animatedSprite;
         public Item theItem;
 
+        public Stopwatch AttackTimer;
         private Stopwatch DebugTimer;
         private Stopwatch DebugTimer1;
 
@@ -534,7 +537,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.RightWeapon;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.RightWeapon.DroppedTextureName);
-                equipment.RightWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
+                equipment.RightWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true, tempItem.BaseAttackSpeed);
                 equipment.Hero.txtRightWeapon = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 animatedSprite.CharWeapon = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.RightWeapon.affixes = tempItem.affixes;
@@ -579,7 +582,7 @@ namespace TextureAtlas
             {
                 Item tempItem = equipment.LeftWeapon;
                 tempItem.ItemTexture = Content.Load<Texture2D>(equipment.LeftWeapon.DroppedTextureName);
-                equipment.LeftWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
+                equipment.LeftWeapon = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true, tempItem.BaseAttackSpeed);
                 equipment.Hero.txtLeftWeapon = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 animatedSprite.CharWeapon = Content.Load<Texture2D>(tempItem.ItemTextureName);
                 equipment.LeftWeapon.affixes = tempItem.affixes;
@@ -852,7 +855,7 @@ namespace TextureAtlas
                         {
                             Item tempItem = inventory.Items[intlc];
                             tempItem.ItemTexture = Content.Load<Texture2D>(inventory.Items[intlc].DroppedTextureName);
-                            inventory.Items[intlc] = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true);
+                            inventory.Items[intlc] = new Item(tempItem.location, tempItem.ItemTexture, tempItem.ItemType, tempItem.ItemLevel, tempItem.ItemSlot, tempItem.DroppedTextureName, tempItem.BaseStat, tempItem.BaseStatName, tempItem.SubType, true, tempItem.BaseAttackSpeed);
                             inventory.Items[intlc].affixes = tempItem.affixes;
                             inventory.Items[intlc].ItemDescription = tempItem.ItemDescription;
                             inventory.Items[intlc].AffixList = tempItem.AffixList;
@@ -894,6 +897,10 @@ namespace TextureAtlas
                 }
             }
             GlobalVariables.UpdateStats();
+            AttackTimer = new Stopwatch();
+            AttackTimer.Start();
+            AttackTimerOn = true;
+
         }
 
         protected override void LoadContent()
@@ -975,6 +982,30 @@ namespace TextureAtlas
 
         protected override void Update(GameTime gameTime)
         {
+
+            if (AttackTimerOn)
+            {
+                if (AttackTimer.ElapsedMilliseconds > 1000 / GlobalVariables._CharacterAttackSpeed)
+                {
+                    AttackTimer.Stop();
+                    AttackTimer.Reset();
+                    AttackTimerOn = false;
+                    canAttack = true;
+                }
+                else
+                {
+                    canAttack = false;
+                }
+            }
+            else
+            {
+                //temp fix to bug at load that has it at false even tho i set it to true
+                if (!canAttack)
+                {
+                    canAttack = true;
+                }
+            }
+
 
             ItemHovered = false;
 
@@ -1209,6 +1240,14 @@ namespace TextureAtlas
                             blnPaused = false;
                             pauseMenu = null;
                             CurrentGameState = GameState.Active;
+                            if (!AttackTimerOn)
+                            {
+                                AttackTimerOn = true;
+                            }
+                            if (!AttackTimer.IsRunning)
+                            {
+                                AttackTimer.Start();
+                            }
                         }
                     }
                 }
@@ -1217,7 +1256,14 @@ namespace TextureAtlas
 
             if (CurrentGameState == GameState.Inactive)
             {
-
+                if (AttackTimer.IsRunning)
+                {
+                    AttackTimer.Stop();
+                }
+                if (AttackTimerOn)
+                {
+                    AttackTimerOn = false;
+                }
                 return;
 
             }
@@ -1251,8 +1297,8 @@ namespace TextureAtlas
                         EnemyTextureColumns = 4;
                         EnemyTextureRows = 4;
                         name = "Turd Burglar";
-                        EnemyEvasion = 1;
-                        EnemyArmour = 1;
+                        EnemyEvasion = 40;
+                        EnemyArmour = 40;
                         HP = RNG.Next(500, 1500);
                         MaxHP = 1500;
                         break;
@@ -1355,7 +1401,7 @@ namespace TextureAtlas
                         for (int l = 0; l < Enemies.Count; l++)
                         {
 
-                            if (newRectangle.Intersects(Enemies[l].Bounds))
+                            if (newRectangle.Intersects(Enemies[l].Bounds) && !Enemies[l].blnDie)
                             {
                                 Valid = false;
                                 break;
@@ -1472,7 +1518,7 @@ namespace TextureAtlas
                         for (int l = 0; l < Enemies.Count; l++)
                         {
 
-                            if (newRectangle.Intersects(Enemies[l].Bounds))
+                            if (newRectangle.Intersects(Enemies[l].Bounds) && !Enemies[l].blnDie)
                             {
                                 Valid = false;
                                 break;
@@ -1603,7 +1649,7 @@ namespace TextureAtlas
                         for (int l = 0; l < Enemies.Count; l++)
                         {
 
-                            if (newRectangle.Intersects(Enemies[l].Bounds))
+                            if (newRectangle.Intersects(Enemies[l].Bounds) && !Enemies[l].blnDie)
                             {
                                 Valid = false;
                                 break;
@@ -1736,7 +1782,7 @@ namespace TextureAtlas
                         for (int l = 0; l < Enemies.Count; l++)
                         {
 
-                            if (newRectangle.Intersects(Enemies[l].Bounds))
+                            if (newRectangle.Intersects(Enemies[l].Bounds) && !Enemies[l].blnDie)
                             {
                                 Valid = false;
                                 break;
@@ -1815,6 +1861,7 @@ namespace TextureAtlas
             //Call Update Which Moves My Monsters
             if (Enemies.Count > 0)
             {
+                int deadEnemyRarity = 0;
                 for (int l = 0; l < Enemies.Count; l++)
                 {
                     if (Enemies[l].hp <= 0)
@@ -1824,16 +1871,36 @@ namespace TextureAtlas
                     }
                     if (Enemies[l].blnDead)
                     {
-                        IntDrop = RNG.Next(1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .1), 100);
+                        deadEnemyRarity = Enemies[l].GetRarity();
+                        switch (deadEnemyRarity)
+                        {
+                            case 1:
+                                IntDrop = RNG.Next(1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .03), 1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .03) + 100);
+                                break;
+                            case 2:
+                                IntDrop = RNG.Next(1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .04), 1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .04) + 100);
+                                break;
+                            case 3:
+                                IntDrop = RNG.Next(1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .06), 1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .06) + 100);
+                                break;
+                            case 4:
+                                IntDrop = RNG.Next(1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .15), 1 + (int)(GlobalVariables.CharacterMagicFindQuantity * .15) + 100);
+                                break;
+                            case 5:
+                                IntDrop = RNG.Next(1 + (int)(GlobalVariables.CharacterMagicFindQuantity * 1), 1 + (int)(GlobalVariables.CharacterMagicFindQuantity * 1) + 100);
+                                break;
+                        }
                         if (IntDrop > 50)
                         {
                             DoesDrop = true;
                         }
+                        else
+                        {
+                            DoesDrop = false;
+                        }
                         if (DoesDrop)
                         {
                             int ItemType = GlobalVariables.RollVsItemType();
-
-                            //assigned to values to fix compile time errs
                             int SubType = 0;
                             int ItemLevel = Enemies[l].Level + RNG.Next(1, 3) - RNG.Next(1, 3);
                             string itemTextureName = "";
@@ -2044,7 +2111,7 @@ namespace TextureAtlas
                                     break;
 
                             }
-                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, basestat, basestatname, SubType, false, baseatkspd));
+                            DroppedItems.Add(new Item(Enemies[l].Location, DroppedItem, ItemType, ItemLevel, itmSlot, itemTextureName, basestat, basestatname, SubType, false, baseatkspd, deadEnemyRarity));
                         }
                         DoesDrop = false;
                         Enemies.Remove(Enemies[l]);
@@ -2062,7 +2129,6 @@ namespace TextureAtlas
             int y = mouseState.Y;
             //Set Mouse Default Start Position
             Mouse.SetPosition(x, y);
-            //Animation Timer
             #endregion
 
             #region ClickEvents
@@ -2120,7 +2186,7 @@ namespace TextureAtlas
             //Logic to see if any enemies have Bln set to trigger character animation
             foreach (Enemy en in Enemies)
             {
-                if (en.CharacterAttacked && !PathFinding)
+                if (en.CharacterAttacked && !PathFinding && !en.blnDie)
                 {
                     PathFinding = GlobalVariables.MoveCharacterToPosition(animatedSprite, this, en.Location, velocity, velocityup, Enemies);
 
@@ -2146,7 +2212,7 @@ namespace TextureAtlas
                                 damage = GlobalVariables.RollPhysicalDamage();
                             }
                             //Enemy Damage reduction
-                            double enReduction = (en.Armour / (en.Armour + 400)) * 100;
+                            double enReduction = en.Armour / (double)(en.Armour + 400);
                             double damageReduced = damage * enReduction;
                             damage -= damageReduced;
                         }
@@ -2155,18 +2221,18 @@ namespace TextureAtlas
                             en.hp -= Convert.ToInt32(damage);
                             if (IsCrit)
                             {
-                                en.DamageCounter = Convert.ToString(Convert.ToUInt32(damage)) + "Crit";
+                                en.DamageCounterList.Add(Convert.ToString(Convert.ToUInt32(damage)) + "Crit");
                             }
                             else
                             {
-                                en.DamageCounter = Convert.ToString(Convert.ToUInt32(damage));
+                                en.DamageCounterList.Add(Convert.ToString(Convert.ToUInt32(damage)));
                             }
-                            break;
                         }
                         else
                         {
-                            en.DamageCounter = "Miss";
+                            en.DamageCounterList.Add("Miss");
                         }
+                        en.m.Add(2);
                     }
                 }
             }

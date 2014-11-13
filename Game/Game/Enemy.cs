@@ -55,6 +55,7 @@ namespace TextureAtlas
         private int offSetBoundsX;
         private int offSetBoundsY;
 
+        public List<string> DamageCounterList = new List<string>();
         public string DamageCounter;
         public float i;
         public float hp;
@@ -70,7 +71,7 @@ namespace TextureAtlas
         public bool blnDead = false;
         public bool CharacterAttacked = false;
 
-        public float m = 2;
+        public List<float> m = new List<float>();
 
         public string name;
 
@@ -276,6 +277,39 @@ namespace TextureAtlas
             }
         }
 
+        public int GetRarity()
+        {
+            int returnValue = 0;
+
+            if ((tothp / maxhp) >= 0 && (tothp / maxhp) < .75)
+            {
+                returnValue = 1;
+            }
+            else if ((tothp / maxhp) >= .75 && (tothp / maxhp) < .9)
+            {
+                returnValue = 2;
+            }
+            else if ((tothp / maxhp) >= .9 && (tothp / maxhp) < .95)
+            {
+                returnValue = 3;
+            }
+            else if ((tothp / maxhp) >= .95 && (tothp / maxhp) < 1)
+            {
+                returnValue = 4;
+            }
+            else if ((tothp / maxhp) == 1)
+            {
+                returnValue = 5;
+            }
+            else
+            {
+                returnValue = 1;
+            }
+
+            return returnValue;
+
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 location)
         {
 
@@ -317,38 +351,40 @@ namespace TextureAtlas
                 }
             }
 
-            if (DamageCounter != null)
+            for (int intlc = 0; intlc < DamageCounterList.Count; intlc++)
             {
-                if (GlobalVariables.ShowEnemyDamage)
+                if (DamageCounterList[intlc] != null)
                 {
-                    if (m < 100)
+                    if (GlobalVariables.ShowEnemyDamage)
                     {
-                        bool crit;
-                        if (DamageCounter.Contains("Crit"))
+                        if (m[intlc] < 100)
                         {
-                            crit = true;
+                            bool crit;
+                            if (DamageCounterList[intlc].Contains("Crit"))
+                            {
+                                crit = true;
+                            }
+                            else
+                            {
+                                crit = false;
+                            }
+                            if (crit)
+                            {
+                                string damagewithoutcrit = DamageCounterList[intlc].Replace("Crit", "");
+                                spriteBatch.DrawString(GlobalVariables.MediumFont, damagewithoutcrit, new Vector2(location.X, (location.Y - m[intlc])), Color.Yellow);
+                                m[intlc] += (float)(GlobalVariables.UserSetHeight * .001);
+                            }
+                            else
+                            {
+                                spriteBatch.DrawString(GlobalVariables.SmallFont, DamageCounterList[intlc], new Vector2(location.X, (location.Y - m[intlc])), Color.Red);
+                                m[intlc] += (float)(GlobalVariables.UserSetHeight * .001);
+                            }
                         }
                         else
                         {
-                            crit = false;
+                            m.RemoveAt(intlc);
+                            DamageCounterList.RemoveAt(intlc);
                         }
-                        if (crit)
-                        {
-                            string damagewithoutcrit = DamageCounter.Replace("Crit", "");
-                            spriteBatch.DrawString(GlobalVariables.MediumFont, damagewithoutcrit, new Vector2(location.X, (location.Y - m)), Color.Yellow);
-                            m += (float)(GlobalVariables.UserSetHeight * .001);
-                        }
-                        else
-                        {
-                            spriteBatch.DrawString(GlobalVariables.SmallFont, DamageCounter, new Vector2(location.X, (location.Y - m)), Color.Red);
-                            m += (float)(GlobalVariables.UserSetHeight * .001);
-                        }
-
-                    }
-                    else
-                    {
-                        m = 2;
-                        DamageCounter = null;
                     }
                 }
             }

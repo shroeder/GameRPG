@@ -620,7 +620,7 @@ namespace TextureAtlas
             if (Offense)
             {
                 Values.Add("Physical Damage : " + theValue.ToString());
-                Values.Add("Attack Speed : " + GlobalVariables._CharacterAttackSpeed.ToString() + "%");
+                Values.Add("Attacks per Second : " + GlobalVariables._CharacterAttackSpeed.ToString());
                 Values.Add("Chance To Hit : " + GlobalVariables._CharacterChanceToHit.ToString() + "%");
                 Values.Add("Melee Range : " + GlobalVariables._CharacterMeleeRange.ToString() + "%");
                 Values.Add("Critical Chance : " + GlobalVariables._CharacterCritChance.ToString() + "%");
